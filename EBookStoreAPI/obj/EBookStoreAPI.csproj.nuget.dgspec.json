@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "D:\\EBookStore.Final\\EBookStoreAPI\\EBookStoreAPI.csproj": {}
+    "D:\\.FUEN28\\.專題\\第三次專題\\EBookStoreAPI\\EBookStoreAPI.csproj": {}
   },
   "projects": {
-    "D:\\EBookStore.Final\\EBookStoreAPI\\EBookStoreAPI.csproj": {
+    "D:\\.FUEN28\\.專題\\第三次專題\\EBookStoreAPI\\EBookStoreAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\EBookStore.Final\\EBookStoreAPI\\EBookStoreAPI.csproj",
+        "projectUniqueName": "D:\\.FUEN28\\.專題\\第三次專題\\EBookStoreAPI\\EBookStoreAPI.csproj",
         "projectName": "EBookStoreAPI",
-        "projectPath": "D:\\EBookStore.Final\\EBookStoreAPI\\EBookStoreAPI.csproj",
-        "packagesPath": "C:\\Users\\yoyoc\\.nuget\\packages\\",
-        "outputPath": "D:\\EBookStore.Final\\EBookStoreAPI\\obj\\",
+        "projectPath": "D:\\.FUEN28\\.專題\\第三次專題\\EBookStoreAPI\\EBookStoreAPI.csproj",
+        "packagesPath": "C:\\Users\\zzz31\\.nuget\\packages\\",
+        "outputPath": "D:\\.FUEN28\\.專題\\第三次專題\\EBookStoreAPI\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\yoyoc\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\zzz31\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,7 +26,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\sdk\\7.0.306\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
+          "C:\\Program Files\\dotnet\\sdk\\7.0.304\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -65,7 +69,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
         }
       }
     }
