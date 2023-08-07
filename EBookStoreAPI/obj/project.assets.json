@@ -224,24 +224,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\zzz31\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
+    "C:\\Users\\ispan\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\.FUEN28\\.專題\\第三次專題\\EBookStoreAPI\\EBookStoreAPI.csproj",
+      "projectUniqueName": "D:\\Final\\EBookStoreAPI\\EBookStoreAPI.csproj",
       "projectName": "EBookStoreAPI",
-      "projectPath": "D:\\.FUEN28\\.專題\\第三次專題\\EBookStoreAPI\\EBookStoreAPI.csproj",
-      "packagesPath": "C:\\Users\\zzz31\\.nuget\\packages\\",
-      "outputPath": "D:\\.FUEN28\\.專題\\第三次專題\\EBookStoreAPI\\obj\\",
+      "projectPath": "D:\\Final\\EBookStoreAPI\\EBookStoreAPI.csproj",
+      "packagesPath": "C:\\Users\\ispan\\.nuget\\packages\\",
+      "outputPath": "D:\\Final\\EBookStoreAPI\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-      ],
       "configFilePaths": [
-        "C:\\Users\\zzz31\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Users\\ispan\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
