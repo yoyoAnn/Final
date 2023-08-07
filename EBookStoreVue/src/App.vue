@@ -31,6 +31,7 @@
     <v-main class="bg-grey-lighten-3">
       <v-container>
         <v-row>
+          
           <v-col cols="2">
             <v-sheet rounded="lg">
               <v-list rounded="lg">
@@ -58,18 +59,23 @@
             </v-sheet>
           </v-col>
 
+          
+            <router-link to="/member">會員中心</router-link>
           <v-col>
             <v-sheet
               min-height="70vh"
               rounded="lg"
             >
+            <router-view />
               <!--  -->
             </v-sheet>
           </v-col>
         </v-row>
       </v-container>
     </v-main>
+
   </v-app>
+  
 </template>
 
 <script setup>
@@ -78,6 +84,7 @@
     'Messages',
     'Profile',
     'Updates',
+    'Member'
   ]
 </script>
 <!-- <script>

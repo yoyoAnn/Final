@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EBookStoreAPI.Controllers
 {
+	[EnableCors("AllowAll")]
 	[ApiController]
 	[Route("[controller]")]
 	public class WeatherForecastController : ControllerBase
