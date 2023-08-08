@@ -1,12 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Member from '../views/Member.vue'
+import Users from '../views/Users.vue'
 
 //路由設定
 const routes = [
     {
-        //http://localhost/member
-        path: '/member',
-        component: Member
+        path: '/users',
+        component: Users
     }
 ]
 
