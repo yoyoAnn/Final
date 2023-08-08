@@ -8,13 +8,17 @@
           size="32"
         ></v-avatar>
 
-        <v-btn
+        <!-- <v-btn
           v-for="link in links"
           :key="link"
           variant="text"
         >
-          {{ link }}
-        </v-btn>
+          {{ link }} -->
+          <v-btn variant="text" to="/users">會員中心</v-btn>
+          <v-btn variant="text" to="/users">會員中心</v-btn>
+          <v-btn variant="text" to="/users">購物車</v-btn>
+          <v-btn variant="text" to="/users">會員中心</v-btn>
+        
 
         <v-spacer></v-spacer>
 
