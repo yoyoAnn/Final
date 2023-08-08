@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Final\\EBookStoreAPI\\EBookStoreAPI.csproj": {}
+    "D:\\EBookStore.Site.Final\\EBookStoreAPI\\EBookStoreAPI.csproj": {}
   },
   "projects": {
-    "D:\\Final\\EBookStoreAPI\\EBookStoreAPI.csproj": {
+    "D:\\EBookStore.Site.Final\\EBookStoreAPI\\EBookStoreAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Final\\EBookStoreAPI\\EBookStoreAPI.csproj",
+        "projectUniqueName": "D:\\EBookStore.Site.Final\\EBookStoreAPI\\EBookStoreAPI.csproj",
         "projectName": "EBookStoreAPI",
-        "projectPath": "D:\\Final\\EBookStoreAPI\\EBookStoreAPI.csproj",
-        "packagesPath": "C:\\Users\\ispan\\.nuget\\packages\\",
-        "outputPath": "D:\\Final\\EBookStoreAPI\\obj\\",
+        "projectPath": "D:\\EBookStore.Site.Final\\EBookStoreAPI\\EBookStoreAPI.csproj",
+        "packagesPath": "C:\\Users\\TingChen\\.nuget\\packages\\",
+        "outputPath": "D:\\EBookStore.Site.Final\\EBookStoreAPI\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\ispan\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\TingChen\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,7 +22,7 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\sdk\\7.0.304\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
+          "C:\\Program Files\\dotnet\\sdk\\7.0.306\\Sdks\\Microsoft.NET.Sdk.Web\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -65,7 +65,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.304\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.306\\RuntimeIdentifierGraph.json"
         }
       }
     }
