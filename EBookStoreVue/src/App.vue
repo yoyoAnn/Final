@@ -1,108 +1,33 @@
 <template>
-  <v-app id="inspire">
-    <v-app-bar flat>
-      <v-container class="fill-height d-flex align-center">
-        <v-avatar
-          class="me-10 ms-4"
-          color="grey-darken-1"
-          size="32"
-        ></v-avatar>
+  <v-app>
 
-        <!-- <v-btn
-          v-for="link in links"
-          :key="link"
-          variant="text"
-        >
-          {{ link }} -->
-          <v-btn variant="text" to="/users">會員中心</v-btn>
-          <v-btn variant="text" to="/users">會員中心</v-btn>
-          <v-btn variant="text" to="/users">購物車</v-btn>
-          <v-btn variant="text" to="/users">會員中心</v-btn>
-        
+    <!-- <v-navigation-drawer app>
+    </v-navigation-drawer> -->
 
-        <v-spacer></v-spacer>
+    <Navbar />
 
-        <v-responsive max-width="260">
-          <v-text-field
-            density="compact"
-            hide-details
-            variant="solo"
-          ></v-text-field>
-        </v-responsive>
-      </v-container>
-    </v-app-bar>
-
-    <v-main class="bg-grey-lighten-3">
-      <v-container>
-        <v-row>
-          
-          <v-col cols="2">
-            <v-sheet rounded="lg">
-              <v-list rounded="lg">
-                <v-list-item
-                  v-for="n in 5"
-                  :key="n"
-                  link
-                >
-                  <v-list-item-title>
-                    List Item {{ n }}
-                  </v-list-item-title>
-                </v-list-item>
-
-                <v-divider class="my-2"></v-divider>
-
-                <v-list-item
-                  link
-                  color="grey-lighten-4"
-                >
-                  <v-list-item-title>
-                    Refresh
-                  </v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-sheet>
-          </v-col>
-
-          
-            <router-link to="/users">會員中心</router-link>
-          <v-col>
-            <v-sheet
-              min-height="70vh"
-              rounded="lg"
-            >
-            <router-view />
-              <!--  -->
-            </v-sheet>
-          </v-col>
-        </v-row>
+    <v-main>
+      <v-container fluid>
+        <router-view></router-view>
       </v-container>
     </v-main>
 
+    <v-footer app>
+      <!-- -->
+    </v-footer>
   </v-app>
-  
 </template>
 
-<script setup>
-  const links = [
-    'Dashboard',
-    'Messages',
-    'Profile',
-    'Updates',
-    'Member'
-  ]
-</script>
-<!-- <script>
-import HelloWorld from './components/HelloWorld.vue'
+<script>
+import Navbar from './components/Navbar.vue'
 
 export default {
   name: 'App',
-
   components: {
-    HelloWorld,
+    Navbar,
   },
-
   data: () => ({
-    //
+
   }),
 }
-</script> -->
+</script>
