@@ -7,8 +7,8 @@
     
 const products = ref([])
 const loadProducts = async () => {
-    const response = await fetch(`https://localhost:7124/api/Products`)
-    //const response = await fetch(`https://localhost:7261/api/XXX`)
+    //const response = await fetch(`https://localhost:7124/api/Products`)
+    const response = await fetch(`https://localhost:7261/api/Users`)
     const datas = await response.json()
     products.value = datas;
     console.log(products.value);

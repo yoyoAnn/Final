@@ -1,3 +1,6 @@
 D:\Final\EBookStoreVue\obj\Debug\EBookStoreVue.njsproj.AssemblyReference.cache
 D:\Final\EBookStoreVue\obj\Debug\EBookStoreVue.njsproj.CoreCompileInputs.cache
 D:\Final\EBookStoreVue\bin\Microsoft.NodejsTools.WebRole.dll
+D:\Final_ann\EBookStoreVue\obj\Debug\EBookStoreVue.njsproj.AssemblyReference.cache
+D:\Final_ann\EBookStoreVue\obj\Debug\EBookStoreVue.njsproj.CoreCompileInputs.cache
+D:\Final_ann\EBookStoreVue\bin\Microsoft.NodejsTools.WebRole.dll

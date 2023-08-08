@@ -1,6 +1,14 @@
+using EBookStoreAPI.Models;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services to the DI container.
+string EBookStoreConnectionString = builder.Configuration.GetConnectionString("EBookStore");
+builder.Services.AddDbContext<EBookStoreContext>(options =>
+{
+	options.UseSqlServer(EBookStoreConnectionString);
+});
 
 builder.Services.AddControllers();
 

@@ -60,7 +60,7 @@
           </v-col>
 
           
-            <router-link to="/member">會員中心</router-link>
+            <router-link to="/users">會員中心</router-link>
           <v-col>
             <v-sheet
               min-height="70vh"
