@@ -16,7 +16,7 @@ namespace EBookStoreAPI.Controllers
 		private readonly ILogger<WeatherForecastController> _logger;
 
 
-		//«¢«¢¬O§Ú°ÕBy ¶®µÓ
+		//«¢«¢¬O§Ú°ÕBy ¶®µÓ ¬X¦w
 		public WeatherForecastController(ILogger<WeatherForecastController> logger)
 		{
 			_logger = logger;
