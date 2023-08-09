@@ -2,12 +2,18 @@
     <nav>
         <v-toolbar flat app>
             <v-toolbar-title class="grey--text text-h4">
+                <v-btn flat color="grey" router :to="homeRoute" >
+                
                 <v-img style="float: left;" :width="80" aspect-ratio="4/3"
                     src="https://blog.flamingtext.com/blog/2023/08/08/flamingtext_com_1691517616_586896794.png"></v-img>
                 <!-- <span style="font-weight: lighter;">布可</span> -->
                 <span style="display: flex;vertical-align: text-bottom;">網路書店</span>
+                </v-btn>
             </v-toolbar-title>
             <v-spacer></v-spacer>
+            <v-btn flat color="grey" router :to="cartRoute" >
+                <v-icon right icon="mdi-cart"/>
+            </v-btn>
             <v-menu open-on-hover>
                 <template v-slot:activator="{ props }">
                     <v-btn color="grey" v-bind="props">
@@ -39,6 +45,8 @@ export default {
             { title: '歷史訂單', route: "#" },
             { title: '收藏專欄', route: "#" },
         ],
+        cartRoute:'/cart',
+        homeRoute:'/'
     }),
 }
 </script>
