@@ -2,28 +2,16 @@
   <v-app id="inspire">
     <v-app-bar flat>
       <v-container class="fill-height d-flex align-center">
-        <v-avatar
-          class="me-10 ms-4"
-          color="grey-darken-1"
-          size="32"
-        ></v-avatar>
+        <v-avatar class="me-10 ms-4" color="grey-darken-1" size="32"></v-avatar>
 
-        <v-btn
-          v-for="link in links"
-          :key="link"
-          variant="text"
-        >
+        <v-btn v-for="link in links" :key="link" variant="text">
           {{ link }}
         </v-btn>
 
         <v-spacer></v-spacer>
 
         <v-responsive max-width="260">
-          <v-text-field
-            density="compact"
-            hide-details
-            variant="solo"
-          ></v-text-field>
+          <v-text-field density="compact" hide-details variant="solo"></v-text-field>
         </v-responsive>
       </v-container>
     </v-app-bar>
@@ -31,15 +19,11 @@
     <v-main class="bg-grey-lighten-3">
       <v-container>
         <v-row>
-          
+
           <v-col cols="2">
             <v-sheet rounded="lg">
               <v-list rounded="lg">
-                <v-list-item
-                  v-for="n in 5"
-                  :key="n"
-                  link
-                >
+                <v-list-item v-for="n in 5" :key="n" link>
                   <v-list-item-title>
                     List Item {{ n }}
                   </v-list-item-title>
@@ -47,10 +31,7 @@
 
                 <v-divider class="my-2"></v-divider>
 
-                <v-list-item
-                  link
-                  color="grey-lighten-4"
-                >
+                <v-list-item link color="grey-lighten-4">
                   <v-list-item-title>
                     Refresh
                   </v-list-item-title>
@@ -59,14 +40,11 @@
             </v-sheet>
           </v-col>
 
-          
-            <router-link to="/users">會員中心</router-link>
+
+          <router-link to="/users">會員中心</router-link>
           <v-col>
-            <v-sheet
-              min-height="70vh"
-              rounded="lg"
-            >
-            <router-view />
+            <v-sheet min-height="70vh" rounded="lg">
+              <router-view />
               <!--  -->
             </v-sheet>
           </v-col>
@@ -75,17 +53,16 @@
     </v-main>
 
   </v-app>
-  
 </template>
 
 <script setup>
-  const links = [
-    'Dashboard',
-    'Messages',
-    'Profile',
-    'Updates',
-    'Member'
-  ]
+const links = [
+  'Dashboard',
+  'Messages',
+  'Profile',
+  'Updates',
+  '購物車'
+]
 </script>
 <!-- <script>
 import HelloWorld from './components/HelloWorld.vue'
