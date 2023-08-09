@@ -1,13 +1,13 @@
 <template>
   <v-app>
-
     <!-- <v-navigation-drawer app>
     </v-navigation-drawer> -->
+    <v-app-bar app>
+      <Navbar />
+    </v-app-bar>
 
-    <Navbar />
-
-    <v-main>
-      <v-container fluid>
+    <v-main class="grey">
+      <v-container fluid class="px-0 py-0">
         <router-view></router-view>
       </v-container>
     </v-main>
@@ -19,15 +19,13 @@
 </template>
 
 <script>
-import Navbar from './components/Navbar.vue'
+import Navbar from "./components/Navbar.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
     Navbar,
   },
-  data: () => ({
-
-  }),
-}
+  data: () => ({}),
+};
 </script>
