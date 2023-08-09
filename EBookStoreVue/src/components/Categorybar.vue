@@ -6,6 +6,10 @@
       color="light"
       horizontal
     >
+      <!-- <v-btn>1</v-btn>
+      <v-btn>2</v-btn>
+      <v-btn>3</v-btn>
+      <v-btn>4</v-btn> -->
       <v-btn
         v-for="category in categories"
         :key="category.title"
