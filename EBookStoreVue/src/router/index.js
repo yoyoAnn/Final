@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Users from '../views/Users.vue'
-import CartItem from '../views/CartItem.vue'
+import Cart from '../views/Cart.vue'
 
 //路由設定
 const routes = [
@@ -9,8 +9,8 @@ const routes = [
         component: Users
     },
     {
-        path: '/CartItem',
-        component: CartItem
+        path: '/cart',
+        component: Cart
     }
 ]
 
