@@ -8,13 +8,58 @@
             id="button-addon1">+</button>
     </div>
 </template>
-    
-<script setup>
-
+<script>
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
+export default {
+    name: 'CartAddRemove',
+    props: ['product'],
+    data() {
+        return {
+            qty: 1,
+            loading: false
+        }
+    },
+    methods: {
+        async addOrRemove(number) {
+            this.loading = true
+            if (number == 1) {
+                if (this.qty < 10) {
+                    this.qty++
+                    this.product.qty = this.qty
+                    await this.$store.commit('updateCart', { product: this.product })
+                    toast.success('cart updated', {
+                        autoClose: 1000,
+                    });
+                } else {
+                    toast.warning('You reached the limit', {
+                        autoClose: 3000,
+                    });
+                }
+            }
+            if (number == -1) {
+                if (this.qty > 1) {
+                    this.qty--
+                    this.product.qty = this.qty
+                    await this.$store.commit('updateCart', { product: this.product })
+                    toast.success('cart updated', {
+                        autoClose: 1000,
+                    });
+                } else {
+                    toast.warning('You reached the limit', {
+                        autoClose: 3000,
+                    });
+                }
+            }
+            this.loading = false
+        }
+    },
+    mounted() {
+        this.qty = this.product.qty
+    }
+}
 </script>
-    
 <style>
 .plus-minus input {
     max-width: 50px;
-}
-</style>
+}</style>
