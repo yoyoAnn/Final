@@ -32,4 +32,7 @@ export default defineConfig({
     ]
   },
   */
+  devServer: {
+    https: true,
+  },
 })
