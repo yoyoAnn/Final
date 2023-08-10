@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace EBookStoreAPI.Models
+namespace EBookStoreAPI.Models.EFModels
 {
     public partial class Writers
     {
