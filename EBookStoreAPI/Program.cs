@@ -1,4 +1,5 @@
 using EBookStoreAPI.Models;
+using EBookStoreAPI.Models.EFModels;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

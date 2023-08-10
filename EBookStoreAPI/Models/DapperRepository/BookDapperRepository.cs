@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using EBookStoreAPI.DTOs;
+using EBookStoreAPI.Models.EFModels;
 using Microsoft.Data.SqlClient;
 using System.Data;
 
