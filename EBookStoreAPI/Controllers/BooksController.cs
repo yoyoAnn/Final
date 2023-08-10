@@ -1,6 +1,7 @@
 ﻿using EBookStoreAPI.DTOs;
 using EBookStoreAPI.Models;
 using EBookStoreAPI.Models.DapperRepository;
+using EBookStoreAPI.Models.EFModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

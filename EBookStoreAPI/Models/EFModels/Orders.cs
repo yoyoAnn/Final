@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace EBookStoreAPI.Models
+namespace EBookStoreAPI.Models.EFModels
 {
     public partial class Orders
     {
@@ -29,6 +29,7 @@ namespace EBookStoreAPI.Models
         public decimal ShippingFee { get; set; }
         public int? ShippingStatusId { get; set; }
         public decimal TotalPayment { get; set; }
+        public bool CommentStatus { get; set; }
 
         public virtual OrderStatuses OrderStatus { get; set; }
         public virtual ShippingStatuses ShippingStatus { get; set; }

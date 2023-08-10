@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace EBookStoreAPI.Models
+namespace EBookStoreAPI.Models.EFModels
 {
     public partial class Comments
     {
@@ -12,6 +12,7 @@ namespace EBookStoreAPI.Models
         public int UserId { get; set; }
         public int Scores { get; set; }
         public string Content { get; set; }
+        public bool VisibleComment { get; set; }
 
         public virtual Books Book { get; set; }
         public virtual Users User { get; set; }

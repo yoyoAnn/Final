@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EBookStoreAPI.Models;
+using EBookStoreAPI.Models.EFModels;
 
 namespace EBookStoreAPI.Controllers
 {
