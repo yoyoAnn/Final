@@ -13,6 +13,12 @@ export default defineConfig({
       autoImport: true,
     }),
   ],
+  // server: {
+  //   https: {
+  //     key: fs.readFileSync(`${__dirname}/src/assets/localhost-key.pem`),
+  //     cert: fs.readFileSync(`${__dirname}/src/assets/localhost.pem`),
+  //   },
+  // },
   define: { 'process.env': {} },
   resolve: {
     alias: {
@@ -32,7 +38,4 @@ export default defineConfig({
     ]
   },
   */
-  devServer: {
-    https: true,
-  },
 })
