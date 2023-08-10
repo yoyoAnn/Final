@@ -26,19 +26,19 @@
             flat
             hide-details
             rounded
-            append-inner-icon="mdi-magnify"
+            append-inner-icon="mdi:mdi-magnify"
           >
           </v-text-field>
         </v-responsive>
       </v-col>
       <v-col class="d-flex justify-end" cols="3">
         <v-btn flat color="grey" router :to="cartRoute">
-          <v-icon right icon="mdi-cart" />
+          <v-icon right icon="mdi:mdi-cart" />
         </v-btn>
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
             <v-btn color="grey" v-bind="props">
-              <v-icon right icon="mdi-account" />
+              <v-icon right icon="mdi:mdi-account" />
             </v-btn>
           </template>
           <v-list>
@@ -53,7 +53,7 @@
           </v-list>
         </v-menu>
         <v-btn flat color="grey">
-          <v-icon right icon="mdi-exit-to-app" />
+          <v-icon right icon="mdi:mdi-exit-to-app" />
         </v-btn>
       </v-col>
 
