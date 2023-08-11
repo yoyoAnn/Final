@@ -17,7 +17,7 @@ namespace EBookStoreAPI.Models.DapperRepository
         {
             _db = db;
             _configuration = configuration;
-            connStr = _configuration.GetConnectionString("EBookStoreContext");
+            connStr = _configuration.GetConnectionString("EBookStore");
             _connection = new SqlConnection(connStr);
         }
 

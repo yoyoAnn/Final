@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EBookStoreAPI.Controllers
 {
-    [EnableCors("AllowAny")]
+    [EnableCors("AllowAll")]
     [Route("api/[controller]")]
     [ApiController]
     public class BooksController : ControllerBase
