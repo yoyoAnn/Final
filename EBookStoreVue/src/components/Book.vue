@@ -14,8 +14,10 @@
     </thead>
     <tbody>
       <tr v-for="book in books" :key="book.id">
-        <td>{{ book.bookImage }}</td>
-        <img src="../BooksImage/{{book.bookImage}}" />
+        <img
+          :src="`src/BooksImage/${book.bookImage}`"
+          style="height: 300px; width: 300px"
+        />
         <td>{{ book.name }}</td>
         <td>{{ book.price }}</td>
       </tr>
@@ -23,10 +25,6 @@
   </table>
 </template>
   
-<!-- <img src="../BooksImage/9f5cbec6-5394-44ed-ba39-6cdf7da53e89.jpg" /> -->
-
-<!-- <td><img :src="'../BooksImage/' + {{book.bookImage  }}" /></td> -->
-<!-- <img src="../BooksImage/{{book.bookImage}}" /> -->
 
 
 <script setup lang='ts'>
@@ -56,6 +54,10 @@ onMounted(() => {
 });
 </script>
   
-  <style>
+<style>
+.book-image {
+  width: 100px;
+  height: 150px;
+}
 </style>
   
