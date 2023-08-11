@@ -31,7 +31,6 @@
 import { ref, onMounted } from "vue";
 
 const books = ref([]);
-const booksImage = ref([]);
 
 const loadBooks = async () => {
   try {
