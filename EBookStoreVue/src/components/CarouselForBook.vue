@@ -29,7 +29,7 @@ export default {
         },
         {
           title: "顯微鏡下的大明",
-          src: "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/092/69/0010926947.jpg&w=187&h=187&v=62b440ab",
+          src: "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/092/69/0010926947.jpg&w=348&h=348&v=62b440ab",
         },
       ],
     };
