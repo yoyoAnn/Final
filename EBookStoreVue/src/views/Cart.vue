@@ -1,6 +1,16 @@
 <template>
     <div style="overflow-y: scroll;">
         <div v-if="books.length" class="container">
+            <h5 class="mt-2">
+                <router-link class="text-body" to="/"><i class="fas fa-long-arrow-alt-left me-2"></i>繼續購物</router-link>
+            </h5>
+
+            <div>
+                <p>
+                    您的購物車裡有 {{ books.length }} 項商品
+                </p>
+            </div>
+
             <table class="table fixed-cell">
                 <thead>
                     <tr>
