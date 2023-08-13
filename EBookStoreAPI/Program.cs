@@ -1,5 +1,7 @@
 using EBookStoreAPI.Models;
+using EBookStoreAPI.Context;
 using EBookStoreAPI.Models.EFModels;
+using EBookStoreAPI.Models.Infra.CartDapper;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,7 @@ builder.Services.AddDbContext<EBookStoreContext>(options =>
 	options.UseSqlServer(EBookStoreConnectionString);
 });
 
+
 builder.Services.AddControllers();
 
 builder.Services.AddCors(options => {
@@ -20,6 +23,9 @@ builder.Services.AddCors(options => {
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<CartGetDapperRepository>();
+builder.Services.AddSingleton<EbookStoreDepperContext>();
 
 var app = builder.Build();
 

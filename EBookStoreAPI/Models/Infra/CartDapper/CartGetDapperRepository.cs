@@ -8,43 +8,43 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
 {
     public class CartGetDapperRepository
     {
-        private readonly EbookStoreDepperContext _conStr;
+        private readonly EbookStoreDepperContext _connStr;
         public CartGetDapperRepository(EbookStoreDepperContext context)
         {
-            _conStr = context;
+            _connStr = context;
         }
 
-        public IEnumerable<CartItemDapperVM> CartItemLoad(int Id)
+
+        public  IEnumerable<CartItemDapperVM> CartItemLoad()
         {
             DynamicParameters param = new DynamicParameters(); // Dapper 動態參數
             StringBuilder sql = new StringBuilder();
 
 
             sql.AppendLine(@"
-                              select UserId, [name],Price,Qty
-                              from Carts
-                              left join Books on [Carts].BookId=Books.Id
-                              where [Carts].Id=@Id");
-
-            param.Add("Id", Id);
-
-            using (var connection = _conStr.CreateConnection())
+                            select UserId, [name],[Image],Price,Qty
+                            from Carts
+                            left join Books on [Carts].BookId=Books.Id
+                            left join BookImages on [Carts].BookId=BookImages.BookId
+                              ");
+            //if(Id != null)
+            //{
+            //    sql.AppendLine(@"where [Carts].Id=@Id");
+            //    param.Add("Id", Id);
+            //}
+            using (var connection = _connStr.CreateConnection())
             {
                 connection.Open();
-                return connection.Query<CartItemDapperVM>(sql.ToString(), param);  // 使用 Query 方法執行查詢並取得結果
-            }
-            //using (var connection = _conStr.CreateConnection())
-            //{
-            //    // 執行更新後，您可以再次查詢相關資料並回傳
-            //    string selectSql = "SELECT * FROM Orders WHERE Id = @Id";
-            //    IEnumerable<CartItemDapperVM> cartItems = connection.Query<CartItemDapperVM>(selectSql, new { Id= Id });
 
-            //    return cartItems.ToList();
-            //}
+                IEnumerable<CartItemDapperVM> DetailCarts = connection.Query<CartItemDapperVM>(sql.ToString());
+
+                return DetailCarts;
+            }
         }
 
         public class CartItemDapperVM
         {
+            public string Image { get; set; }
             public int UserId { get; set; }
             public string name { get; set; }
             public decimal Price { get; set; }
