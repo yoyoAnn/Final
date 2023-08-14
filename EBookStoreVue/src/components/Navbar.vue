@@ -52,7 +52,7 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <v-btn flat color="grey">
+        <v-btn flat color="grey" @click="logout">
           <v-icon right icon="mdi:mdi-exit-to-app" />
         </v-btn>
       </v-col>
@@ -72,6 +72,12 @@ export default {
     cartRoute: "/cart",
     homeRoute: "/",
   }),
+  methods: {
+    logout() {
+      localStorage.removeItem('memberInfo');
+      this.$router.push('/');
+    },
+  },
 };
 </script>
     
