@@ -9,9 +9,11 @@
   <div>
     <el-row class="button-row">
       <el-col :span="1">
-        <el-button @click="prevPage" :disabled="currentPage === 1"
-          >上一頁</el-button
-        >
+        <i
+          class="fa-solid fa-circle-chevron-left fa-beat-fade fa-2xl"
+          @click="prevPage"
+          :disabled="currentPage === 1"
+        ></i>
       </el-col>
       <el-col :span="18">
         <div class="card-container">
@@ -37,10 +39,11 @@
         </div>
       </el-col>
       <el-col :span="3">
-        <el-button @click="nextPage" :disabled="currentPage === totalPages"
-          >下一頁</el-button
-        >
-        <i class="fa-solid fa-chevron-right fa-fade"></i>
+        <i
+          class="fa-solid fa-circle-chevron-right fa-beat-fade fa-2xl"
+          @click="nextPage"
+          :disabled="currentPage === totalPages"
+        ></i>
       </el-col>
     </el-row>
   </div>
@@ -50,6 +53,7 @@
 
 <script setup lang='ts'>
 import { ref, computed, onMounted } from "vue";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const books = ref([]);
 // const randomBooks = ref([]);
