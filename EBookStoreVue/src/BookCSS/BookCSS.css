@@ -1,0 +1,93 @@
+.custom-card {
+    padding: 0px;
+    height: 100%;
+}
+
+.button-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.custom-card {
+    padding: 0px;
+    height: 100%;
+    /* width: 228px; */
+}
+
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    /* justify-content: space-between; */
+    align-items: flex-start;
+    width: 100%;
+}
+
+.button-wrapper {
+    flex: 0 0 50px;
+    /* 调整按钮宽度，确保按钮占用固定宽度 */
+}
+
+.book-title {
+    height: 60px;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.book-card {
+    min-height: 400px;
+}
+
+.card-content {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.cart-button-text {
+    width: 100px;
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.pagination {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.pricecolor {
+    font-size: 13px;
+    color: #f02e2e;
+}
+
+.bottom {
+    margin-top: 13px;
+    line-height: 12px;
+}
+
+.button {
+    padding: 0;
+    float: right;
+}
+
+.image {
+    width: 100%;
+    display: block;
+}
+
+.clearfix:before,
+.clearfix:after {
+    display: table;
+    content: "";
+}
+
+.clearfix:after {
+    clear: both;
+}
