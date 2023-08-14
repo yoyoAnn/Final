@@ -1,4 +1,5 @@
 <template>
+    <br />
     <v-container>
       <v-form @submit.prevent="login">
         <v-card>
@@ -32,6 +33,7 @@
   </template>
   
   <script>
+
   export default {
     data() {
       return {
@@ -57,16 +59,15 @@
         if (response.ok) {
           const data = await response.json(); 
 
-          const memberInfo = {
+          const userInfo = {
             account: this.account,
-            Password: this.password,
+            password: this.password,
             // Id: this.id,
             id: data.userId,
           };
         
-          console.log(memberInfo)
-          localStorage.setItem('memberInfo', JSON.stringify(memberInfo));
-  
+        //   console.log(userInfo)
+          localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
           this.$router.push('/');
         } else {
