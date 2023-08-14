@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EBookStoreAPI.Models;
 using EBookStoreAPI.Models.EFModels;
+using EBookStoreAPI.Models.Infra.CartDapper;
 
 namespace EBookStoreAPI.Controllers
 {
@@ -15,31 +16,44 @@ namespace EBookStoreAPI.Controllers
     public class CartsController : ControllerBase
     {
         private readonly EBookStoreContext _context;
+        private readonly CartGetDapperRepository _cartDapperRepository;
 
-        public CartsController(EBookStoreContext context)
+
+        public CartsController(EBookStoreContext context, CartGetDapperRepository cartDapperRepository)
         {
             _context = context;
+            _cartDapperRepository = cartDapperRepository;
         }
 
         // GET: api/Carts
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Carts>>> GetCarts()
         {
-          if (_context.Carts == null)
-          {
-              return NotFound();
-          }
-            return await _context.Carts.ToListAsync();
+            if (_context.Carts == null)
+            {
+                return NotFound();
+            }
+
+            //return await _context.Carts.ToListAsync();
+            try
+            {
+                var carts = _cartDapperRepository.CartItemLoad();
+                return Ok(carts);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"錯誤訊息: {ex.Message}");
+            }
         }
 
         // GET: api/Carts/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Carts>> GetCarts(int id)
         {
-          if (_context.Carts == null)
-          {
-              return NotFound();
-          }
+            if (_context.Carts == null)
+            {
+                return NotFound();
+            }
             var carts = await _context.Carts.FindAsync(id);
 
             if (carts == null)
@@ -86,10 +100,10 @@ namespace EBookStoreAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Carts>> PostCarts(Carts carts)
         {
-          if (_context.Carts == null)
-          {
-              return Problem("Entity set 'EBookStoreContext.Carts'  is null.");
-          }
+            if (_context.Carts == null)
+            {
+                return Problem("Entity set 'EBookStoreContext.Carts'  is null.");
+            }
             _context.Carts.Add(carts);
             await _context.SaveChangesAsync();
 
