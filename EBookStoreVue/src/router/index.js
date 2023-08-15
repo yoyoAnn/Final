@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import Users from '../views/Users.vue'
 import Cart from '../views/Cart.vue'
 import Article from '../views/Article.vue'
+import Books from '../components/BookDetail.vue'
 import Login from '../views/Login.vue'
 import CustomerMail from '../views/CustomerMail.vue'
 
@@ -32,6 +33,11 @@ const routes = [
     {
         path: '/customerMail',
         component: CustomerMail
+    },
+    {
+        path: '/books/:id',
+        component: Books
+
     }
 ]
 

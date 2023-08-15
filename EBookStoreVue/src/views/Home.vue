@@ -21,7 +21,7 @@
 <script>
 import Categorybar from "@/components/Categorybar.vue";
 import CarouselForBook from "../components/CarouselForBook.vue";
-import Books from "../components/Book.vue";
+import Books from "../views/Book.vue";
 
 export default {
   name: "App",
