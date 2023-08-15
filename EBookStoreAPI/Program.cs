@@ -23,7 +23,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
 {
 	//未登入時會自動導到這個網址
-	option.LoginPath = new PathString("/api/Login/NoLogin");
+	//option.LoginPath = new PathString("/api/Login/NoLogin");
 });
 
 //全域套用

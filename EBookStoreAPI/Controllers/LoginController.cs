@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection.Metadata.Ecma335;
 using System.Security.Claims;
 
@@ -24,31 +25,41 @@ namespace EBookStoreAPI.Controllers
         }
 
         [HttpPost]
-        public string login(LoginDto value)
+        public async Task<IActionResult> Login(LoginDto value)
         {
-            var user = (from u in _context.Users
-                        where u.Account == value.Account
-                        && u.Password == value.Password
-                        select u).SingleOrDefault();
+            var user = await _context.Users.FirstOrDefaultAsync(u =>
+                u.Account == value.Account && u.Password == value.Password);
 
             if (user == null)
             {
-                return "帳號密碼錯誤";
+                return BadRequest("帳號密碼錯誤");
             }
             else
             {
-                var claims = new List<Claim>  //誰驗證成功
-                {
-                    new Claim(ClaimTypes.Name, user.Account),
-                    new Claim("FullName", user.Name),
-                    new Claim("UserId", user.Id.ToString()),
-                   // new Claim(ClaimTypes.Role, "Administrator")
-                };
+                var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Account),
+                new Claim("FullName", user.Name),
+                new Claim("UserId", user.Id.ToString()),
+            };
+
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
-                return "ok";
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(20),
+                };
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    authProperties);
+
+                //return Ok("ok");
+                return Ok(new { UserId = user.Id });
             }
         }
+
 
         [HttpDelete]
         public void logout()
