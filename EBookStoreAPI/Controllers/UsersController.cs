@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using EBookStoreAPI.Models;
 using EBookStoreAPI.Models.EFModels;
+using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 
 namespace EBookStoreAPI.Controllers
 {
@@ -15,13 +17,16 @@ namespace EBookStoreAPI.Controllers
     public class UsersController : ControllerBase
     {
         private readonly EBookStoreContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UsersController(EBookStoreContext context)
+        public UsersController(EBookStoreContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         // GET: api/Users
+        //[Authorize]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Users>>> GetUsers()
         {
@@ -119,6 +124,29 @@ namespace EBookStoreAPI.Controllers
         private bool UsersExists(int id)
         {
             return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        [HttpGet("GetUserId")]
+        public IActionResult GetUserId()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+
+                if (userIdClaim != null)
+                {
+                    int userId = Convert.ToInt32(userIdClaim.Value);
+                    return Ok(userId);
+                }
+                else
+                {
+                    return BadRequest("UserId claim not found.");
+                }
+            }
+            else
+            {
+                return Unauthorized("User not authenticated.");
+            }
         }
     }
 }
