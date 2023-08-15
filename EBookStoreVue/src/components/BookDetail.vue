@@ -1,4 +1,5 @@
 <template>
+  <NavbarC />
   <div class="book-details container">
     <div class="image divimage">
       <img :src="`/src/BooksImage/${book.bookImage}`" />
@@ -101,12 +102,13 @@ const checkout = () => {
 <script lang="ts">
 import { defineComponent } from "vue";
 import Books from "./ChosenBook.vue"; // Adjust the path based on your project structure
+import NavbarC from "./Categorybar.vue";
 
 export default defineComponent({
   components: {
     Books,
+    NavbarC,
   },
-  // Other component options
 });
 </script>
 
