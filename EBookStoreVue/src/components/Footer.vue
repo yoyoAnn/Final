@@ -63,7 +63,7 @@
               <a href="#!" class="text-reset">線上客服</a>
             </p>
             <p>
-              <a href="#!" class="text-reset">客服信箱</a>
+              <a href="/customerMail" class="text-reset">客服信箱</a>
             </p>
           </MDBCol>
           <!-- Grid column -->
