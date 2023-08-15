@@ -11,25 +11,29 @@
                 </p>
             </div>
 
-            <table class="table fixed-cell">
+            <table id="cartItem" class="table fixed-cell">
                 <thead>
                     <tr>
                         <th style="width: 60px;text-align:center; " class="checkWidth">
                             全選：<input type="checkbox" v-model="Allcheck" @change="allcheck" />
                         </th>
-                        <!-- <th>編號</th> -->
+                        <th class="hidden-column">Id</th>
+                        <th class="hidden-column">會員Id</th>
+                        <th class="hidden-column">書本Id</th>
                         <th>書籍名稱</th>
                         <th>書籍簡介</th>
                         <th>價格</th>
                         <th>購買數量</th>
                         <th>小計</th>
-                        <th>操作</th>
+                        <th>動作</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item, index) in books" :key="item.userId">
                         <td><input type="checkbox" v-model="item.check" /></td>
-                        <!-- <td>{{ item.userId }}</td> -->
+                        <td class="hidden-column">{{ item.id }}</td>
+                        <td class="hidden-column">{{ item.userId }}</td>
+                        <td class="hidden-column">{{ item.bookId }}</td>
                         <td>
                             <v-dialog v-model="showImageModal" max-width="70%">
                                 <v-card>
@@ -56,7 +60,9 @@
                             <button @click="increaseQuantity(item)" class="quantityButton">+</button>
                         </td>
                         <td>{{ getprice(item.price * item.qty) }}</td>
-                        <td><button @click="removeItem(index)">移除</button></td>
+                        <td> <button type="button" class="btn btn-danger" @click="removeItem(index)">移除
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -69,6 +75,7 @@
 </template>
   
 <script setup>
+import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
 import 'bootstrap/dist/js/bootstrap.bundle.js';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
@@ -98,8 +105,32 @@ const fetchCartData = async () => {
     }
 };
 
-const removeItem = (index) => {
-    books.value.splice(index, 1);
+const updateQuantity = async (item) => {
+    const data = {
+        id: item.id, // Assuming your item has an 'id' property
+        userId: item.userId,
+        qty: item.qty
+    };
+
+    try {
+        await axios.put(`https://localhost:7261/api/Carts/`, data);
+    } catch (error) {
+        console.error('Error updating quantity:', error);
+        // Rollback the change if update fails
+        item.qty--;
+    }
+};
+
+const removeItem = async (index) => {
+    const itemId = books.value[index].id;
+    console.log(itemId);
+    try {
+        await axios.delete(`https://localhost:7261/api/Carts/${itemId}`);
+        books.value.splice(index, 1);
+    }
+    catch (error) {
+        console.error('Error deleting item:', error);
+    }
 };
 
 const allcheck = () => {
@@ -111,15 +142,17 @@ const allcheck = () => {
 const decreaseQuantity = (item) => {
     if (item.qty > 1) {
         item.qty--;
+        updateQuantity(item);
     }
 };
 
 const increaseQuantity = (item) => {
     item.qty++;
+    updateQuantity(item);
 };
 
 const getprice = (val) => {
-    return '$' + val.toFixed(2);
+    return '$' + val//.toFixed(2);
 };
 
 onMounted(() => {
@@ -141,6 +174,11 @@ const closeModal = () => {
   
 <style scoped>
 /* 你的CSS樣式 */
+
+.hidden-column {
+    display: none;
+}
+
 table {
     border: 1px solid #e9e9e9;
     border-collapse: collapse;

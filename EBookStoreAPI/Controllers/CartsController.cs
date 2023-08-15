@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using EBookStoreAPI.Models;
 using EBookStoreAPI.Models.EFModels;
 using EBookStoreAPI.Models.Infra.CartDapper;
+using EBookStoreAPI.DTOs;
 
 namespace EBookStoreAPI.Controllers
 {
@@ -17,12 +18,14 @@ namespace EBookStoreAPI.Controllers
     {
         private readonly EBookStoreContext _context;
         private readonly CartGetDapperRepository _cartDapperRepository;
+        private readonly CartPutDapperRepository _cartPutDapperRepository;
 
 
-        public CartsController(EBookStoreContext context, CartGetDapperRepository cartDapperRepository)
+        public CartsController(EBookStoreContext context, CartGetDapperRepository cartDapperRepository, CartPutDapperRepository cartPutDapperRepository)
         {
             _context = context;
             _cartDapperRepository = cartDapperRepository;
+            _cartPutDapperRepository = cartPutDapperRepository;
         }
 
         // GET: api/Carts
@@ -64,25 +67,47 @@ namespace EBookStoreAPI.Controllers
             return carts;
         }
 
-        // PUT: api/Carts/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCarts(int id, Carts carts)
+        //// PUT: api/Carts/5
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPut/*("{id}")*/]
+        //public async Task<IActionResult> PutCarts(int id, Carts carts)
+        //{
+        //    if (id != carts.Id)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    _context.Entry(carts).State = EntityState.Modified;
+
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!CartsExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //    return NoContent();
+        //}
+
+        [HttpPut/*("{id}")*/]
+        public async Task<IActionResult> PutCarts(CartsDto carts)
         {
-            if (id != carts.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(carts).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                 _cartPutDapperRepository.CartItemEdit(carts);
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CartsExists(id))
+                if (!CartsExists(carts.Id))
                 {
                     return NotFound();
                 }

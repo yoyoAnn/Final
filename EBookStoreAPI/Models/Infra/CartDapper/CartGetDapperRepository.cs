@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using EBookStoreAPI.Context;
+using EBookStoreAPI.DTOs;
 using EBookStoreAPI.Models.EFModels;
 using Microsoft.Data.SqlClient;
 using System.Text;
@@ -15,14 +16,14 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
         }
 
 
-        public  IEnumerable<CartItemDapperVM> CartItemLoad()
+        public IEnumerable<CartItemDapperVM> CartItemLoad()
         {
             DynamicParameters param = new DynamicParameters(); // Dapper 動態參數
             StringBuilder sql = new StringBuilder();
 
 
             sql.AppendLine(@"
-                            select UserId, [name],[Image],Price,Qty
+                            select Carts.Id,userId,Books.Id as bookId, [name] ,[image],price,qty
                             from Carts
                             left join Books on [Carts].BookId=Books.Id
                             left join BookImages on [Carts].BookId=BookImages.BookId
@@ -42,13 +43,16 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
             }
         }
 
+
         public class CartItemDapperVM
         {
-            public string Image { get; set; }
-            public int UserId { get; set; }
+            public int Id { get; set; }
+            public int bookId { get; set; }
+            public string image { get; set; }
+            public int userId { get; set; }
             public string name { get; set; }
-            public decimal Price { get; set; }
-            public int Qty { get; set; }
+            public decimal price { get; set; }
+            public int qty { get; set; }
         }
 
 

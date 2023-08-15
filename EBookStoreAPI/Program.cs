@@ -41,6 +41,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<CartGetDapperRepository>();
+builder.Services.AddScoped<CartPutDapperRepository>();
 builder.Services.AddSingleton<EbookStoreDepperContext>();
 
 var app = builder.Build();
