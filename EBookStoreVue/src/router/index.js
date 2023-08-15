@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import Users from '../views/Users.vue'
 import Cart from '../views/Cart.vue'
 import Article from '../views/Article.vue'
+import Books from '../components/BookDetail.vue'
 
 //路由設定
 const routes = [
@@ -21,6 +22,11 @@ const routes = [
     {
         path: '/article',
         component: Article
+
+    },
+    {
+        path: '/books/:id',
+        component: Books
 
     }
 ]
