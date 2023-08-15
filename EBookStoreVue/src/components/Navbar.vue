@@ -32,12 +32,22 @@
         </v-responsive>
       </v-col>
       <v-col class="d-flex justify-end" cols="3">
-        <v-btn flat color="grey" router v-if="!$route.path.includes('/Login')" :to="cartRoute">
+        <v-btn
+          flat
+          color="grey"
+          router
+          v-if="!$route.path.includes('/Login')"
+          :to="cartRoute"
+        >
           <v-icon right icon="mdi:mdi-cart" />
         </v-btn>
         <v-menu open-on-hover>
-          <template v-slot:activator="{ props }" >
-            <v-btn color="grey" v-bind="props" v-if="!$route.path.includes('/Login')"> 
+          <template v-slot:activator="{ props }">
+            <v-btn
+              color="grey"
+              v-bind="props"
+              v-if="!$route.path.includes('/Login')"
+            >
               <v-icon right icon="mdi:mdi-account" />
             </v-btn>
           </template>
@@ -52,7 +62,12 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <v-btn flat color="grey" @click="logout" v-if="!$route.path.includes('/Login')">
+        <v-btn
+          flat
+          color="grey"
+          @click="logout"
+          v-if="!$route.path.includes('/Login')"
+        >
           <v-icon right icon="mdi:mdi-exit-to-app" />
         </v-btn>
       </v-col>
@@ -71,20 +86,20 @@ export default {
     ],
     cartRoute: "/cart",
     homeRoute: "/",
-    isLoggedIn: false, 
+    isLoggedIn: false,
   }),
   created() {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     this.isLoggedIn = userInfo && userInfo.id;
   },
   methods: {
     logout() {
-      const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
       if (userInfo && userInfo.id) {
-        localStorage.removeItem('userInfo');
-        this.$router.push('/Login');
+        localStorage.removeItem("userInfo");
+        this.$router.push("/Login");
       } else {
-        this.$router.push('/Login'); 
+        this.$router.push("/Login");
       }
     },
   },
