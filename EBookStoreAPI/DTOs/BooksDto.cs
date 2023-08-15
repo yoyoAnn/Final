@@ -15,6 +15,8 @@
 
         public DateTime PublishDate { get; set; }
 
+        public string PublisherDateTxt => PublishDate.ToString("yyyy/MM/dd");
+
         public string Summary { get; set; }
 
         public string ISBN { get; set; }

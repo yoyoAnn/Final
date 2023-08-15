@@ -25,7 +25,7 @@
             <el-card :body-style="{ padding: '0px' }" class="custom-card">
               <a :href="`/books/${book.id}`">
                 <img
-                  :src="`src/BooksImage/${book.bookImage}`"
+                  :src="`/src/BooksImage/${book.bookImage}`"
                   style="height: 300px; width: auto; max-width: 100%"
                 />
               </a>

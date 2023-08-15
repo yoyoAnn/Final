@@ -35,7 +35,7 @@ const routes = [
         component: CustomerMail
     },
     {
-        path: '/books/:id',
+        path: '/books/:bookid',
         component: Books
 
     }
