@@ -22,13 +22,25 @@ namespace EBookStoreAPI.Controllers
             _configuration = configuration;
             _repo = new BookDapperRepository(_context,_configuration);
         }
-        //123
+        //取得所有書籍
         [HttpGet]
         public async Task<IEnumerable<BooksDto>> GetBooks()
         {
             return await _repo.GetBookItems();
         }
 
+
+        //取得單一書籍資訊
+        [HttpGet("{id}")]
+        public async Task<ActionResult<BooksDto>> GetBookById(int id)
+        {
+            var bookItem = await _repo.GetBookItemById(id);
+            if (bookItem == null)
+            {
+                return NotFound(); // 如果書本不存在，回傳 404 Not Found
+            }
+            return bookItem;
+        }
 
     }
 }
