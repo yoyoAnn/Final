@@ -19,13 +19,18 @@ namespace EBookStoreAPI.Controllers
         private readonly EBookStoreContext _context;
         private readonly CartGetDapperRepository _cartDapperRepository;
         private readonly CartPutDapperRepository _cartPutDapperRepository;
+        private readonly CartPostDapperRepository _cartPostDapperRepository;
+        private readonly CartIdGetDapperRepository _cartIdGetDapperRepository;
 
 
-        public CartsController(EBookStoreContext context, CartGetDapperRepository cartDapperRepository, CartPutDapperRepository cartPutDapperRepository)
+
+        public CartsController(EBookStoreContext context, CartGetDapperRepository cartDapperRepository, CartPutDapperRepository cartPutDapperRepository, CartPostDapperRepository cartPostDapperRepository, CartIdGetDapperRepository cartIdGetDapperRepository)
         {
             _context = context;
             _cartDapperRepository = cartDapperRepository;
             _cartPutDapperRepository = cartPutDapperRepository;
+            _cartPostDapperRepository = cartPostDapperRepository;
+            _cartIdGetDapperRepository = cartIdGetDapperRepository;
         }
 
         // GET: api/Carts
@@ -34,7 +39,7 @@ namespace EBookStoreAPI.Controllers
         {
             if (_context.Carts == null)
             {
-                return NotFound();
+                return NotFound(); 
             }
 
             //return await _context.Carts.ToListAsync();
@@ -49,23 +54,50 @@ namespace EBookStoreAPI.Controllers
             }
         }
 
-        // GET: api/Carts/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Carts>> GetCarts(int id)
+        [HttpPost]
+        [Route("/GetCartsList")]
+        public async Task<ActionResult<Carts>> GetCartsList(CartsDto dto)
         {
             if (_context.Carts == null)
             {
                 return NotFound();
             }
-            var carts = await _context.Carts.FindAsync(id);
 
-            if (carts == null)
+            //return await _context.Carts.ToListAsync();
+            try
             {
-                return NotFound();
+                var carts = _cartIdGetDapperRepository.CartItemLoad(dto);
+                return Ok(carts);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"錯誤訊息: {ex.Message}");
             }
 
-            return carts;
         }
+
+
+        // GET: api/Carts/5
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<IEnumerable<Carts>>> GetCarts(int id)
+        //{
+        //    if (_context.Carts == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    //return await _context.Carts.ToListAsync();
+        //    try
+        //    {
+        //        var carts = _cartIdGetDapperRepository.CartItemLoad(id);
+        //        return Ok(carts);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest($"錯誤訊息: {ex.Message}");
+        //    }
+        //}
+
 
         //// PUT: api/Carts/5
         //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -103,7 +135,7 @@ namespace EBookStoreAPI.Controllers
         {
             try
             {
-                 _cartPutDapperRepository.CartItemEdit(carts);
+                _cartPutDapperRepository.CartItemEdit(carts);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -122,18 +154,38 @@ namespace EBookStoreAPI.Controllers
 
         // POST: api/Carts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost]
+        //public async Task<ActionResult<Carts>> PostCarts(CartsDto carts)
+        //{
+        //    if (_context.Carts == null)
+        //    {
+        //        return Problem("Entity set 'EBookStoreContext.Carts'  is null.");
+        //    }
+        //    _context.Carts.Add(carts);
+        //    await _context.SaveChangesAsync();
+
+        //    return CreatedAtAction("GetCarts", new { id = carts.Id }, carts);
+        //    //return Ok("已新增至購物車");
+        //}
+
         [HttpPost]
-        public async Task<ActionResult<Carts>> PostCarts(Carts carts)
+        public async Task<ActionResult<Carts>> PostCarts(CartsDto carts)
         {
-            if (_context.Carts == null)
+            if (carts == null)
             {
                 return Problem("Entity set 'EBookStoreContext.Carts'  is null.");
             }
-            _context.Carts.Add(carts);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCarts", new { id = carts.Id }, carts);
-            //return Ok("已新增至購物車");
+            try
+            {
+                await _cartPostDapperRepository.CartItemPost(carts);
+                return Ok("已新增至購物車");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"錯誤訊息: {ex.Message}");
+            }
+
         }
 
         // DELETE: api/Carts/5
