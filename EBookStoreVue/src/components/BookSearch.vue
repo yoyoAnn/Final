@@ -1,13 +1,17 @@
 <template>
   <NavbarC />
-  <h2>本日推薦</h2>
+
   <div class="row">
     <div class="col-3"></div>
     <div class="col-6"></div>
     <div class="col-3"></div>
   </div>
+  <!-- 注目新書 -->
 
-  <div>
+  <!-- 全部書籍 -->
+
+  <div class="container">
+    <h2>全部書籍</h2>
     <el-row class="button-row">
       <el-col :span="1">
         <i
@@ -23,7 +27,10 @@
             :key="index"
             :span="6"
           >
-            <el-card :body-style="{ padding: '0px' }" class="custom-card">
+            <el-card
+              :body-style="{ padding: '0px' }"
+              style="margin-right: 10px"
+            >
               <a :href="`/books/${book.id}`">
                 <img
                   :src="`/src/BooksImage/${book.bookImage}`"
@@ -66,6 +73,15 @@ const itemsPerPage = 4;
 const category = ref("");
 category.value = route.params.category;
 
+const newBooks = computed(() => {
+  const sortedDisplayedBooks = filteredBooks.value
+    .slice()
+    .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+  const startIndex = (currentPage.value - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  return sortedDisplayedBooks.slice(startIndex, endIndex);
+});
+
 const loadBooks = async () => {
   try {
     const response = await fetch("https://localhost:7261/api/Books");
@@ -97,13 +113,6 @@ const filteredBooks = computed(() => {
   }
   return books.value.filter((book) => book.categoryName === category.value);
 });
-
-//隨機選擇指定數量書籍
-
-// const getRandomBooks = computed(() => {
-//   const shuffledBooks = books.value.sort(() => 0.5 - Math.random());
-//   return shuffledBooks.slice(0, numberOfRandomBooks);
-// });
 
 //分頁邏輯
 const totalPages = computed(() =>
@@ -140,5 +149,8 @@ export default defineComponent({
 </script>
   
   <style src="../BookCSS/BookCSS.css">
+.cuscard {
+  margin: 10px;
+}
 </style>
     
