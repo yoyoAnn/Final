@@ -86,14 +86,12 @@ onMounted(() => {
 
 const addToCart = () => {
   if (book.value.stock > 0) {
-    // Add your logic to handle adding to cart
     book.value.stock--;
   }
 };
 
 const checkout = () => {
   if (book.value.stock > 0) {
-    // Add your logic to handle checkout
     book.value.stock--;
   }
 };
@@ -101,7 +99,7 @@ const checkout = () => {
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import Books from "./ChosenBook.vue"; // Adjust the path based on your project structure
+import Books from "./ChosenBook.vue";
 import NavbarC from "./Categorybar.vue";
 
 export default defineComponent({
