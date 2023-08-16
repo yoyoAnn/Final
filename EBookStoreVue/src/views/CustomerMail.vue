@@ -1,49 +1,15 @@
 <template>
   <div class="container-fluid m-3">
-    <form>
-      <v-select
-        variant="outlined"
-        v-model="state.select"
-        :items="items"
-        :error-messages="v$.select.$errors.map((e) => e.$message)"
-        label="問題種類"
-        required
-        @change="v$.select.$touch"
-        @blur="v$.select.$touch"
-      ></v-select>
-
-      <v-text-field
-        variant="outlined"
-        v-model="state.email"
-        :error-messages="v$.email.$errors.map((e) => e.$message)"
-        label="E-mail"
-        required
-        @input="v$.email.$touch"
-        @blur="v$.email.$touch"
-      ></v-text-field>
-
-      <v-text-field
-        variant="outlined"
-        v-model="state.name"
-        :error-messages="v$.name.$errors.map((e) => e.$message)"
-        :counter="10"
-        label="帳號"
-        required
-        @input="v$.name.$touch"
-        @blur="v$.name.$touch"
-      ></v-text-field>
-      <v-textarea label="Label" variant="outlined"></v-textarea>
-      <v-checkbox
-        v-model="state.checkbox"
-        :error-messages="v$.checkbox.$errors.map((e) => e.$message)"
-        label="Do you agree?"
-        required
-        @change="v$.checkbox.$touch"
-        @blur="v$.checkbox.$touch"
-      ></v-checkbox>
-
-      <v-btn class="me-4" @click="v$.$validate"> submit </v-btn>
-      <v-btn @click="clear"> clear </v-btn>
+    <form class="form-group" action="">
+      <input class="form-control mt-3 w-50" type="text" v-model="form.UserAccount" placeholder="會員帳號" />
+      <input class="form-control mt-3 w-50" type="email" v-model="form.Email" placeholder="Email" />
+      <input class="form-control mt-3 w-50" type="text" v-model="form.OrderId" placeholder="您的訂單編號(如沒有可不填)" />
+      <select class="form-control mt-3 w-50" v-model="form.ProblemTypeId">
+        <option value="" disabled selected>問題種類</option>
+        <option v-for="(item, i) in problemTypes" :value="i + 1">{{ item }}</option>
+      </select>
+      <textarea class="form-control mt-3 w-50" v-model="form.ProblemStatement" placeholder="問題敘述"></textarea>
+      <input class="btn btn-primary mt-3" type="button" name="submit" id="" @click="submitMail" value="送出">
     </form>
   </div>
 </template>
@@ -53,51 +19,42 @@ import { useVuelidate } from "@vuelidate/core";
 import { email, required } from "@vuelidate/validators";
 import "bootstrap/dist/js/bootstrap.bundle.js";
 import { ref, reactive, onMounted } from "vue";
+import axios from 'axios';
 
-const initialState = {
-  name: "",
-  email: "",
-  select: null,
-  checkbox: null,
-};
-
-const state = reactive({
-  ...initialState,
-});
-
-const items = ["Item 1", "Item 2", "Item 3", "Item 4"];
-
-const rules = {
-  name: { required },
-  email: { required, email },
-  select: { required },
-  items: { required },
-  checkbox: { required },
-};
-
-const v$ = useVuelidate(rules, state);
-
-function clear() {
-  v$.value.$reset();
-
-  for (const [key, value] of Object.entries(initialState)) {
-    state[key] = value;
-  }
-}
-
-const mail = ref([]);
+const baseAddress = `https://localhost:7261`
+const problemTypes = ref([]);
+// problemTypes.push("問題種類");
 const loadProducts = async () => {
   const response = await fetch(
-    `https://localhost:7261/api/CustomerServiceMails`
+    `${baseAddress}/api/CustomerServiceMails`
   );
   const datas = await response.json();
-  mail.value = datas;
-  console.log(mail.value);
+  for (let i = 0; i < datas.length; i++) {
+    problemTypes.value[i] = datas[i].name;
+  }
 };
+
+const form = {
+  Id: 0,
+  UserAccount: "",
+  Email: "",
+  OrderId: null,
+  ProblemTypeId: "",
+  ProblemStatement: "",
+};
+
+const submitMail = () => {
+  console.log(form);
+  axios.post(`${baseAddress}/api/CustomerServiceMails`, form).then(response => {
+    alert("成功");
+  }).catch(err => {
+    alert(err);
+  });
+};
+
 onMounted(() => {
   loadProducts();
 });
 </script>
     
-<style>
-</style>
+<style></style>
