@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
+import mkcert from "vite-plugin-mkcert";
 
 const path = require('path')
 
@@ -12,7 +13,14 @@ export default defineConfig({
     vuetify({
       autoImport: true,
     }),
+    mkcert(),
   ],
+  // server: {
+  //   https: {
+  //     key: fs.readFileSync(`${__dirname}/src/assets/localhost-key.pem`),
+  //     cert: fs.readFileSync(`${__dirname}/src/assets/localhost.pem`),
+  //   },
+  // },
   define: { 'process.env': {} },
   resolve: {
     alias: {
@@ -32,7 +40,4 @@ export default defineConfig({
     ]
   },
   */
-  devServer: {
-    https: true,
-  },
 })

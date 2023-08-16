@@ -1,6 +1,10 @@
 using EBookStoreAPI.Models;
+using EBookStoreAPI.Context;
 using EBookStoreAPI.Models.EFModels;
+using EBookStoreAPI.Models.Infra.CartDapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +15,22 @@ builder.Services.AddDbContext<EBookStoreContext>(options =>
 	options.UseSqlServer(EBookStoreConnectionString);
 });
 
+
 builder.Services.AddControllers();
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+{
+	//���n�J�ɷ|�۰ʾɨ�o�Ӻ�}
+	//option.LoginPath = new PathString("/api/Login/NoLogin");
+});
+
+//����M��
+//builder.Services.AddMvc(options =>
+//{
+//    options.Filters.Add(new AuthorizeFilter());
+//});
 
 builder.Services.AddCors(options => {
 	options.AddPolicy("AllowAll", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
@@ -20,6 +39,9 @@ builder.Services.AddCors(options => {
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<CartGetDapperRepository>();
+builder.Services.AddSingleton<EbookStoreDepperContext>();
 
 var app = builder.Build();
 
@@ -31,9 +53,14 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowAll");
+
+app.UseCookiePolicy();
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapControllers();
 

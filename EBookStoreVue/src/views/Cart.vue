@@ -1,121 +1,199 @@
 <template>
-    <section class="h-100 h-custom">
-        <div class="container py-5 h-100">
-            <div class="row d-flex justify-content-center align-items-center h-100">
-                <div class="col">
-                    <div class="card border-0">
-                        <div class="card-body p-4">
+    <div style="overflow-y: scroll;">
+        <div v-if="books.length" class="container">
+            <h5 class="mt-2">
+                <router-link class="text-body" to="/"><i class="fas fa-long-arrow-alt-left me-2"></i>繼續購物</router-link>
+            </h5>
 
-                            <div class="row">
-                                <div class="col-lg-7">
-                                    <h5 class="mb-3"><router-link class="text-body" to="/"><i
-                                                class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping</router-link>
-                                    </h5>
-                                    <hr>
-
-                                    <div class="d-flex justify-content-between align-items-center mb-4">
-                                        <div>
-                                            <p class="mb-0">You have {{ books.length }} items in your
-                                                cart</p>
-                                        </div>
-                                    </div>
-
-                                    <div v-for="item in books" class="card mb-3 shadow-sm border-0" :key="item.id">
-                                        <div class="card-body">
-                                            <div class="d-flex justify-content-between">
-                                                <div class="d-flex flex-row align-items-center">
-                                                    <div>
-                                                        <img :src="item.image" class="img-fluid rounded-3"
-                                                            alt="Shopping item" style="width: 65px;">
-                                                    </div>
-                                                    <div class="ms-3">
-                                                        <p>{{ item.bookId }}</p> <!-- Display item name -->
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex flex-row align-items-center">
-                                                    <div>
-                                                        <CartAddRemove :product="item" />
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex flex-row align-items-center">
-                                                    <div>
-                                                        <h5 class="mb-0"><i class="bi bi-currency-dollar"></i>{{ item.Price
-                                                            * item.qty }}</h5>
-                                                        <small v-if="item.hasDiscount"
-                                                            class="text-muted text-decoration-line-through">
-                                                            <i class="bi bi-currency-dollar"></i>{{ item.price }}</small>
-                                                    </div>
-                                                    <a role="button" @click="removeItem(item)" class="ms-4"
-                                                        style="color: #cecece;">
-                                                        <i class="bi bi-trash3 h4"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <h2>test</h2>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
+            <div>
+                <p>
+                    您的購物車裡有 {{ books.length }} 項商品
+                </p>
             </div>
+
+            <table class="table fixed-cell">
+                <thead>
+                    <tr>
+                        <th style="width: 60px;text-align:center; " class="checkWidth">
+                            全選：<input type="checkbox" v-model="Allcheck" @change="allcheck" />
+                        </th>
+                        <!-- <th>編號</th> -->
+                        <th>書籍名稱</th>
+                        <th>書籍簡介</th>
+                        <th>價格</th>
+                        <th>購買數量</th>
+                        <th>小計</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item, index) in books" :key="item.userId">
+                        <td><input type="checkbox" v-model="item.check" /></td>
+                        <!-- <td>{{ item.userId }}</td> -->
+                        <td>
+                            <v-dialog v-model="showImageModal" max-width="70%">
+                                <v-card>
+                                    <v-card-actions class="justify-end">
+                                        <v-btn icon @click="closeModal">
+                                            <v-icon>mdi-close</v-icon>
+                                        </v-btn>
+                                    </v-card-actions>
+                                    <v-card-text>
+                                        <img :src="`src/BooksImage/${selectedImage}`" alt="書籍圖片" class="full-image" />
+                                    </v-card-text>
+                                </v-card>
+                            </v-dialog>
+                            <img :src="`src/BooksImage/${item.image}`" alt="書籍圖片" class="book-image body-sm"
+                                @click="showModal(item.image)" />
+                        </td>
+
+                        <td>{{ item.name }}</td>
+                        <td>{{ getprice(item.price) }}</td>
+                        <td style="white-space: nowrap;">
+                            <button @click="decreaseQuantity(item)" :disabled="item.qty <= 1"
+                                class="quantityButton">-</button>
+                            {{ item.qty }}
+                            <button @click="increaseQuantity(item)" class="quantityButton">+</button>
+                        </td>
+                        <td>{{ getprice(item.price * item.qty) }}</td>
+                        <td><button @click="removeItem(index)">移除</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <h2>總計：{{ getprice(totalprice) }}</h2>
         </div>
-    </section>
+        <div v-else class="container">
+            <h2>購物車無內容</h2>
+        </div>
+    </div>
 </template>
-<script>
-import CartAddRemove from '../components/CartAddRemove.vue';
-import { ref, reactive, onMounted } from "vue"
+  
+<script setup>
+import 'bootstrap/dist/js/bootstrap.bundle.js';
+import { ref, computed, onMounted } from 'vue';
+import axios from 'axios';
 
-export default {
-    components: { CartAddRemove },
-    setup() {
-        const books = ref([])
 
-        const removeItem = async (item) => {
-            try {
-                const response = await fetch(`https://localhost:7261/api/Carts/${item.id}`, {
-                    method: 'DELETE',
-                });
+const books = ref([]);
 
-                if (response.ok) {
-                    // Remove the item from the local array
-                    const itemIndex = books.value.findIndex((cartItem) => cartItem.id === item.id);
-                    if (itemIndex !== -1) {
-                        books.value.splice(itemIndex, 1);
-                    }
-                } else {
-                    console.error('Failed to remove item from cart.');
-                }
-            } catch (error) {
-                console.error('An error occurred:', error);
-            }
-        };
+const Allcheck = ref(true);
 
-        const loadProducts = async function () {
-            try {
-                const response = await fetch(`https://localhost:7261/api/Carts`, { method: "Get" })
-                const datas = await response.json()
+const totalprice = computed(() => {
+    return books.value.reduce((total, item) => {
+        return item.check ? total + item.price * item.qty : total;
+    }, 0);
+});
 
-                books.value = datas
-                console.log(books.value)
-            }
-            catch (error) {
-                console.error('錯誤原因:', error);
-            }
-        };
+const fetchCartData = async () => {
+    try {
+        const response = await axios.get('https://localhost:7261/api/Carts');
+        books.value = response.data;
 
-        onMounted(function () {
-            loadProducts();
+        // 將每個項目的check屬性設置為true
+        books.value.forEach((item) => {
+            item.check = true;
         });
+    } catch (error) {
+        console.error('Error fetching cart data:', error);
+    }
+};
 
-        return {
-            books,
-            removeItem,
-        };
-    },
+const removeItem = (index) => {
+    books.value.splice(index, 1);
+};
+
+const allcheck = () => {
+    books.value.forEach((element) => {
+        element.check = Allcheck.value;
+    });
+};
+
+const decreaseQuantity = (item) => {
+    if (item.qty > 1) {
+        item.qty--;
+    }
+};
+
+const increaseQuantity = (item) => {
+    item.qty++;
+};
+
+const getprice = (val) => {
+    return '$' + val.toFixed(2);
+};
+
+onMounted(() => {
+    fetchCartData();
+});
+
+const showImageModal = ref(false);
+const selectedImage = ref('');
+
+const showModal = (image) => {
+    selectedImage.value = image;
+    showImageModal.value = true;
+};
+
+const closeModal = () => {
+    showImageModal.value = false;
+};
+</script>
+  
+<style scoped>
+/* 你的CSS樣式 */
+table {
+    border: 1px solid #e9e9e9;
+    border-collapse: collapse;
+    border-spacing: 0;
 }
 
-</script>
+#app {
+    margin: 0 auto;
+}
+
+th,
+td {
+    padding: 8px 16px;
+    border: 1px solid #e9e9e9;
+    text-align: left;
+    width: 100px;
+    text-align: center;
+}
+
+th {
+    background-color: #f7f7f7;
+    color: #5c6b77;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.checkWidth {
+    width: 60px !important;
+}
+
+.quantityButton {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.quantityButton:hover {
+    background-color: #0056b3;
+}
+
+img {
+    object-fit: cover;
+    width: 50%;
+}
+
+.full-image {
+    width: 100%;
+    height: auto;
+    max-height: 100vh;
+    object-fit: contain;
+    cursor: pointer;
+}
+</style>
