@@ -7,3 +7,6 @@ D:\Final_ann\EBookStoreVue\bin\Microsoft.NodejsTools.WebRole.dll
 D:\EBookStore.Site.Final\EBookStoreVue\obj\Debug\EBookStoreVue.njsproj.AssemblyReference.cache
 D:\EBookStore.Site.Final\EBookStoreVue\obj\Debug\EBookStoreVue.njsproj.CoreCompileInputs.cache
 D:\EBookStore.Site.Final\EBookStoreVue\bin\Microsoft.NodejsTools.WebRole.dll
+D:\FUEN\VUE\FINAL\EBookStore\EBookStoreVue\obj\Debug\EBookStoreVue.njsproj.AssemblyReference.cache
+D:\FUEN\VUE\FINAL\EBookStore\EBookStoreVue\obj\Debug\EBookStoreVue.njsproj.CoreCompileInputs.cache
+D:\FUEN\VUE\FINAL\EBookStore\EBookStoreVue\bin\Microsoft.NodejsTools.WebRole.dll
