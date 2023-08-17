@@ -5,6 +5,7 @@ using EBookStoreAPI.Models.Infra.CartDapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using EBookStoreAPI.Models.DapperRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,11 +23,11 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
 {
-	//¥¼µn¤J®É·|¦Û°Ê¾É¨ì³o­Óºô§}
+	//ï¿½ï¿½ï¿½nï¿½Jï¿½É·|ï¿½Û°Ê¾É¨ï¿½oï¿½Óºï¿½}
 	//option.LoginPath = new PathString("/api/Login/NoLogin");
 });
 
-//¥þ°ì®M¥Î
+//ï¿½ï¿½ï¿½ï¿½Mï¿½ï¿½
 //builder.Services.AddMvc(options =>
 //{
 //    options.Filters.Add(new AuthorizeFilter());
@@ -40,7 +41,11 @@ builder.Services.AddCors(options => {
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<CSMailsDapperRepository>();
+builder.Services.AddScoped<CartIdGetDapperRepository>();
+builder.Services.AddScoped<CartPostDapperRepository>();
 builder.Services.AddScoped<CartGetDapperRepository>();
+builder.Services.AddScoped<CartPutDapperRepository>();
 builder.Services.AddSingleton<EbookStoreDepperContext>();
 
 var app = builder.Build();
