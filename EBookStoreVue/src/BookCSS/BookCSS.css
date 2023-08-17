@@ -63,13 +63,15 @@
 }
 
 .pricecolor {
-    font-size: 13px;
+    font-size: 16px;
     color: #f02e2e;
+    justify-content: center;
 }
 
 .bottom {
     margin-top: 13px;
     line-height: 12px;
+    justify-content: center;
 }
 
 .button {

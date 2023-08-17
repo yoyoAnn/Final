@@ -6,6 +6,7 @@ import Article from '../views/Article.vue'
 import Books from '../components/BookDetail.vue'
 import Login from '../views/Login.vue'
 import CustomerMail from '../views/CustomerMail.vue'
+import BookSearch from '../components/BookSearch.vue'
 
 //路由設定
 const routes = [
@@ -35,8 +36,13 @@ const routes = [
         component: CustomerMail
     },
     {
-        path: '/books/:id',
+        path: '/books/:bookid',
         component: Books
+    },
+    {
+        path: '/booksearch/:category',
+        name: 'book-search',
+        component: BookSearch
 
     }
 ]
