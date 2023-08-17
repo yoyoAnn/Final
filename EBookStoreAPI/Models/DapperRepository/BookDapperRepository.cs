@@ -72,7 +72,7 @@ namespace EBookStoreAPI.Models.DapperRepository
         /// <returns>書本資訊</returns>
         public int GetCategoryIdByCategoryName(string CategoryName)
         {
-            string sql = $@"SELECT B.Id
+            string sql = $@"SELECT C.Id
                             FROM Books as B
                             LEFT JOIN Categories as C ON B.CategoryId = C.Id
                             WHERE C.Name = @CategoryName";
@@ -80,6 +80,23 @@ namespace EBookStoreAPI.Models.DapperRepository
             int categoryId = _connection.QueryFirstOrDefault<int>(sql, new { CategoryName });
 
             return categoryId;
+        }
+        /// <summary>
+        /// 從ID獲取分類名稱
+        /// </summary>
+        /// <param name="CategoryName"></param>
+        /// <returns></returns>
+
+        public string GetCategoryNameByCategoryId(int CategoryId)
+        {
+            string sql = $@"SELECT C.Name
+                            FROM Books as B
+                            LEFT JOIN Categories as C ON B.CategoryId = C.Id
+                            WHERE C.Id = @CategoryId";
+
+            string categoryName = _connection.QueryFirstOrDefault<string>(sql, new { CategoryId });
+
+            return categoryName;
         }
 
 
@@ -90,7 +107,7 @@ namespace EBookStoreAPI.Models.DapperRepository
         /// <returns>書本資訊</returns>
         public int GetPublisherIdByPublisherName(string PublisherName)
         {
-            string sql = $@"SELECT B.Id
+            string sql = $@"SELECT P.Id
                             FROM Books as B
                             LEFT JOIN Publishers as P ON B.PublisherId = P.Id
                             WHERE P.Name = @PublisherName";
@@ -98,6 +115,24 @@ namespace EBookStoreAPI.Models.DapperRepository
             int PublisherId = _connection.QueryFirstOrDefault<int>(sql, new { PublisherName });
 
             return PublisherId;
+        }
+
+
+        /// <summary>
+        /// 從出版商Id取得出版商名稱
+        /// </summary>
+        /// <param name="bookId">書本的 ID</param>
+        /// <returns>書本資訊</returns>
+        public string GetPublisherNameByPublisherId(int PublisherId)
+        {
+            string sql = $@"SELECT P.Name
+                            FROM Books as B
+                            LEFT JOIN Publishers as P ON B.PublisherId = P.Id
+                            WHERE P.Id = @PublisherId";
+
+            string PublisherName = _connection.QueryFirstOrDefault<string>(sql, new { PublisherId });
+
+            return PublisherName;
         }
     }
 }

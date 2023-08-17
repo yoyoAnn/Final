@@ -20,8 +20,8 @@
         <v-responsive max-height="100" max-width="500">
           <el-autocomplete
             class=""
-            v-model="searchInput.value"
-            :fetch-suggestions="querySearch"
+            v-model="searchInput"
+            :fetch-suggestions="querySearchAsync"
             placeholder="搜尋"
             @keydown.enter="goToSearchPage"
             @select="handleSelect"
@@ -97,88 +97,76 @@ isLoggedIn.value = userInfo && userInfo.id;
 
 //查詢邏輯
 
-function handleKeyDown(event) {
-  if (event.key === "Enter") {
-    goToSearchPage();
+const state = ref("");
+
+interface LinkItem {
+  value: string;
+  categoryName: string;
+  publisherName: string;
+}
+
+const links = ref<LinkItem[]>([]);
+
+async function loadAll(queryString: string) {
+  if (queryString) {
+    try {
+      const apiUrl = "https://localhost:7261/api/Books/filter";
+      const bookDto = {
+        Name: queryString,
+        ISBN: queryString,
+        CategoryName: queryString,
+        PublisherName: queryString,
+        Id: 0,
+      };
+
+      const response = await axios.post(apiUrl, bookDto);
+      console.log("Response Data:", response.data); //測試
+      if (response.status === 200) {
+        links.value = response.data.map((result: any) => {
+          return {
+            value: result.name,
+            categoryName: result.categoryName,
+            publisherName: result.publisherName,
+          };
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching suggestions from backend:", error);
+    }
   }
 }
 
+let timeout: NodeJS.Timeout;
+const querySearchAsync = (
+  queryString: string,
+  cb: (suggestions: any[]) => void
+) => {
+  loadAll(queryString); // 獲取後端查詢結果
+
+  console.log("Links:", links.value); //測試
+
+  clearTimeout(timeout);
+  timeout = setTimeout(() => {
+    cb(links.value);
+  }, 3000 * Math.random());
+};
+
+const handleSelect = (item: LinkItem) => {
+  console.log(item);
+};
+
+onMounted(() => {
+  loadAll("");
+});
+
 const router = useRouter();
 function goToSearchPage() {
-  router.push({ name: "book-searchall" });
+  router.push({
+    name: "book-searchall",
+    query: { searchString: searchInput.value },
+  });
 }
 </script>
 
 
-
-
-<!-- <script lang="ts">
-import { useRouter } from "vue-router";
-import axios from "axios";
-import { ref } from "vue";
-
-export default {
-  data: () => ({
-    useritems: [
-      { title: "會員中心", route: "/Users" },
-      { title: "歷史訂單", route: "/" },
-      { title: "收藏專欄", route: "/" },
-    ],
-    cartRoute: "/cart",
-    homeRoute: "/",
-    isLoggedIn: false,
-    searchInput: "",
-  }),
-  created() {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    this.isLoggedIn = userInfo && userInfo.id;
-  },
-  methods: {
-    logout() {
-      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-      if (userInfo && userInfo.id) {
-        localStorage.removeItem("userInfo");
-        this.$router.push("/Login");
-      } else {
-        this.$router.push("/Login");
-      }
-    },
-    async querySearch(query) {
-      try {
-        const apiUrl = "https://localhost:7261/api/Books";
-        const response = await axios.get(apiUrl);
-
-        if (response.status === 200) {
-          console.log(response.data);
-
-          const allBooks = response.data;
-          const filteredBooks = allBooks.filter((book) => {
-            return (
-              book.name?.includes(query) ||
-              book.isbn?.includes(query) ||
-              book.categoryName?.includes(query) ||
-              book.publisherName?.includes(query)
-            );
-          });
-          return filteredBooks;
-        }
-      } catch (error) {
-        console.error("Error fetching suggestions:", error);
-      }
-      return [];
-    },
-    goToSearchPage() {
-      const router = useRouter();
-      router.push({ name: "book-searchall" });
-    },
-    handleKeyDown(event) {
-      if (event.key === "Enter") {
-        this.goToSearchPage();
-      }
-    },
-  },
-};
-</script> -->
-
-    
 <style></style>

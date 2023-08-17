@@ -88,16 +88,8 @@ const books = ref([]);
 const currentPage = ref(1);
 const itemsPerPage = 12;
 const category = ref("");
-category.value = route.params.category;
 
-const newBooks = computed(() => {
-  const sortedDisplayedBooks = filteredBooks.value
-    .slice()
-    .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return sortedDisplayedBooks.slice(startIndex, endIndex);
-});
+const searchString = ref("");
 
 const loadBooks = async () => {
   try {
@@ -107,6 +99,20 @@ const loadBooks = async () => {
     }
     const datas = await response.json();
     books.value = datas;
+
+    // Filter books based on search keyword
+    if (searchString.value) {
+      books.value = books.value.filter((book) => {
+        const keyword = searchString.value.toLowerCase();
+        return (
+          book.name.toLowerCase().includes(keyword) ||
+          book.isbn.toLowerCase().includes(keyword) ||
+          book.categoryName.toLowerCase().includes(keyword) ||
+          book.publisherName.toLowerCase().includes(keyword)
+        );
+      });
+    }
+
     console.log(category.value);
   } catch (error) {
     console.error("Error loading books:", error);
@@ -114,11 +120,12 @@ const loadBooks = async () => {
 };
 
 onMounted(() => {
+  searchString.value = route.query.searchString || "";
   loadBooks();
 });
 
 watch(route, () => {
-  category.value = route.params.category;
+  searchString.value = route.query.searchString || "";
   loadBooks();
   currentPage.value = 1;
 });

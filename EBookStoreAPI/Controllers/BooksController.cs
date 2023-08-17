@@ -5,6 +5,7 @@ using EBookStoreAPI.Models.EFModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EBookStoreAPI.Controllers
 {
@@ -44,20 +45,23 @@ namespace EBookStoreAPI.Controllers
 
 
         [HttpPost("filter")]
-        public async Task<IEnumerable<BooksDto>> FilterBooks([FromBody]BooksDto bookDto)
+        public async Task<IEnumerable<BooksSearchDto>> FilterBooks([FromBody]BooksSearchDto bookDto)
         {
-            return _context.Books.Where(book => book.Id == bookDto.Id ||
+            var filteredBooks = _context.Books.Where(book => book.Id == bookDto.Id ||
                                               book.Isbn.Contains(bookDto.ISBN) ||
                                               book.CategoryId == _repo.GetCategoryIdByCategoryName(bookDto.CategoryName) ||
                                               book.Name.Contains(bookDto.Name) ||
                                               book.PublisherId == _repo.GetPublisherIdByPublisherName(bookDto.PublisherName))
-                                              .Select(book=> new BooksDto
+                                              .Select(book=> new BooksSearchDto
                                               {
+                                                  Id = book.Id,
                                                   Name = book.Name,
-                                                  CategoryName = bookDto.CategoryName,
-                                                  PublisherName = bookDto.PublisherName,
+                                                  CategoryName = _repo.GetCategoryNameByCategoryId(book.CategoryId),
+                                                  PublisherName = _repo.GetPublisherNameByPublisherId(book.PublisherId),
                                                   ISBN = book.Isbn
                                               });
+
+            return await filteredBooks.ToListAsync();
         }
 
     }
