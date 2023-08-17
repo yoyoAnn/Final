@@ -6,6 +6,7 @@ import Article from '../views/Article.vue'
 import Books from '../components/BookDetail.vue'
 import Login from '../views/Login.vue'
 import CustomerMail from '../views/CustomerMail.vue'
+import Orders from '../views/Orders.vue'
 
 //路由設定
 const routes = [
@@ -38,6 +39,10 @@ const routes = [
         path: '/books/:id',
         component: Books
 
+    },
+    {
+        path: '/orders',
+        component: Orders
     }
 ]
 

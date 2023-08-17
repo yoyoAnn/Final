@@ -4,7 +4,7 @@
             <v-card>
                 <v-tabs v-model="tab" color="deep-purple-accent-4" align-tabs="center">
                     <v-tab :value="1">購物車</v-tab>
-                    <v-tab :value="2">訂購人資訊</v-tab>
+                    <v-tab :value="2">收件人資訊</v-tab>
                 </v-tabs>
                 <v-window v-model="tab">
                     <v-window-item :value="1">
@@ -73,7 +73,9 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <h2>總計：{{ getprice(totalprice) }}</h2>
+                        <h2><span style="color: blue;">小計</span>+<span style="color: red;">運費</span>：<span
+                                style="color: blue;">{{ getprice(totalprice)
+                                }}</span> + <span style="color: red;">60</span> ={{ getprice(totalprice + 60) }} </h2>
 
                     </v-window-item>
 
@@ -123,6 +125,34 @@
         <div v-else class="container">
             <h2>購物車無內容</h2>
         </div>
+
+
+        <!-- Vuetify的Modal -->
+        <v-dialog v-model="showModalcart" max-width="600px">
+            <v-card>
+                <v-card-title>結賬確認</v-card-title>
+                <v-card-text>
+                    <!-- 顯示購物車項目 -->
+                    <div v-for="item in cartItems" :key="item.name">
+                        名稱: {{ item.name }}<br>
+                        價格: {{ item.price }}<br>
+                        數量: {{ item.qty }}<br>
+                        <hr>
+                    </div>
+
+                    <form ref="paymentForm" method="POST"
+                        action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5">
+                        <div v-for="(value, key) in cartItemsresponse" :key="key">
+                            <input type="hidden" :name="key" :value="value">
+                        </div>
+                    </form>
+                </v-card-text>
+                <v-card-actions>
+                    <v-btn color="red" @click="showModalcart = false">取消</v-btn>
+                    <v-btn color="green" @click="submitForm">前往付款</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 
@@ -131,6 +161,7 @@
 
 import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
 import 'bootstrap/dist/js/bootstrap.bundle.js';
+import router from '../router/index.js';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 
@@ -140,8 +171,11 @@ const books = ref([]);
 
 const Allcheck = ref(true);
 
+const showModalcart = ref(false)
+const cartItemsresponse = ref([]);
+const cartItems = ref([]);
 const ReceiverName = ref('');
-const ReceiverNameError = ref('');
+const receiverNameError = ref('');
 const ReceiverPhone = ref('');
 const receiverPhoneError = ref('');
 const TaxIdNum = ref('');
@@ -155,15 +189,21 @@ const validate = () => {
     let valid = true;
 
     // 收件人姓名驗證
-    if (ReceiverName.value.length > 255) {
-        ReceiverNameError.value = '收件人姓名不能超過255個字';
+    if (!ReceiverName.value.trim()) {
+        receiverNameError.value = '收件人姓名不能為空';
+        valid = false;
+    } else if (ReceiverName.value.length > 255) {
+        receiverNameError.value = '收件人姓名不能超過255個字';
         valid = false;
     } else {
-        ReceiverNameError.value = '';
+        receiverNameError.value = '';
     }
 
     // 手機載具驗證
-    if (!/^[A-Za-z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]{8}$/.test(TaxIdNum.value)) {
+    if (!TaxIdNum.value.trim()) {
+        taxIdNumError.value = '手機載具不能為空';
+        valid = false;
+    } else if (!/^[A-Za-z0-9!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]{8}$/.test(TaxIdNum.value)) {
         taxIdNumError.value = '手機載具僅能8碼的英數字符號';
         valid = false;
     } else {
@@ -171,7 +211,10 @@ const validate = () => {
     }
 
     // 手機號碼驗證
-    if (ReceiverPhone.value.length !== 10) {
+    if (!ReceiverPhone.value.trim()) {
+        receiverPhoneError.value = '手機號碼不能為空';
+        valid = false;
+    } else if (ReceiverPhone.value.length !== 10) {
         receiverPhoneError.value = '手機號碼僅能十碼';
         valid = false;
     } else {
@@ -179,7 +222,10 @@ const validate = () => {
     }
 
     // 收件地址驗證
-    if (ReceiverAddress.value.length > 255) {
+    if (!ReceiverAddress.value.trim()) {
+        receiverAddressError.value = '收件地址不能為空';
+        valid = false;
+    } else if (ReceiverAddress.value.length > 255) {
         receiverAddressError.value = '收件地址不能超過255個字';
         valid = false;
     } else {
@@ -197,7 +243,7 @@ const validate = () => {
     return valid;
 };
 
-const handleCheckout = () => {
+const handleCheckout = async () => {
     // 在此可以進行任何其他結帳相關的邏輯，例如數據驗證等。
 
     // 如果驗證失敗，則終止函數
@@ -214,12 +260,46 @@ const handleCheckout = () => {
     };
 
     // 將資料儲存到localStorage
-    localStorage.setItem('cartInfo', JSON.stringify(cartInfoData));
+    localStorage.setItem('ReceiverInfo', JSON.stringify(cartInfoData));
+
+
+    try {
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        console.log(userInfo.id);
+        const data = {
+            userId: userInfo.id,
+        };
+        const response = await axios.post('https://localhost:7261/GetCartsList/', data);
+
+        cartItems.value = response.data.map(item => ({
+            name: item.name,
+            price: item.price,
+            qty: item.qty
+        }));
+
+        try {
+            const cartItemsresponseResult = await axios.post("https://localhost:7261/api/Ecpay/Ecpay", cartItems.value)
+            cartItemsresponse.value = cartItemsresponseResult.data
+
+            // 顯示Vuetify的Modal
+            showModalcart.value = true
+        } catch (error) {
+            console.error("Error axios cart items:", error)
+        }
+
+    } catch (error) {
+        console.error("Error axios cart items:", error);
+    }
 
     // 假設想導航到另一頁面
-    // router.push('/somepath'); 
+    router.push('');
 };
 
+const paymentForm = ref(null)
+
+function submitForm() {
+    paymentForm.value.submit()
+}
 
 const totalprice = computed(() => {
     return books.value.reduce((total, item) => {

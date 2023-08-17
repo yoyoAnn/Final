@@ -6,7 +6,7 @@
       <input class="form-control mt-3 w-50" type="text" v-model="form.OrderId" placeholder="您的訂單編號(如沒有可不填)" />
       <select class="form-control mt-3 w-50" v-model="form.ProblemTypeId">
         <option value="" disabled selected>問題種類</option>
-        <option v-for="(item, i) in problemTypes" :value="i + 1">{{ item }}</option>
+        <!-- <option v-for="(item, i) in problemTypes" :value="i + 1">{{ item }}</option> -->
       </select>
       <textarea class="form-control mt-3 w-50" v-model="form.ProblemStatement" placeholder="問題敘述"></textarea>
       <input class="btn btn-primary mt-3" type="button" name="submit" id="" @click="submitMail" value="送出">

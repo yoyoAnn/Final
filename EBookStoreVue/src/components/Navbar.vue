@@ -45,7 +45,7 @@ export default {
   data: () => ({
     useritems: [
       { title: "會員中心", route: "/Users" },
-      { title: "歷史訂單", route: "/" },
+      { title: "歷史訂單", route: "/orders" },
       { title: "收藏專欄", route: "/" },
     ],
     cartRoute: "/cart",
