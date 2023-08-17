@@ -5,6 +5,7 @@ using EBookStoreAPI.Models.Infra.CartDapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using EBookStoreAPI.Models.DapperRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +41,11 @@ builder.Services.AddCors(options => {
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<CSMailsDapperRepository>();
+builder.Services.AddScoped<CartIdGetDapperRepository>();
+builder.Services.AddScoped<CartPostDapperRepository>();
 builder.Services.AddScoped<CartGetDapperRepository>();
+builder.Services.AddScoped<CartPutDapperRepository>();
 builder.Services.AddSingleton<EbookStoreDepperContext>();
 
 var app = builder.Build();
