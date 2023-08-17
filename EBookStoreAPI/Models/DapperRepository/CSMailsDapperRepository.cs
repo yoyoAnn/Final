@@ -1,61 +1,46 @@
 ﻿using Dapper;
+using EBookStoreAPI.Context;
 using EBookStoreAPI.DTOs;
 using EBookStoreAPI.Models.EFModels;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using static EBookStoreAPI.Models.Infra.CartDapper.CartGetDapperRepository;
+using System.Text;
 
 namespace EBookStoreAPI.Models.DapperRepository
 {
     public class CSMailsDapperRepository
     {
-        private readonly IDbConnection _connection;
-        private readonly EBookStoreContext _context;
-        private readonly string _connStr;
-        private readonly IConfiguration _configuration;
-        public CSMailsDapperRepository(EBookStoreContext context, IConfiguration configuration)
+        private readonly EbookStoreDepperContext _context;
+        public CSMailsDapperRepository(EbookStoreDepperContext context)
         {
-            _context = context;
-            _configuration = configuration;
-            //_connStr = System.Configuration.ConfigurationManager.ConnectionStrings["EBookStoreContext"].ConnectionString;
-            _connStr = _configuration.GetConnectionString("EBookStore");
-            //_connection = new SqlConnection(_connStr);
-
-
-
+			_context = context;
         }
-        public async Task<string> AddCSMail(CSMailsDto csmailDto)
-        {
-            string sql = $@"
+		public void AddCSMail(CSMailsDto dto)
+		{
+			DynamicParameters param = new DynamicParameters(); // Dapper 動態參數
+			StringBuilder sql = new StringBuilder();
+
+
+			sql.AppendLine(@"
 INSERT INTO CustomerServiceMails
 (UserAccount,Email,ProblemTypeId,ProblemStatement,OrderId,IsRead,IsReplied,CreatedTime)
 VALUES
 (@account,@email,@problemTypeId,@problemStatement,@orderId,1,1,GETDATE())
-";
+                              ");
+			
+			param.Add("account", dto.UserAccount);
+			param.Add("email", dto.Email);
+			param.Add("problemTypeId", dto.ProblemTypeId);
+			param.Add("problemStatement", dto.ProblemStatement);
+			param.Add("orderId", dto.OrderId);
 
 
-            string sql2 = $@"
-UPDATE RepliedMails
-SET Email = @email,
-Title = @title,
-Content = @content,
-CreatedTime = GETDATE()
-WHERE Id = @id";
-
-            var csMail = new SqlConnection(_connStr)
-                .Query<CSMailsDto>(sql, new
-                {
-                    account = csmailDto.UserAccount,
-                    email = csmailDto.Email,
-                    problemTypeId = csmailDto.ProblemTypeId,
-                    problemStatement = csmailDto.ProblemStatement,
-                    orderId = csmailDto.OrderId
-                });
-
-            if (csMail != null)
-            {
-                return "Success";
-            }
-            return "Fail";
-        }
+			using (var connection = _context.CreateConnection())
+			{
+				connection.Open();
+				connection.Execute(sql.ToString(), param);
+			}
+		}
     }
 }
