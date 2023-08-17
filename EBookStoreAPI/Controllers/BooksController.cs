@@ -42,5 +42,23 @@ namespace EBookStoreAPI.Controllers
             return bookItem;
         }
 
+
+        [HttpPost("filter")]
+        public async Task<IEnumerable<BooksDto>> FilterBooks([FromBody]BooksDto bookDto)
+        {
+            return _context.Books.Where(book => book.Id == bookDto.Id ||
+                                              book.Isbn.Contains(bookDto.ISBN) ||
+                                              book.CategoryId == _repo.GetCategoryIdByCategoryName(bookDto.CategoryName) ||
+                                              book.Name.Contains(bookDto.Name) ||
+                                              book.PublisherId == _repo.GetPublisherIdByPublisherName(bookDto.PublisherName))
+                                              .Select(book=> new BooksDto
+                                              {
+                                                  Name = book.Name,
+                                                  CategoryName = bookDto.CategoryName,
+                                                  PublisherName = bookDto.PublisherName,
+                                                  ISBN = book.Isbn
+                                              });
+        }
+
     }
 }

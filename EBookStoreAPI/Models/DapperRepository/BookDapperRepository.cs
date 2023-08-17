@@ -65,5 +65,39 @@ namespace EBookStoreAPI.Models.DapperRepository
             return bookItem;
         }
 
+        /// <summary>
+        /// 從分類名稱取得分類ID
+        /// </summary>
+        /// <param name="bookId">書本的 ID</param>
+        /// <returns>書本資訊</returns>
+        public int GetCategoryIdByCategoryName(string CategoryName)
+        {
+            string sql = $@"SELECT B.Id
+                            FROM Books as B
+                            LEFT JOIN Categories as C ON B.CategoryId = C.Id
+                            WHERE C.Name = @CategoryName";
+
+            int categoryId = _connection.QueryFirstOrDefault<int>(sql, new { CategoryName });
+
+            return categoryId;
+        }
+
+
+        /// <summary>
+        /// 從出版商名稱取得從出版商名稱取得分類IDID
+        /// </summary>
+        /// <param name="bookId">書本的 ID</param>
+        /// <returns>書本資訊</returns>
+        public int GetPublisherIdByPublisherName(string PublisherName)
+        {
+            string sql = $@"SELECT B.Id
+                            FROM Books as B
+                            LEFT JOIN Publishers as P ON B.PublisherId = P.Id
+                            WHERE P.Name = @PublisherName";
+
+            int PublisherId = _connection.QueryFirstOrDefault<int>(sql, new { PublisherName });
+
+            return PublisherId;
+        }
     }
 }
