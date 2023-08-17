@@ -7,16 +7,16 @@ using System.Text;
 
 namespace EBookStoreAPI.Models.Infra.CartDapper
 {
-    public class CartGetDapperRepository
+    public class CartIdGetDapperRepository
     {
         private readonly EbookStoreDepperContext _connStr;
-        public CartGetDapperRepository(EbookStoreDepperContext context)
+        public CartIdGetDapperRepository(EbookStoreDepperContext context)
         {
             _connStr = context;
         }
 
 
-        public IEnumerable<CartItemDapperVM> CartItemLoad()
+        public IEnumerable<CartItemDapperVM> CartItemLoad(CartsDto dto)
         {
             DynamicParameters param = new DynamicParameters(); // Dapper 動態參數
             StringBuilder sql = new StringBuilder();
@@ -27,7 +27,15 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
                             from Carts
                             left join Books on [Carts].BookId=Books.Id
                             left join BookImages on [Carts].BookId=BookImages.BookId
+                            where 1=1
                               ");
+
+            if (!string.IsNullOrWhiteSpace(dto.UserId.ToString()))
+            {
+                sql.AppendLine(@"and userId=@userId");
+                param.Add("userId", dto.UserId);
+            }
+
             //if(Id != null)
             //{
             //    sql.AppendLine(@"where [Carts].Id=@Id");
@@ -37,7 +45,7 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
             {
                 connection.Open();
 
-                IEnumerable<CartItemDapperVM> DetailCarts = connection.Query<CartItemDapperVM>(sql.ToString());
+                IEnumerable<CartItemDapperVM> DetailCarts = connection.Query<CartItemDapperVM>(sql.ToString(), param);
 
                 return DetailCarts;
             }

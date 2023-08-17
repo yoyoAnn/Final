@@ -18,12 +18,13 @@ namespace EBookStoreAPI.Controllers
     public class CustomerServiceMailsController : ControllerBase
     {
         private readonly EBookStoreContext _context;
-        //private readonly CSMailsDapperRepository _csMailDapperRepository;
+        private readonly CSMailsDapperRepository _csMailDapperRepository;
 
-        public CustomerServiceMailsController(EBookStoreContext context)
+
+        public CustomerServiceMailsController(EBookStoreContext context, CSMailsDapperRepository repository)
         {
             _context = context;
-            //_csMailDapperRepository = repository;
+            _csMailDapperRepository = repository;
         }
 
         // GET: api/CustomerServiceMails
@@ -90,33 +91,34 @@ namespace EBookStoreAPI.Controllers
         // POST: api/CustomerServiceMails
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<CustomerServiceMails>> PostCustomerServiceMails(CSMailsDto csDto)
-        {
+		public async Task<ActionResult<string>> PostCustomerServiceMails(CSMailsDto csDto)
+		{
+			try
+			{
+				_csMailDapperRepository.AddCSMail(csDto);
+				return Ok("已成功留言，謝謝您的建議，我們會盡快聯繫您。");
+			}
+			catch (Exception ex)
+			{
+				return BadRequest($"錯誤訊息: {ex.Message}");
+			}
 
-            //var result = _csMailDapperRepository.AddCSMail(csDto);
-            //return await result;
-
-            //if (_context.CustomerServiceMails == null)
+            //CustomerServiceMails entity = new CustomerServiceMails
             //{
-            //    return Problem("Entity set 'EBookStoreContext.CustomerServiceMails'  is null.");
-            //}
+            //    UserAccount = csDto.UserAccount,
+            //    Email = csDto.Email,
+            //    ProblemTypeId = csDto.ProblemTypeId,
+            //    ProblemStatement = csDto.ProblemStatement,
+            //    OrderId = csDto.OrderId,
+            //    IsRead = false,
+            //    IsReplied = false,
+            //    CreatedTime = DateTime.Now
+            //};
 
-            CustomerServiceMails entity = new CustomerServiceMails
-            {
-                UserAccount = csDto.UserAccount,
-                Email = csDto.Email,
-                ProblemTypeId = csDto.ProblemTypeId,
-                ProblemStatement = csDto.ProblemStatement,
-                OrderId = csDto.OrderId,
-                IsRead = false,
-                IsReplied = false,
-                CreatedTime = DateTime.Now
-            };
+            //_context.CustomerServiceMails.Add(entity);
+            //await _context.SaveChangesAsync();
 
-            _context.CustomerServiceMails.Add(entity);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetCustomerServiceMails", new { id = entity.Id }, entity);
+            //return CreatedAtAction("GetCustomerServiceMails", new { id = entity.Id }, entity);
         }
 
         // DELETE: api/CustomerServiceMails/5
