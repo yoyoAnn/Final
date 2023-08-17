@@ -1,45 +1,53 @@
-<template>
-    <br />
-    <v-container>
-      <v-form @submit.prevent="login">
-        <v-card>
-          <v-card-title>
-            <h3>Login</h3>
-          </v-card-title>
-  
-          <v-card-text>
-            <v-text-field
-              v-model="account"
-              label="帳號"
-              outlined
-              placeholder="請輸入帳號"
-            ></v-text-field>
-  
-            <v-text-field
-              v-model="password"
-              label="密碼"
-              type="password"
-              outlined
-              placeholder="請輸入密碼"
-            ></v-text-field>
-          </v-card-text>
-  
-          <v-card-actions>
-            <v-btn depressed color="blue" block @click="login">登入</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-form>
-    </v-container>
+   <template>
+    <div class="wrapper login-3">
+      <div class="container">
+        <div class="col-left">
+          <div class="login-text">
+            <h3>歡迎回來</h3>
+            <h2>布可</h2>
+            <p>
+              請先登入您的帳號<br />
+              以繼續使用服務
+            </p>
+            <!-- <a class="btn" href="">Read More</a> -->
+          </div>
+        </div>
+        <div class="col-right">
+          <div class="login-form">
+            <h2>登入</h2>
+            <form @submit.prevent="login">
+              <p>
+                <input v-model="account" type="text" placeholder="帳號" required>
+              </p>
+              <p>
+                <input v-model="password" type="password" placeholder="密碼" required>
+              </p>
+              <p>
+                <button class="btn" type="submit">Sign In</button>
+              </p>
+              
+              <p>
+                    <a href="">Forget password?</a>
+                    <a href="/register">新增帳號</a>
+                </p>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="credit">
+        © 2023 布可 版權所有。
+      </div>
+    </div>
   </template>
   
   <script>
-
   export default {
     data() {
       return {
         account: '',
         password: '',
         id: null,
+        isLoggedIn: false, 
       };
     },
     methods: {
@@ -57,24 +65,34 @@
         });
   
         if (response.ok) {
-          const data = await response.json(); 
-
+          const data = await response.json();
+  
           const userInfo = {
             account: this.account,
             password: this.password,
-            // Id: this.id,
             id: data.userId,
           };
-        
-        //   console.log(userInfo)
-          localStorage.setItem('userInfo', JSON.stringify(userInfo));
+  
+        //   this.isLoggedIn = true;
+        //   console.log(this.isLoggedIn)
 
+          localStorage.setItem('userInfo', JSON.stringify(userInfo));
+  
           this.$router.push('/');
+
+          
         } else {
-        //   console.error('Login failed');
+          console.error('Login failed');
         }
       },
     },
   };
   </script>
+  
+
+  <style scoped>
+
+  @import "@/assets/loginStyle.css";
+
+  </style>
   

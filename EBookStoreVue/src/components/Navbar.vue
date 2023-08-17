@@ -32,12 +32,12 @@
         </v-responsive>
       </v-col>
       <v-col class="d-flex justify-end" cols="3">
-        <v-btn flat color="grey" router v-if="!$route.path.includes('/Login')" :to="cartRoute">
+        <v-btn flat color="grey" router v-if="isLoggedIn" :to="cartRoute">
           <v-icon right icon="mdi:mdi-cart" />
         </v-btn>
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }" >
-            <v-btn color="grey" v-bind="props" v-if="!$route.path.includes('/Login')"> 
+            <v-btn color="grey" v-bind="props" v-if="isLoggedIn "> 
               <v-icon right icon="mdi:mdi-account" />
             </v-btn>
           </template>
@@ -73,17 +73,38 @@ export default {
     homeRoute: "/",
     isLoggedIn: false, 
   }),
-  created() {
-    const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-    this.isLoggedIn = userInfo && userInfo.id;
+//   created() {
+//     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
+//     if((userInfo && userInfo.id) != null){
+//         this.isLoggedIn = true;
+//     } else {
+//         this.isLoggedIn = false;
+//     }
+//     console.log(this.isLoggedIn)
+
+//   },
+  watch: { 
+    '$route'() {
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
+        if((userInfo && userInfo.id) != null){
+            this.isLoggedIn = true;
+        } else {
+            this.isLoggedIn = false;
+        }
+        console.log(this.isLoggedIn)
+    }
   },
   methods: {
     logout() {
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
       if (userInfo && userInfo.id) {
         localStorage.removeItem('userInfo');
+        this.isLoggedIn = false;
         this.$router.push('/Login');
       } else {
+ 
         this.$router.push('/Login'); 
       }
     },

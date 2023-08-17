@@ -9,6 +9,10 @@ using EBookStoreAPI.Models;
 using EBookStoreAPI.Models.EFModels;
 using Microsoft.AspNetCore.Authorization;
 using System.Linq;
+using EBookStoreAPI.DTOs.Users;
+using NuGet.Common;
+using EBookStoreAPI.Models.Infra;
+using System.Diagnostics.Metrics;
 
 namespace EBookStoreAPI.Controllers
 {
@@ -147,6 +151,44 @@ namespace EBookStoreAPI.Controllers
             {
                 return Unauthorized("User not authenticated.");
             }
+        }
+
+
+        [HttpPost("Register")]
+        public async Task<ActionResult<string>> Register(RegisterDto registerDto)
+        {
+     
+            if (await _context.Users.AnyAsync(u => u.Account == registerDto.Account))
+            {
+                return BadRequest("帳號已存在"); 
+            }
+
+            if (registerDto.Password != registerDto.ConfirmedPassword)
+            {
+                return BadRequest("輸入的密碼不一致，請再重新確認");
+            }
+
+            var hashOrigPwd = HashUtility.ToSHA256(registerDto.Password, "!@#$$DGTEGYT");
+
+            registerDto.ConfirmedPassword = null;
+            var confirmCode = Guid.NewGuid().ToString("N");
+
+            Users user = new Users
+            {
+                Id = registerDto.Id,
+                Account = registerDto.Account,
+                Password = registerDto.Password, 
+                Email = registerDto.Email,
+                IsConfirmed = false,
+                ConfirmCode = confirmCode,
+                CreatedTime = DateTime.Now,
+            };
+
+            //_context.Users.Add(user);
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+
+            return Ok("註冊成功");
         }
     }
 }
