@@ -6,7 +6,7 @@
   </div>
   <!-- 注目新書 -->
 
-  <v-container>
+  <div>
     <h2>注目新書</h2>
     <el-row class="button-row">
       <el-col :span="1">
@@ -72,7 +72,7 @@
         ></i>
       </el-col>
     </el-row>
-  </v-container>
+  </div>
 </template>
     
   

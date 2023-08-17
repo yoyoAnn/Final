@@ -7,6 +7,7 @@ import Books from '../components/BookDetail.vue'
 import Login from '../views/Login.vue'
 import CustomerMail from '../views/CustomerMail.vue'
 import BookSearch from '../components/BookSearch.vue'
+import BookSearchAll from '../components/BookSearchAll.vue'
 
 //路由設定
 const routes = [
@@ -43,7 +44,11 @@ const routes = [
         path: '/booksearch/:category',
         name: 'book-search',
         component: BookSearch
-
+    },
+    {
+        path: '/booksearchall',
+        name: 'book-searchall',
+        component: BookSearchAll
     }
 ]
 

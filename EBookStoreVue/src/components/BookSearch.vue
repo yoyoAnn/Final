@@ -41,6 +41,9 @@
               </a>
               <div style="padding: 20px; margin: 16px">
                 <span class="book-title">{{ book.name }}</span>
+                <a href="#">{{ book.author }}</a
+                ><span> 著</span>
+                <!-- <span class="book-title">{{ book.author }}</span> -->
                 <div
                   class="bottom"
                   style="
