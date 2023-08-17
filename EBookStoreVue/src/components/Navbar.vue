@@ -20,10 +20,11 @@
         <v-responsive max-height="100" max-width="500">
           <el-autocomplete
             class=""
-            v-model="state"
+            v-model="searchInput.value"
             :fetch-suggestions="querySearch"
             placeholder="搜尋"
-            @keydown="handleKeyDown"
+            @keydown.enter="goToSearchPage"
+            @select="handleSelect"
           />
         </v-responsive>
       </v-col>
@@ -72,7 +73,50 @@
     </v-row>
   </v-container>
 </template>
-<script lang="ts">
+
+
+<script setup lang="ts">
+import { useRouter } from "vue-router";
+import axios from "axios";
+import { ref, onMounted } from "vue";
+import { ElAutocomplete } from "element-plus";
+
+const useritems = [
+  { title: "會員中心", route: "/Users" },
+  { title: "歷史訂單", route: "/" },
+  { title: "收藏專欄", route: "/" },
+];
+
+const cartRoute = "/cart";
+const homeRoute = "/";
+const isLoggedIn = ref(false);
+const searchInput = ref("");
+
+const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+isLoggedIn.value = userInfo && userInfo.id;
+
+//查詢邏輯
+
+function handleKeyDown(event) {
+  if (event.key === "Enter") {
+    goToSearchPage();
+  }
+}
+
+const router = useRouter();
+function goToSearchPage() {
+  router.push({ name: "book-searchall" });
+}
+</script>
+
+
+
+
+<!-- <script lang="ts">
+import { useRouter } from "vue-router";
+import axios from "axios";
+import { ref } from "vue";
+
 export default {
   data: () => ({
     useritems: [
@@ -83,6 +127,7 @@ export default {
     cartRoute: "/cart",
     homeRoute: "/",
     isLoggedIn: false,
+    searchInput: "",
   }),
   created() {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -98,25 +143,42 @@ export default {
         this.$router.push("/Login");
       }
     },
+    async querySearch(query) {
+      try {
+        const apiUrl = "https://localhost:7261/api/Books";
+        const response = await axios.get(apiUrl);
+
+        if (response.status === 200) {
+          console.log(response.data);
+
+          const allBooks = response.data;
+          const filteredBooks = allBooks.filter((book) => {
+            return (
+              book.name?.includes(query) ||
+              book.isbn?.includes(query) ||
+              book.categoryName?.includes(query) ||
+              book.publisherName?.includes(query)
+            );
+          });
+          return filteredBooks;
+        }
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
+      }
+      return [];
+    },
+    goToSearchPage() {
+      const router = useRouter();
+      router.push({ name: "book-searchall" });
+    },
+    handleKeyDown(event) {
+      if (event.key === "Enter") {
+        this.goToSearchPage();
+      }
+    },
   },
 };
-</script>
+</script> -->
 
-<script setup lang="ts">
-import { useRouter } from "vue-router";
-// import { onMounted, ref } from "vue";
-
-const router = useRouter();
-
-const goToSearchPage = () => {
-  router.push({ name: "book-searchall" });
-};
-
-const handleKeyDown = (event) => {
-  if (event.keyCode === 13) {
-    goToSearchPage();
-  }
-};
-</script>
     
 <style></style>
