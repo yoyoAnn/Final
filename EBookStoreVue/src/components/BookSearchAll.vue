@@ -100,7 +100,7 @@ const loadBooks = async () => {
     const datas = await response.json();
     books.value = datas;
 
-    // Filter books based on search keyword
+    // 搜尋傳入值
     if (searchString.value) {
       books.value = books.value.filter((book) => {
         const keyword = searchString.value.toLowerCase();
@@ -163,14 +163,10 @@ const nextPage = () => {
 <script lang="ts">
 import { defineComponent } from "vue";
 import NavbarC from "./Categorybar.vue";
-import Books from "./ChosenBook.vue";
-import BooksNewDate from "./BookSearchFromNewsDate.vue";
 
 export default defineComponent({
   components: {
     NavbarC,
-    Books,
-    BooksNewDate,
   },
 });
 </script>
