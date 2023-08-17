@@ -22,7 +22,11 @@
             :key="index"
             :span="6"
           >
-            <el-card :body-style="{ padding: '0px' }" class="custom-card">
+            <el-card
+              :body-style="{ padding: '0px' }"
+              class="custom-card"
+              style="margin-right: 10px"
+            >
               <a :href="`/books/${book.id}`">
                 <img
                   :src="`/src/BooksImage/${book.bookImage}`"
@@ -31,9 +35,30 @@
               </a>
               <div style="padding: 14px">
                 <span class="book-title">{{ book.name }}</span>
-                <div class="bottom">
+                <!-- <div class="bottom">
                   <span class="pricecolor">{{ book.price }} 元</span>
                   <el-button type="text" class="button">加入購物車</el-button>
+                </div> -->
+                <div
+                  class="bottom"
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                  "
+                >
+                  <span class="pricecolor" style="margin-top: 4px"
+                    >{{ book.price }} 元</span
+                  >
+                  <el-button
+                    class="button"
+                    style="background-color: #c80000; color: #ebeff4"
+                    ><i
+                      class="fa-solid fa-cart-shopping fa-xl"
+                      style="color: #ebeff4; margin-right: 10px"
+                    ></i>
+                    加入購物車</el-button
+                  >
                 </div>
               </div>
             </el-card>

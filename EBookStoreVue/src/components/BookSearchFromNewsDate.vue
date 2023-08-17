@@ -1,19 +1,13 @@
 <template>
-  <NavbarC />
-
   <div class="row">
     <div class="col-3"></div>
     <div class="col-6"></div>
     <div class="col-3"></div>
   </div>
   <!-- 注目新書 -->
-  <v-container>
-    <BooksNewDate />
-  </v-container>
-  <!-- 全部書籍 -->
 
   <v-container>
-    <h2>全部書籍</h2>
+    <h2>注目新書</h2>
     <el-row class="button-row">
       <el-col :span="1">
         <i
@@ -41,6 +35,9 @@
               </a>
               <div style="padding: 20px; margin: 16px">
                 <span class="book-title">{{ book.name }}</span>
+                <span class="book-title" style="color: orange"
+                  >出版日期 : {{ book.publisherDateTxt }}
+                </span>
                 <div
                   class="bottom"
                   style="
@@ -76,9 +73,6 @@
       </el-col>
     </el-row>
   </v-container>
-  <v-container>
-    <Books />
-  </v-container>
 </template>
     
   
@@ -91,18 +85,10 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 const route = useRoute();
 const books = ref([]);
 const currentPage = ref(1);
-const itemsPerPage = 12;
+const itemsPerPage = 4;
 const category = ref("");
+const numberOfRandomBooks = 10;
 category.value = route.params.category;
-
-const newBooks = computed(() => {
-  const sortedDisplayedBooks = filteredBooks.value
-    .slice()
-    .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return sortedDisplayedBooks.slice(startIndex, endIndex);
-});
 
 const loadBooks = async () => {
   try {
@@ -128,6 +114,14 @@ watch(route, () => {
   loadBooks();
   currentPage.value = 1;
 });
+
+const newBooks = computed(() => {
+  const sortedDisplayedBooks = filteredBooks.value
+    .slice()
+    .sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
+  return sortedDisplayedBooks.slice(0, numberOfRandomBooks);
+});
+
 //篩選分類書籍
 const filteredBooks = computed(() => {
   if (!category.value) {
@@ -138,13 +132,13 @@ const filteredBooks = computed(() => {
 
 //分頁邏輯
 const totalPages = computed(() =>
-  Math.ceil(filteredBooks.value.length / itemsPerPage)
+  Math.ceil(newBooks.value.length / itemsPerPage)
 );
 
 const displayedBooks = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  return filteredBooks.value.slice(startIndex, endIndex);
+  return newBooks.value.slice(startIndex, endIndex);
 });
 
 const prevPage = () => {
@@ -163,13 +157,11 @@ const nextPage = () => {
 import { defineComponent } from "vue";
 import NavbarC from "./Categorybar.vue";
 import Books from "./ChosenBook.vue";
-import BooksNewDate from "./BookSearchFromNewsDate.vue";
 
 export default defineComponent({
   components: {
     NavbarC,
     Books,
-    BooksNewDate,
   },
 });
 </script>
