@@ -39,7 +39,7 @@ namespace EBookStoreAPI.Controllers
                 var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Account),
-                new Claim("FullName", user.Name),
+                //new Claim("FullName", user.Name),
                 new Claim("UserId", user.Id.ToString()),
             };
 

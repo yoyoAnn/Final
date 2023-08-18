@@ -29,22 +29,12 @@
         </v-responsive>
       </v-col>
       <v-col class="d-flex justify-end" cols="3">
-        <v-btn
-          flat
-          color="grey"
-          router
-          v-if="!$route.path.includes('/Login')"
-          :to="cartRoute"
-        >
+        <v-btn flat color="grey" router v-if="isLoggedIn" :to="cartRoute">
           <v-icon right icon="mdi:mdi-cart" />
         </v-btn>
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
-            <v-btn
-              color="grey"
-              v-bind="props"
-              v-if="!$route.path.includes('/Login')"
-            >
+            <v-btn color="grey" v-bind="props" v-if="isLoggedIn">
               <v-icon right icon="mdi:mdi-account" />
             </v-btn>
           </template>
@@ -89,18 +79,29 @@ export default {
     homeRoute: "/",
     isLoggedIn: false,
   }),
-  created() {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    this.isLoggedIn = userInfo && userInfo.id;
+
+  watch: { 
+    '$route'() {
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
+        if((userInfo && userInfo.id) != null){
+            this.isLoggedIn = true;
+        } else {
+            this.isLoggedIn = false;
+        }
+        // console.log(this.isLoggedIn)
+    }
   },
   methods: {
     logout() {
       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
       if (userInfo && userInfo.id) {
-        localStorage.removeItem("userInfo");
-        this.$router.push("/Login");
+        localStorage.removeItem('userInfo');
+        this.isLoggedIn = false;
+        this.$router.push('/Login');
       } else {
-        this.$router.push("/Login");
+ 
+        this.$router.push('/Login'); 
       }
     },
   },
@@ -108,10 +109,10 @@ export default {
 </script> -->
 
 
-<script  setup lang="ts">
-import { useRouter } from "vue-router";
+<script setup lang="ts">
+import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { ElAutocomplete } from "element-plus";
 
 const useritems = [
@@ -124,9 +125,7 @@ const cartRoute = "/cart";
 const homeRoute = "/";
 const isLoggedIn = ref(false);
 const searchInput = ref("");
-
-const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-isLoggedIn.value = userInfo && userInfo.id;
+const route = useRoute();
 
 const logout = () => {
   if (userInfo && userInfo.id) {
@@ -136,6 +135,16 @@ const logout = () => {
     router.push("/Login");
   }
 };
+
+watch(route, () => {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  if ((userInfo && userInfo.id) != null) {
+    isLoggedIn.value = true;
+  } else {
+    isLoggedIn.value = false;
+  }
+  // console.log(this.isLoggedIn)
+});
 
 // //查詢邏輯
 
@@ -199,6 +208,7 @@ const handleSelect = (item: LinkItem) => {
 
 onMounted(() => {
   loadAll("");
+  // getLogStatus();
 });
 
 const router = useRouter();
