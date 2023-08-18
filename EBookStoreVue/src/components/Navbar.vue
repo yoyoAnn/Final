@@ -21,7 +21,7 @@
         </v-btn>
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }" >
-            <v-btn color="grey" v-bind="props" v-if="!$route.path.includes('/Login')"> 
+            <v-btn color="grey" v-bind="props" v-if="isLoggedIn"> 
               <v-icon right icon="mdi:mdi-account" />
             </v-btn>
           </template>
@@ -72,7 +72,7 @@ export default {
         } else {
             this.isLoggedIn = false;
         }
-        console.log(this.isLoggedIn)
+        // console.log(this.isLoggedIn)
     }
   },
   methods: {

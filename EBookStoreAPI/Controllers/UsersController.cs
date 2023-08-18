@@ -13,6 +13,8 @@ using EBookStoreAPI.DTOs.Users;
 using NuGet.Common;
 using EBookStoreAPI.Models.Infra;
 using System.Diagnostics.Metrics;
+using Microsoft.AspNetCore.Http;
+
 
 namespace EBookStoreAPI.Controllers
 {
@@ -188,7 +190,52 @@ namespace EBookStoreAPI.Controllers
             await _context.Users.AddAsync(user);
             await _context.SaveChangesAsync();
 
+
+            //var urlTemplate = Request.Url.Scheme + "://" +  // 生成 http:.// 或 https://
+            //                 Request.Url.Authority + "/" + // 生成網域名稱或 ip
+            //                 "Users/ResetPassword?userId={0}&confirmCode={1}";
+
+            var scheme = HttpContext.Request.Scheme;
+            var host = HttpContext.Request.Host.ToUriComponent();
+            //var urluserid = user.Id;
+            //var urlconfirmCode = confirmCode;
+            //var urlTemplate = $"{scheme}://5173/ActiveRegister?userid={urluserid}&confirmCode={urlconfirmCode}";
+            //var urlTemplate = "https://localhost:5173/Users/ActiveRegister?userid={0}&confirmCode={1}";
+            var urlTemplate = "https://localhost:5173/ActiveRegister?userid={0}&confirmCode={1}";
+
+            try
+            {
+                // 寄送email
+                //var url = string.Format(urlTemplate, user.Id, confirmCode);
+                var url = string.Format(urlTemplate, user.Id, confirmCode);
+                new EmailHelper().SendConfirmRegisterEmail(url, user.Account, user.Email);
+
+                //return CreatedAtAction("GetUser", new { id = user.Id }, user);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return Ok(ex.Message);
+
+            }
+           
             return Ok("註冊成功");
+        }
+
+        [HttpPost("ActiveRegister")]
+        public async Task<ActionResult<string>> ActiveRegister(UsersDto dto)
+        {
+                       
+            var user = await _context.Users.FindAsync(dto.Id);
+
+            user.IsConfirmed = true;
+            user.ConfirmCode = null;
+
+            await _context.SaveChangesAsync();
+
+            return Ok("帳號啟用成功");
+
         }
     }
 }

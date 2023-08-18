@@ -8,10 +8,10 @@ namespace EBookStoreAPI.Models.Infra
     {
         private string senderEmail = "yoyoann2023@gmail.com"; // 寄件者
 
-        public void SendForgetPasswordEmail(string url, string name, string email)
+        public void SendForgetPasswordEmail(string url, string account, string email)
         {
             var subject = "[重設密碼通知]";
-            var body = $@"Hi {name},
+            var body = $@"Hi {account},
 <br />
 請點擊此連結 [<a href='{url}' target='_blank'>我要重設密碼</a>], 以進行重設密碼, 如果您沒有提出申請, 請忽略本信, 謝謝";
 
@@ -21,12 +21,17 @@ namespace EBookStoreAPI.Models.Infra
             SendFromGmail(from, to, subject, body);
         }
 
-        public void SendConfirmRegisterEmail(string url, string name, string email)
+        public void SendConfirmRegisterEmail(string url, string account, string email)
         {
-            var subject = "[新會員確認信]";
-            var body = $@"Hi {name},
-<br />
-請點擊此連結 [<a href='{url}' target='_blank'>的確是我申請會員</a>], 如果您沒有提出申請, 請忽略本信, 謝謝";
+            //var url2 = "https://127.0.0.1:5173/customerMail";
+            var subject = "[布可網路書店新會員確認信]";
+//            var body = $@"Hi {account},
+//<br />
+//請點擊此連結 [<a href='{url}' target='_blank'>的確是我申請會員</a>], 如果您沒有提出申請, 請忽略本信, 謝謝";
+
+            var body = $@"<img src=""https://ci4.googleusercontent.com/proxy/Y6y46vWSqrWFvqI5i7bwBG_X-fbPXtOIrwi8QK8SEet5WW1jbQBm8sDz_ytVNMKmbjoHc4sOL8PtkMhmhpAGsxX2ByZuug5ofx0pBlw5tmfGBvKj7e9U5jaPRrgSp2YDQXvYu7lRR7vNkIBdmb9fGdHhUaElM7MZkes9pJMLQVwk=s0-d-e1-ft#https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Open_book_nae_02.svg/2560px-Open_book_nae_02.svg.png"" width=""75"" height=""41"" style=""margin-right: 0px;""><div><b><font face=""microsoft jhenghei, sans-serif"" size=""4"">立即啟用布可網路書店帳號!</font></b><div><br></div></div><div>請點擊[<a href='{url}' target='_blank'>此連結</a>]完成會員驗證，即可馬上啟用布可網路書店帳號!</div><div><br></div><div><br></div><div><font color=""#666666"">不是您註冊的帳號嗎?</font></div><div><font color=""#666666"">可以由此<a href=""https://127.0.0.1:5173/customerMail"">聯絡客服</a></font></div>";
+
+
 
             var from = senderEmail;
             var to = email;

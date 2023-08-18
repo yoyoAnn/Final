@@ -9,6 +9,7 @@ import CustomerMail from '../views/CustomerMail.vue'
 import BookSearch from '../components/BookSearch.vue'
 import Register from '../views/Register.vue'
 import ConformRegister from '../views/ConformRegister.vue'
+import ActiveRegister from '../views/ActiveRegister.vue'
 
 //路由設定
 const routes = [
@@ -27,6 +28,10 @@ const routes = [
     {
         path: '/conformregister',
         component: ConformRegister
+    },
+    {
+        path: "/activeregister",
+        component: ActiveRegister
     },
     {
         path: '/users',

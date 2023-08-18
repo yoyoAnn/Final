@@ -9,6 +9,7 @@
         <a href="/">服務條款</a>
         與
         <a href="/">隱私權政策</a>
+        yoyoann2023@gmail.com
       </p>    
       <form @submit.prevent="register">
         <div class="input-group">
@@ -50,31 +51,34 @@ data() {
 },
 methods: {
     async register() {
-    try {
-        const response = await axios.post("https://localhost:7261/api/Users/Register", this.registerData);
-        console.log(response)
+        try {
+            const response = await axios.post("https://localhost:7261/api/Users/Register", this.registerData);
+            console.log(response)
 
-        this.registrationMessage = response.data;
-        console.log(this.registrationMessage)
+            this.registrationMessage = response.data;
+            console.log(this.registrationMessage)
 
-        this.registerData = {
-        account: '',
-        email: '',
-        password: '',
-        confirmedPassword: ''
-        };
-        console.log(this.registerData)
+            this.registerData = {
+            account: '',
+            email: '',
+            password: '',
+            confirmedPassword: ''
+            };
+            console.log(this.registerData)
 
-        console.log(response.data)
+            console.log(response.data)
+            console.log(response.status)
+            
 
 
-        if (response.data === 'Registration successful.') {
-            this.$router.push('/ConformRegister');
+            if (response.status == 200) {
+                this.$router.push('/ConformRegister');
+            }
+            
+        } catch (error) {
+            this.registrationMessage = '註冊失敗';
+            console.error(error);
         }
-    } catch (error) {
-        this.registrationMessage = '註冊失敗';
-        console.error(error);
-    }
     }
 }
 };
