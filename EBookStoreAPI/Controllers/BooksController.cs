@@ -5,6 +5,7 @@ using EBookStoreAPI.Models.EFModels;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace EBookStoreAPI.Controllers
 {
@@ -40,6 +41,27 @@ namespace EBookStoreAPI.Controllers
                 return NotFound(); // 如果書本不存在，回傳 404 Not Found
             }
             return bookItem;
+        }
+
+
+        [HttpPost("filter")]
+        public async Task<IEnumerable<BooksSearchDto>> FilterBooks([FromBody]BooksSearchDto bookDto)
+        {
+            var filteredBooks = _context.Books.Where(book => book.Id == bookDto.Id ||
+                                              book.Isbn.Contains(bookDto.ISBN) ||
+                                              book.CategoryId == _repo.GetCategoryIdByCategoryName(bookDto.CategoryName) ||
+                                              book.Name.Contains(bookDto.Name) ||
+                                              book.PublisherId == _repo.GetPublisherIdByPublisherName(bookDto.PublisherName))
+                                              .Select(book=> new BooksSearchDto
+                                              {
+                                                  Id = book.Id,
+                                                  Name = book.Name,
+                                                  CategoryName = _repo.GetCategoryNameByCategoryId(book.CategoryId),
+                                                  PublisherName = _repo.GetPublisherNameByPublisherId(book.PublisherId),
+                                                  ISBN = book.Isbn
+                                              });
+
+            return await filteredBooks.ToListAsync();
         }
 
     }

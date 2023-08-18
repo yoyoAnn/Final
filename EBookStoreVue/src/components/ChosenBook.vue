@@ -15,7 +15,7 @@
           :disabled="currentPage === 1"
         ></i>
       </el-col>
-      <el-col :span="18">
+      <el-col :span="20">
         <div class="card-container">
           <el-col
             v-for="(book, index) in displayedBooks"
@@ -25,7 +25,7 @@
             <el-card
               :body-style="{ padding: '0px' }"
               class="custom-card"
-              style="margin-right: 10px"
+              style="margin-right: 10px; margin-bottom: 10px"
             >
               <a :href="`/books/${book.id}`">
                 <img
@@ -65,7 +65,7 @@
           </el-col>
         </div>
       </el-col>
-      <el-col :span="3">
+      <el-col :span="1">
         <i
           class="fa-solid fa-circle-chevron-right fa-beat-fade fa-2xl"
           @click="nextPage"
