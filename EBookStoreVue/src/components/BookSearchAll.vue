@@ -1,5 +1,6 @@
 <template>
   <NavbarC />
+  <Bookbt />
   <div class="row">
     <div class="col-3"></div>
     <div class="col-6"></div>
@@ -9,15 +10,9 @@
   <!-- 全部書籍 -->
 
   <v-container>
-    <h2>全部書籍</h2>
+    <h2>搜尋書籍</h2>
     <el-row class="button-row">
-      <el-col :span="1">
-        <i
-          class="fa-solid fa-circle-chevron-left fa-beat-fade fa-2xl"
-          @click="prevPage"
-          :disabled="currentPage === 1"
-        ></i>
-      </el-col>
+      <el-col :span="1"> </el-col>
       <el-col :span="20">
         <div class="card-container">
           <el-col
@@ -50,43 +45,43 @@
                   <span class="pricecolor" style="margin-top: 4px"
                     >{{ book.price }} 元</span
                   >
-                  <el-button
-                    class="button"
-                    style="background-color: #c80000; color: #ebeff4"
-                    ><i
-                      class="fa-solid fa-cart-shopping fa-xl"
-                      style="color: #ebeff4; margin-right: 10px"
-                    ></i>
-                    加入購物車</el-button
-                  >
+                  <BookCartbtn @add-to-cart="addToCart" :book="book" />
                 </div>
               </div>
             </el-card>
           </el-col>
         </div>
       </el-col>
-      <el-col :span="1">
-        <i
-          class="fa-solid fa-circle-chevron-right fa-beat-fade fa-2xl"
-          @click="nextPage"
-          :disabled="currentPage === totalPages"
-        ></i>
-      </el-col>
+      <el-col :span="1"> </el-col>
     </el-row>
+    <!-- 分頁 -->
+    <div class="demo-pagination-block container">
+      <div class="demonstration">Change page size</div>
+      <el-pagination
+        v-model:current-page="currentPage2"
+        v-model:page-size="pageSize2"
+        :page-sizes="[12, 24, 36, 48]"
+        :small="small"
+        :disabled="disabled"
+        :background="background"
+        layout="sizes, prev, pager, next"
+        :total="filteredBooks.length"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+      />
+    </div>
   </v-container>
 </template>
     
   
   
-  <script setup lang='ts'>
+  <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const route = useRoute();
 const books = ref([]);
 const currentPage = ref(1);
-const itemsPerPage = 12;
 const category = ref("");
 
 const searchString = ref("");
@@ -138,42 +133,60 @@ const filteredBooks = computed(() => {
 });
 
 //分頁邏輯
-const totalPages = computed(() =>
-  Math.ceil(filteredBooks.value.length / itemsPerPage)
-);
 
 const displayedBooks = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
+  const startIndex = (currentPage2.value - 1) * pageSize2.value;
+  const endIndex = startIndex + pageSize2.value;
   return filteredBooks.value.slice(startIndex, endIndex);
 });
 
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-  }
+const currentPage2 = ref(1);
+const pageSize2 = ref(12);
+
+const small = ref(false);
+const background = ref(false);
+const disabled = ref(false);
+const handleSizeChange = (val: number) => {
+  pageSize2.value = val;
+  currentPage2.value = 1;
 };
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
-  }
+const handleCurrentChange = (val: number) => {
+  currentPage2.value = val;
 };
 </script>
     
 <script lang="ts">
 import { defineComponent } from "vue";
 import NavbarC from "./Categorybar.vue";
+import Books from "./ChosenBook.vue";
+import BooksNewDate from "./BookSearchFromNewsDate.vue";
+import Bookbt from "./Bookbacktop.vue";
+import BookCartbtn from "./BookCartBtn.vue";
 
 export default defineComponent({
   components: {
     NavbarC,
+    Books,
+    BooksNewDate,
+    Bookbt,
+    BookCartbtn,
   },
 });
 </script>
   
-  <style src="../BookCSS/BookCSS.css">
+
+
+
+  <style src="../BookCSS/BookCSS.css" scoped>
 .cuscard {
   margin: 10px;
+}
+
+.demo-pagination-block + .demo-pagination-block {
+  margin-top: 10px;
+}
+.demo-pagination-block .demonstration {
+  margin-bottom: 16px;
 }
 </style>
     

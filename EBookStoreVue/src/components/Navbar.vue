@@ -29,22 +29,12 @@
         </v-responsive>
       </v-col>
       <v-col class="d-flex justify-end" cols="3">
-        <v-btn
-          flat
-          color="grey"
-          router
-          v-if="!$route.path.includes('/Login')"
-          :to="cartRoute"
-        >
+        <v-btn flat color="grey" router v-if="isLoggedIn" :to="cartRoute">
           <v-icon right icon="mdi:mdi-cart" />
         </v-btn>
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
-            <v-btn
-              color="grey"
-              v-bind="props"
-              v-if="!$route.path.includes('/Login')"
-            >
+            <v-btn color="grey" v-bind="props" v-if="isLoggedIn">
               <v-icon right icon="mdi:mdi-account" />
             </v-btn>
           </template>
@@ -75,15 +65,59 @@
 </template>
 
 
+
+
+<!-- <script>
+export default {
+  data: () => ({
+    useritems: [
+      { title: "會員中心", route: "/Users" },
+      { title: "歷史訂單", route: "/orders" },
+      { title: "收藏專欄", route: "/" },
+    ],
+    cartRoute: "/cart",
+    homeRoute: "/",
+    isLoggedIn: false,
+  }),
+
+  watch: { 
+    '$route'() {
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+
+        if((userInfo && userInfo.id) != null){
+            this.isLoggedIn = true;
+        } else {
+            this.isLoggedIn = false;
+        }
+        // console.log(this.isLoggedIn)
+    }
+  },
+  methods: {
+    logout() {
+      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+      if (userInfo && userInfo.id) {
+        localStorage.removeItem('userInfo');
+        this.isLoggedIn = false;
+        this.$router.push('/Login');
+      } else {
+ 
+        this.$router.push('/Login'); 
+      }
+    },
+  },
+};
+</script> -->
+
+
 <script setup lang="ts">
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { ElAutocomplete } from "element-plus";
 
 const useritems = [
   { title: "會員中心", route: "/Users" },
-  { title: "歷史訂單", route: "/" },
+  { title: "歷史訂單", route: "/orders" },
   { title: "收藏專欄", route: "/" },
 ];
 
@@ -91,11 +125,29 @@ const cartRoute = "/cart";
 const homeRoute = "/";
 const isLoggedIn = ref(false);
 const searchInput = ref("");
+const route = useRoute();
 
-const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-isLoggedIn.value = userInfo && userInfo.id;
+const logout = () => {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  if (userInfo && userInfo.id) {
+    localStorage.removeItem("userInfo");
+    router.push("/Login");
+  } else {
+    router.push("/Login");
+  }
+};
 
-//查詢邏輯
+watch(route, () => {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  if ((userInfo && userInfo.id) != null) {
+    isLoggedIn.value = true;
+  } else {
+    isLoggedIn.value = false;
+  }
+  // console.log(this.isLoggedIn)
+});
+
+// //查詢邏輯
 
 const state = ref("");
 
@@ -157,6 +209,7 @@ const handleSelect = (item: LinkItem) => {
 
 onMounted(() => {
   loadAll("");
+  // getLogStatus();
 });
 
 const router = useRouter();
@@ -167,6 +220,8 @@ function goToSearchPage() {
   });
 }
 </script>
+
+
 
 
 <style></style>

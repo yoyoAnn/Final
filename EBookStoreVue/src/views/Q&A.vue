@@ -1,5 +1,5 @@
 <template>
-    <h2>test</h2>
+    <h2>常見問題</h2>
 </template>
     
 <script setup>
