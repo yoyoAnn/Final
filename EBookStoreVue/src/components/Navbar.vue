@@ -128,6 +128,7 @@ const searchInput = ref("");
 const route = useRoute();
 
 const logout = () => {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   if (userInfo && userInfo.id) {
     localStorage.removeItem("userInfo");
     router.push("/Login");
