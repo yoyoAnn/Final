@@ -33,6 +33,7 @@
             />
           </div>
         </div>
+        <div class="m-0 p-0 text-red"></div>
         <div class="row col-12">
           <div class="col-3 p-0">
             <label
@@ -81,6 +82,7 @@
           v-model="form.ProblemStatement"
           placeholder="問題敘述(請勿超過200字)"
         ></textarea>
+        <div class="m-0 p-0 text-red">{{ problemStatementErr }}</div>
         <input
           class="btn btn-primary mt-3"
           type="button"
@@ -90,12 +92,6 @@
           value="送出"
         />
       </form>
-      <div class="mt-3 text-red">
-        <span v-for="error in v$.$errors" :key="error.$uid"
-          >{{ error.$property.displayName }},</span
-        >
-        <span>以上欄位請填寫正確</span>
-      </div>
     </div>
   </v-container>
 </template>
@@ -115,7 +111,7 @@ if (localStorage.getItem("userInfo") == null) {
   userAccount.value = JSON.parse(localStorage.getItem("userInfo")).account;
 }
 
-//串接WebAPI的問題種類
+//串接WebAPI的ProblemTypes
 const baseAddress = `https://localhost:7261`;
 const problemTypes = ref([]);
 const loadProducts = async () => {
@@ -135,25 +131,32 @@ const form = reactive({
   ProblemTypeId: "",
   ProblemStatement: "",
 });
+//Error屬性
+const errorMsg = reactive({
+  emailErr: "",
+  problemTypeIdErr: "",
+  problemStatementErr: "",
+});
+const validate = () => {
+  let valid = true;
 
-const rules = {
-  Email: { required, email },
-  ProblemTypeId: { required },
-  ProblemStatement: {
-    required,
-    maxLength: maxLength(200),
-  },
+  // 問題敘述驗證
+  if (!form.ProblemStatement.trim()) {
+    problemStatementErr.value = "*問題敘述未填寫*";
+    valid = false;
+  } else if (form.ProblemStatement.length > 200) {
+    problemStatementErr.value = "*收件人姓名不能超過200個字*";
+    valid = false;
+  } else {
+    receiverNameError.value = "";
+  }
+  return valid;
 };
-const v$ = useVuelidate(rules, form);
 
 //客服信件送出
-const submitMail = async () => {
-  console.log(form);
-  const result = await v$.value.$validate();
-  if (result) {
-    alert("success");
-  } else {
-    alert("fail");
+const submitMail = () => {
+  if (!validate()) {
+    return;
   }
   // axios
   //   .post(`${baseAddress}/api/CustomerServiceMails`, form)
