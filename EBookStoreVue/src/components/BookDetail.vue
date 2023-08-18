@@ -25,7 +25,7 @@
           :disabled="book.stock === 0"
           >加入購物車</el-button
         > -->
-        <BookCartbtn />
+        <BookCartbtn @add-to-cart="addToCart" :book="book" />
       </div>
       <div class="center-button">
         <el-button

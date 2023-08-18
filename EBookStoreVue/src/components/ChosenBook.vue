@@ -46,7 +46,7 @@
                   <span class="pricecolor" style="margin-top: 4px"
                     >{{ book.price }} 元</span
                   >
-                  <BookCartbtn />
+                  <BookCartbtn @add-to-cart="addToCart" :book="book" />
                 </div>
               </div>
             </el-card>
