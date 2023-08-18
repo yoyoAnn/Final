@@ -1,5 +1,5 @@
 <template>
-    <h2>test</h2>
+    <h2>訂單狀態</h2>
 </template>
     
 <script setup>

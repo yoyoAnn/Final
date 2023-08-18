@@ -153,6 +153,33 @@ const querySearchAsync = (
 
 const handleSelect = (item: LinkItem) => {
   console.log(item);
+<script>
+export default {
+  data: () => ({
+    useritems: [
+      { title: "會員中心", route: "/Users" },
+      { title: "歷史訂單", route: "/orders" },
+      { title: "收藏專欄", route: "/" },
+    ],
+    cartRoute: "/cart",
+    homeRoute: "/",
+    isLoggedIn: false,
+  }),
+  created() {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    this.isLoggedIn = userInfo && userInfo.id;
+  },
+  methods: {
+    logout() {
+      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+      if (userInfo && userInfo.id) {
+        localStorage.removeItem("userInfo");
+        this.$router.push("/Login");
+      } else {
+        this.$router.push("/Login");
+      }
+    },
+  },
 };
 
 onMounted(() => {
