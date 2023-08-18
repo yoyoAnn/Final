@@ -54,7 +54,7 @@
 
 
 
-<script setup lang='ts'>
+<script setup>
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
@@ -100,7 +100,7 @@ const checkout = () => {
 };
 </script>
 
-<script lang="ts">
+<script>
 import { defineComponent } from "vue";
 import Books from "./ChosenBook.vue";
 import NavbarC from "./Categorybar.vue";

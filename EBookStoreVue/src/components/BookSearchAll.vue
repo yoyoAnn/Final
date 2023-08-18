@@ -75,14 +75,13 @@
     
   
   
-  <script setup lang='ts'>
+  <script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
 const books = ref([]);
 const currentPage = ref(1);
-const itemsPerPage = 12;
 const category = ref("");
 
 const searchString = ref("");
