@@ -1,6 +1,6 @@
 <template>
   <NavbarC />
-
+  <Bookbt />
   <div class="row">
     <div class="col-3"></div>
     <div class="col-6"></div>
@@ -167,12 +167,13 @@ import { defineComponent } from "vue";
 import NavbarC from "./Categorybar.vue";
 import Books from "./ChosenBook.vue";
 import BooksNewDate from "./BookSearchFromNewsDate.vue";
-
+import Bookbt from "./Bookbacktop.vue";
 export default defineComponent({
   components: {
     NavbarC,
     Books,
     BooksNewDate,
+    Bookbt,
   },
 });
 </script>

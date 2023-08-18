@@ -1,5 +1,7 @@
 <template>
   <NavbarC />
+  <Bookbt />
+
   <div class="book-details container">
     <div class="image divimage">
       <img :src="`/src/BooksImage/${book.bookImage}`" />
@@ -101,11 +103,12 @@ const checkout = () => {
 import { defineComponent } from "vue";
 import Books from "./ChosenBook.vue";
 import NavbarC from "./Categorybar.vue";
-
+import Bookbt from "./Bookbacktop.vue";
 export default defineComponent({
   components: {
     Books,
     NavbarC,
+    Bookbt,
   },
 });
 </script>
