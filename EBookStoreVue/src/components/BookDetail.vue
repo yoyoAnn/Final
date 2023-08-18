@@ -18,13 +18,14 @@
     <div class="stock-info">
       <p>庫存尚餘 : {{ book.stock }} ， 限購 {{ book.stock }} 份</p>
       <div class="center-button">
-        <el-button
+        <!-- <el-button
           round
           type="warning"
           @click="addToCart"
           :disabled="book.stock === 0"
           >加入購物車</el-button
-        >
+        > -->
+        <BookCartbtn />
       </div>
       <div class="center-button">
         <el-button
@@ -104,11 +105,13 @@ import { defineComponent } from "vue";
 import Books from "./ChosenBook.vue";
 import NavbarC from "./Categorybar.vue";
 import Bookbt from "./Bookbacktop.vue";
+import BookCartbtn from "./BookCartBtn.vue";
 export default defineComponent({
   components: {
     Books,
     NavbarC,
     Bookbt,
+    BookCartbtn,
   },
 });
 </script>

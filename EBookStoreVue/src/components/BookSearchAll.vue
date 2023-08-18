@@ -45,15 +45,7 @@
                   <span class="pricecolor" style="margin-top: 4px"
                     >{{ book.price }} 元</span
                   >
-                  <el-button
-                    class="button"
-                    style="background-color: #c80000; color: #ebeff4"
-                    ><i
-                      class="fa-solid fa-cart-shopping fa-xl"
-                      style="color: #ebeff4; margin-right: 10px"
-                    ></i>
-                    加入購物車</el-button
-                  >
+                  <BookCartbtn />
                 </div>
               </div>
             </el-card>
@@ -86,7 +78,6 @@
   <script setup lang='ts'>
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const route = useRoute();
 const books = ref([]);
@@ -171,6 +162,7 @@ import NavbarC from "./Categorybar.vue";
 import Books from "./ChosenBook.vue";
 import BooksNewDate from "./BookSearchFromNewsDate.vue";
 import Bookbt from "./Bookbacktop.vue";
+import BookCartbtn from "./BookCartBtn.vue";
 
 export default defineComponent({
   components: {
@@ -178,6 +170,7 @@ export default defineComponent({
     Books,
     BooksNewDate,
     Bookbt,
+    BookCartbtn,
   },
 });
 </script>
