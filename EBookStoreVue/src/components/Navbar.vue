@@ -75,7 +75,40 @@
 </template>
 
 
-<script setup lang="ts">
+
+
+<!-- <script>
+export default {
+  data: () => ({
+    useritems: [
+      { title: "會員中心", route: "/Users" },
+      { title: "歷史訂單", route: "/orders" },
+      { title: "收藏專欄", route: "/" },
+    ],
+    cartRoute: "/cart",
+    homeRoute: "/",
+    isLoggedIn: false,
+  }),
+  created() {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    this.isLoggedIn = userInfo && userInfo.id;
+  },
+  methods: {
+    logout() {
+      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+      if (userInfo && userInfo.id) {
+        localStorage.removeItem("userInfo");
+        this.$router.push("/Login");
+      } else {
+        this.$router.push("/Login");
+      }
+    },
+  },
+};
+</script> -->
+
+
+<script  setup lang="ts">
 import { useRouter } from "vue-router";
 import axios from "axios";
 import { ref, onMounted } from "vue";
@@ -83,7 +116,7 @@ import { ElAutocomplete } from "element-plus";
 
 const useritems = [
   { title: "會員中心", route: "/Users" },
-  { title: "歷史訂單", route: "/" },
+  { title: "歷史訂單", route: "/orders" },
   { title: "收藏專欄", route: "/" },
 ];
 
@@ -95,7 +128,16 @@ const searchInput = ref("");
 const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 isLoggedIn.value = userInfo && userInfo.id;
 
-//查詢邏輯
+const logout = () => {
+  if (userInfo && userInfo.id) {
+    localStorage.removeItem("userInfo");
+    router.push("/Login");
+  } else {
+    router.push("/Login");
+  }
+};
+
+// //查詢邏輯
 
 const state = ref("");
 
@@ -153,33 +195,6 @@ const querySearchAsync = (
 
 const handleSelect = (item: LinkItem) => {
   console.log(item);
-<script>
-export default {
-  data: () => ({
-    useritems: [
-      { title: "會員中心", route: "/Users" },
-      { title: "歷史訂單", route: "/orders" },
-      { title: "收藏專欄", route: "/" },
-    ],
-    cartRoute: "/cart",
-    homeRoute: "/",
-    isLoggedIn: false,
-  }),
-  created() {
-    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    this.isLoggedIn = userInfo && userInfo.id;
-  },
-  methods: {
-    logout() {
-      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-      if (userInfo && userInfo.id) {
-        localStorage.removeItem("userInfo");
-        this.$router.push("/Login");
-      } else {
-        this.$router.push("/Login");
-      }
-    },
-  },
 };
 
 onMounted(() => {
@@ -194,6 +209,8 @@ function goToSearchPage() {
   });
 }
 </script>
+
+
 
 
 <style></style>
