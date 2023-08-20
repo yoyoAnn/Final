@@ -60,5 +60,33 @@ namespace EBookStoreAPI.Controllers
             }
 
         }
+
+        // GET: api/Articles/writer/5
+        [HttpGet("writer/{id}")]
+        public async Task<ActionResult<ArticlesDto>> GetWriter(int id)
+        {
+            //if (_context.Articles == null)
+            //{
+            //    return NotFound();
+            //}
+            //var articles = await _context.Articles.FindAsync(id);
+
+            //if (articles == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //return articles;
+            try
+            {
+                var article = _articleDapperRepository.GetWriter(id);
+                return Ok(article);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"錯誤訊息: {ex.Message}");
+            }
+
+        }
     }
 }

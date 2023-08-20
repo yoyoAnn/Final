@@ -41,5 +41,29 @@ WHERE [Articles].[Id] = @Id
             }
 
         }
+        public IEnumerable<WritersDto> GetWriter(int id)
+        {
+            DynamicParameters param = new DynamicParameters(); // Dapper 動態參數
+            StringBuilder sql = new StringBuilder();
+
+
+            sql.AppendLine(@"
+SELECT [Writers].[Id], [Writers].[Name], [Writers].[Photo], [Writers].[Profile],
+[Articles].[Id] AS ArticleId, [Articles].[Title] AS ArticleTitle
+FROM [Writers]
+RIGHT JOIN [Articles] ON [Articles].[WriterId] = [Writers].[Id]
+WHERE [Writers].[Id] = @Id
+");
+
+            param.Add("Id", id);
+
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                IEnumerable<WritersDto> writer = connection.Query<WritersDto>(sql.ToString(), param);
+                return writer;
+            }
+
+        }
     }    
 }
