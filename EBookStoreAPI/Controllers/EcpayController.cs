@@ -1,6 +1,9 @@
 ﻿using EBookStoreAPI.DTOs;
+using EBookStoreAPI.Models.EFModels;
+using EBookStoreAPI.Models.Infra.CartDapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Security.Cryptography.Xml;
 using System.Text;
@@ -13,6 +16,16 @@ namespace EBookStoreAPI.Controllers
     [ApiController]
     public class EcpayController : ControllerBase
     {
+        private readonly EBookStoreContext _context;
+        private readonly OrderPostDapperRepository _orderPostDapperRepository;
+
+        public EcpayController(EBookStoreContext context, OrderPostDapperRepository orderPostDapperRepository)
+        {
+            _context = context;
+            _orderPostDapperRepository = orderPostDapperRepository;
+        }
+
+
         [HttpPost("Ecpay")]
         public ActionResult<IDictionary<string, string>> GetOrderDetails(IEnumerable<Ecpay> dto)
         {
@@ -44,8 +57,8 @@ namespace EBookStoreAPI.Controllers
                     { "TradeDesc",  "無"},//交易描述
                     { "ItemName",  totalItemName},//商品名稱 如果商品名稱有多筆，需在金流選擇頁一行一行顯示商品名稱的話，商品名稱請以符號#分隔。
 
-                    { "ReturnURL",  $"{website}"/*/api/Ecpay/AddPayInfo*/},//回傳網址
-                    { "OrderResultURL", $"{website}"/*Home/PayInfo/{orderId}*/},//交易結束後的回傳頁面
+                    { "ReturnURL",  $"{website}PayInfo"/*/api/Ecpay/AddPayInfo*/},//回傳網址
+                   // { "OrderResultURL", $"{website}PayInfo/{orderId}"},//交易結果回傳頁面
                     //{ "PaymentInfoURL",  $"{website}/api/Ecpay/AddAccountInfo"},
                     //{ "ClientRedirectURL",  $"{website}/Home/AccountInfo/{orderId}"},
                     { "MerchantID",  "3002607"},//特店編號
@@ -85,6 +98,50 @@ namespace EBookStoreAPI.Controllers
                 result.Append(hash[i].ToString("X2"));
             }
             return result.ToString();
+        }
+
+        [HttpPost]
+        [Route("/CartAddToOrderDB")]
+        public async Task<ActionResult> CartAddToOrderDB(OrdersDto dto)
+        {
+            if (_context.Carts == null)
+            {
+                return NotFound();
+            }
+
+            //return await _context.Carts.ToListAsync();
+            try
+            {
+                var carts = _orderPostDapperRepository.PayInfoPost(dto);
+                return Ok(carts);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"錯誤訊息: {ex.Message}");
+            }
+
+        }
+
+
+
+        [HttpPost]
+        [Route("/PayInfo")]
+        public async Task<ActionResult> PayInfo(Dictionary<string, string> formData)
+        {
+            // 處理付款資訊
+            string merchantTradeNo = formData["MerchantTradeNo"];
+            //var ecpayOrder = _dbContext.EcpayOrders.FirstOrDefault(m => m.MerchantTradeNo == merchantTradeNo);
+
+            //if (ecpayOrder != null)
+            //{
+            //    ecpayOrder.RtnCode = int.Parse(formData["RtnCode"]);
+            //    if (formData["RtnMsg"] == "Succeeded") ecpayOrder.RtnMsg = "已付款";
+            //    ecpayOrder.PaymentDate = Convert.ToDateTime(formData["PaymentDate"]);
+            //    ecpayOrder.SimulatePaid = int.Parse(formData["SimulatePaid"]);
+            //    _dbContext.SaveChanges();
+            //}
+
+            return Ok();
         }
     }
 }
