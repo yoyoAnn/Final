@@ -66,6 +66,8 @@ namespace EBookStoreAPI.Models.EFModels
                     .HasColumnType("datetime")
                     .HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.Image).HasMaxLength(255);
+
                 entity.Property(e => e.Title)
                     .IsRequired()
                     .HasMaxLength(255);
@@ -74,13 +76,13 @@ namespace EBookStoreAPI.Models.EFModels
                     .WithMany(p => p.Articles)
                     .HasForeignKey(d => d.BookId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Articles__BookId__1F98B2C1");
+                    .HasConstraintName("FK__Articles__BookId__208CD6FA");
 
                 entity.HasOne(d => d.Writer)
                     .WithMany(p => p.Articles)
                     .HasForeignKey(d => d.WriterId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Articles__Writer__208CD6FA");
+                    .HasConstraintName("FK__Articles__Writer__2180FB33");
             });
 
             modelBuilder.Entity<Authors>(entity =>
@@ -105,13 +107,13 @@ namespace EBookStoreAPI.Models.EFModels
                     .WithMany(p => p.BookAuthors)
                     .HasForeignKey(d => d.AuthorId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__BookAutho__Autho__0E6E26BF");
+                    .HasConstraintName("FK__BookAutho__Autho__0F624AF8");
 
                 entity.HasOne(d => d.Book)
                     .WithMany(p => p.BookAuthors)
                     .HasForeignKey(d => d.BookId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__BookAutho__BookI__0D7A0286");
+                    .HasConstraintName("FK__BookAutho__BookI__0E6E26BF");
             });
 
             modelBuilder.Entity<BookImages>(entity =>
@@ -125,7 +127,7 @@ namespace EBookStoreAPI.Models.EFModels
                     .WithMany(p => p.BookImages)
                     .HasForeignKey(d => d.BookId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__BookImage__BookI__0F624AF8");
+                    .HasConstraintName("FK__BookImage__BookI__10566F31");
             });
 
             modelBuilder.Entity<Books>(entity =>
@@ -159,13 +161,13 @@ namespace EBookStoreAPI.Models.EFModels
                     .WithMany(p => p.Books)
                     .HasForeignKey(d => d.CategoryId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Books__CategoryI__0B91BA14");
+                    .HasConstraintName("FK__Books__CategoryI__0C85DE4D");
 
                 entity.HasOne(d => d.Publisher)
                     .WithMany(p => p.Books)
                     .HasForeignKey(d => d.PublisherId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Books__Publisher__0C85DE4D");
+                    .HasConstraintName("FK__Books__Publisher__0D7A0286");
             });
 
             modelBuilder.Entity<Carts>(entity =>
@@ -174,18 +176,18 @@ namespace EBookStoreAPI.Models.EFModels
                     .WithMany(p => p.Carts)
                     .HasForeignKey(d => d.BookId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Carts__BookId__1BC821DD");
+                    .HasConstraintName("FK__Carts__BookId__1CBC4616");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Carts)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Carts__UserId__1AD3FDA4");
+                    .HasConstraintName("FK__Carts__UserId__1BC821DD");
             });
 
             modelBuilder.Entity<Categories>(entity =>
             {
-                entity.HasIndex(e => e.Name, "UQ__Categori__737584F6CE637D68")
+                entity.HasIndex(e => e.Name, "UQ__Categori__737584F6FC9E21DE")
                     .IsUnique();
 
                 entity.Property(e => e.Name)
@@ -203,13 +205,13 @@ namespace EBookStoreAPI.Models.EFModels
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.BookId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Comments__BookId__18EBB532");
+                    .HasConstraintName("FK__Comments__BookId__19DFD96B");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Comments)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Comments__UserId__19DFD96B");
+                    .HasConstraintName("FK__Comments__UserId__1AD3FDA4");
             });
 
             modelBuilder.Entity<CustomerServiceMails>(entity =>
@@ -234,13 +236,13 @@ namespace EBookStoreAPI.Models.EFModels
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.CustomerServiceMails)
                     .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("FK__CustomerS__Order__245D67DE");
+                    .HasConstraintName("FK__CustomerS__Order__25518C17");
 
                 entity.HasOne(d => d.ProblemType)
                     .WithMany(p => p.CustomerServiceMails)
                     .HasForeignKey(d => d.ProblemTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__CustomerS__Probl__236943A5");
+                    .HasConstraintName("FK__CustomerS__Probl__245D67DE");
             });
 
             modelBuilder.Entity<EbookOrders>(entity =>
@@ -259,13 +261,13 @@ namespace EBookStoreAPI.Models.EFModels
                     .WithMany(p => p.EbookOrders)
                     .HasForeignKey(d => d.EbookId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__EBookOrde__EBook__1EA48E88");
+                    .HasConstraintName("FK__EBookOrde__EBook__1F98B2C1");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.EbookOrders)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__EBookOrde__UserI__1DB06A4F");
+                    .HasConstraintName("FK__EBookOrde__UserI__1EA48E88");
             });
 
             modelBuilder.Entity<Ebooks>(entity =>
@@ -287,15 +289,15 @@ namespace EBookStoreAPI.Models.EFModels
                     .WithMany(p => p.Ebooks)
                     .HasForeignKey(d => d.BookId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__EBooks__BookId__1CBC4616");
+                    .HasConstraintName("FK__EBooks__BookId__1DB06A4F");
             });
 
             modelBuilder.Entity<Employees>(entity =>
             {
-                entity.HasIndex(e => e.Email, "UQ__Employee__A9D10534BAC6F8D0")
+                entity.HasIndex(e => e.Email, "UQ__Employee__A9D10534A78EFD04")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Account, "UQ__Employee__B0C3AC462DBEE8DA")
+                entity.HasIndex(e => e.Account, "UQ__Employee__B0C3AC46739CB445")
                     .IsUnique();
 
                 entity.Property(e => e.Account)
@@ -331,7 +333,7 @@ namespace EBookStoreAPI.Models.EFModels
                     .WithMany(p => p.Employees)
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Employees__RoleI__08B54D69");
+                    .HasConstraintName("FK__Employees__RoleI__09A971A2");
             });
 
             modelBuilder.Entity<News>(entity =>
@@ -357,13 +359,13 @@ namespace EBookStoreAPI.Models.EFModels
                     .WithMany(p => p.OrderItems)
                     .HasForeignKey(d => d.BookId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__OrderItem__BookI__17F790F9");
+                    .HasConstraintName("FK__OrderItem__BookI__18EBB532");
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderItems)
                     .HasForeignKey(d => d.OrderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__OrderItem__Order__17036CC0");
+                    .HasConstraintName("FK__OrderItem__Order__17F790F9");
             });
 
             modelBuilder.Entity<OrderStatuses>(entity =>
@@ -418,23 +420,23 @@ namespace EBookStoreAPI.Models.EFModels
                 entity.HasOne(d => d.OrderStatus)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.OrderStatusId)
-                    .HasConstraintName("FK__Orders__OrderSta__151B244E");
+                    .HasConstraintName("FK__Orders__OrderSta__160F4887");
 
                 entity.HasOne(d => d.ShippingStatus)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.ShippingStatusId)
-                    .HasConstraintName("FK__Orders__Shipping__160F4887");
+                    .HasConstraintName("FK__Orders__Shipping__17036CC0");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Orders)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Orders__UserId__14270015");
+                    .HasConstraintName("FK__Orders__UserId__151B244E");
             });
 
             modelBuilder.Entity<Permissions>(entity =>
             {
-                entity.HasIndex(e => e.Name, "UQ__Permissi__737584F6BD246C1D")
+                entity.HasIndex(e => e.Name, "UQ__Permissi__737584F648554F27")
                     .IsUnique();
 
                 entity.Property(e => e.Name)
@@ -484,12 +486,12 @@ namespace EBookStoreAPI.Models.EFModels
                 entity.HasOne(d => d.Book)
                     .WithMany(p => p.PurchaseOrderHistory)
                     .HasForeignKey(d => d.BookId)
-                    .HasConstraintName("FK__PurchaseO__BookI__123EB7A3");
+                    .HasConstraintName("FK__PurchaseO__BookI__1332DBDC");
 
                 entity.HasOne(d => d.Publisher)
                     .WithMany(p => p.PurchaseOrderHistory)
                     .HasForeignKey(d => d.PublisherId)
-                    .HasConstraintName("FK__PurchaseO__Publi__1332DBDC");
+                    .HasConstraintName("FK__PurchaseO__Publi__14270015");
             });
 
             modelBuilder.Entity<PurchaseOrders>(entity =>
@@ -506,13 +508,13 @@ namespace EBookStoreAPI.Models.EFModels
                     .WithMany(p => p.PurchaseOrders)
                     .HasForeignKey(d => d.BookId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PurchaseO__BookI__10566F31");
+                    .HasConstraintName("FK__PurchaseO__BookI__114A936A");
 
                 entity.HasOne(d => d.Publisher)
                     .WithMany(p => p.PurchaseOrders)
                     .HasForeignKey(d => d.PublisherId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__PurchaseO__Publi__114A936A");
+                    .HasConstraintName("FK__PurchaseO__Publi__123EB7A3");
             });
 
             modelBuilder.Entity<RepliedMails>(entity =>
@@ -540,7 +542,7 @@ namespace EBookStoreAPI.Models.EFModels
                     .WithMany(p => p.RepliedMails)
                     .HasForeignKey(d => d.Csid)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__RepliedMai__CSId__25518C17");
+                    .HasConstraintName("FK__RepliedMai__CSId__2645B050");
             });
 
             modelBuilder.Entity<RolePermissions>(entity =>
@@ -549,18 +551,18 @@ namespace EBookStoreAPI.Models.EFModels
                     .WithMany(p => p.RolePermissions)
                     .HasForeignKey(d => d.PermissionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__RolePermi__Permi__0A9D95DB");
+                    .HasConstraintName("FK__RolePermi__Permi__0B91BA14");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.RolePermissions)
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__RolePermi__RoleI__09A971A2");
+                    .HasConstraintName("FK__RolePermi__RoleI__0A9D95DB");
             });
 
             modelBuilder.Entity<Roles>(entity =>
             {
-                entity.HasIndex(e => e.Name, "UQ__Roles__737584F6BABED8D1")
+                entity.HasIndex(e => e.Name, "UQ__Roles__737584F64DB139C7")
                     .IsUnique();
 
                 entity.Property(e => e.Name)
@@ -584,20 +586,20 @@ namespace EBookStoreAPI.Models.EFModels
                 entity.HasOne(d => d.Article)
                     .WithMany(p => p.UserArticleCollections)
                     .HasForeignKey(d => d.ArticleId)
-                    .HasConstraintName("FK__UserArtic__Artic__22751F6C");
+                    .HasConstraintName("FK__UserArtic__Artic__236943A5");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserArticleCollections)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__UserArtic__UserI__2180FB33");
+                    .HasConstraintName("FK__UserArtic__UserI__22751F6C");
             });
 
             modelBuilder.Entity<Users>(entity =>
             {
-                entity.HasIndex(e => e.Email, "UQ__Users__A9D1053429DB1BD4")
+                entity.HasIndex(e => e.Email, "UQ__Users__A9D105345D8B2723")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Account, "UQ__Users__B0C3AC462E5C44F2")
+                entity.HasIndex(e => e.Account, "UQ__Users__B0C3AC4687BBAEC4")
                     .IsUnique();
 
                 entity.Property(e => e.Account)
@@ -642,7 +644,6 @@ namespace EBookStoreAPI.Models.EFModels
             modelBuilder.Entity<Writers>(entity =>
             {
                 entity.Property(e => e.Email)
-                    .IsRequired()
                     .HasMaxLength(255)
                     .IsUnicode(false);
 

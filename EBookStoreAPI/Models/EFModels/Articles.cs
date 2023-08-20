@@ -19,6 +19,7 @@ namespace EBookStoreAPI.Models.EFModels
         public string Content { get; set; }
         public int PageViews { get; set; }
         public bool Status { get; set; }
+        public string Image { get; set; }
         public DateTime CreatedTime { get; set; }
 
         public virtual Books Book { get; set; }

@@ -102,6 +102,8 @@ const errorMsg = reactive({
   problemTypeIdErr: "",
   problemStatementErr: "",
 });
+
+//表單驗證
 const validate = () => {
   let valid = true;
 

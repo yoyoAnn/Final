@@ -46,6 +46,7 @@ builder.Services.AddScoped<CartIdGetDapperRepository>();
 builder.Services.AddScoped<CartPostDapperRepository>();
 builder.Services.AddScoped<CartGetDapperRepository>();
 builder.Services.AddScoped<CartPutDapperRepository>();
+builder.Services.AddScoped<ArticleDapperRepository>();
 builder.Services.AddSingleton<EbookStoreDepperContext>();
 
 var app = builder.Build();
