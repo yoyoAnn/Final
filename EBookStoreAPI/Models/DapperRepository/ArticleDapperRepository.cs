@@ -13,6 +13,36 @@ namespace EBookStoreAPI.Models.DapperRepository
         {
             _context = context;
         }
+        public IEnumerable<ArticlesDto> GetArticles(int? writerId)
+        {
+            DynamicParameters param = new DynamicParameters(); // Dapper 動態參數
+            StringBuilder sql = new StringBuilder();
+
+
+            sql.AppendLine(@"
+SELECT [Articles].[Id], [Articles].[WriterId], [Writers].[Name] AS WriterName, [Writers].[Photo] AS WriterPhoto,
+[Writers].[Profile] AS WriterProfile, [Articles].[Title], [Articles].[Content], [Articles].[PageViews],
+[Articles].[Status], [Articles].[Image], [Articles].[CreatedTime],
+[Articles].[BookId], [Books].[Name] AS BookName
+FROM [Articles]
+LEFT JOIN [Writers] ON [Articles].[WriterId] = [Writers].[Id]
+LEFT JOIN [Books] ON [Articles].[BookId] = [Books].[Id]
+LEFT JOIN [BookImages] ON [Articles].[BookId] = [BookImages].[BookId]
+");
+            if (writerId != null)
+            {
+                sql.AppendLine(@"WHERE [Articles].[WriterId]=@WriterId");
+                param.Add("WriterId", writerId);
+            }
+
+            using (var connection = _context.CreateConnection())
+            {
+                connection.Open();
+                IEnumerable<ArticlesDto> article = connection.Query<ArticlesDto>(sql.ToString(), param);
+                return article;
+            }
+
+        }
         public IEnumerable<ArticlesDto> GetArticle(int id)
         {
             DynamicParameters param = new DynamicParameters(); // Dapper 動態參數

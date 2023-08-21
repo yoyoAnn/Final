@@ -35,15 +35,25 @@ namespace EBookStoreAPI.Controllers
 
 		// GET: api/Articles
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<Articles>>> GetArticles()
+		public async Task<ActionResult<IEnumerable<ArticlesDto>>> GetArticles(int? writerId)
 		{
-			if (_context.Articles == null)
-			{
-				return NotFound();
-			}
+			//if (_context.Articles == null)
+			//{
+			//	return NotFound();
+			//}
 
-			return await _context.Articles.OrderByDescending(a => a.CreatedTime).ToListAsync();
-		}
+			//return await _context.Articles.OrderByDescending(a => a.CreatedTime).ToListAsync();
+
+            try
+            {
+                var articles = _articleDapperRepository.GetArticles(writerId);
+                return Ok(articles);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"錯誤訊息: {ex.Message}");
+            }
+        }
 
 		// GET: api/Articles/5
 		[HttpGet("{id}")]

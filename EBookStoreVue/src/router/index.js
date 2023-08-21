@@ -77,7 +77,7 @@ const routes = [
 
     },
     {
-        path: '/articleList/',
+        path: '/articleList/:writerid',
         component: ArticleList
 
     },
