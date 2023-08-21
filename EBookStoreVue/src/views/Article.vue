@@ -126,10 +126,3 @@ onMounted(() => {
     background-color: #FFFF8D;
 }
 </style>
-<template></template>
-    
-<script setup>
-
-</script>
-    
-<style></style>
