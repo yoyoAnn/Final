@@ -110,13 +110,13 @@ export default {
 
 
 <script  setup lang="ts">
-import { useRouter } from "vue-router";
+import { useRouter,useRoute } from "vue-router";
 import axios from "axios";
-import { ref, onMounted } from "vue";
+import { ref, onMounted,watch,watchEffect } from "vue";
 import { ElAutocomplete } from "element-plus";
 
 const useritems = [
-  { title: "會員中心", route: "/Users" },
+  { title: "會員中心", route: "/UserProfile" },
   { title: "歷史訂單", route: "/orders" },
   { title: "收藏專欄", route: "/" },
 ];
@@ -126,8 +126,10 @@ const homeRoute = "/";
 const isLoggedIn = ref(false);
 const searchInput = ref("");
 
-const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-isLoggedIn.value = userInfo && userInfo.id;
+
+
+
+// isLoggedIn.value = userInfo && userInfo.id;
 
 const logout = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -138,6 +140,22 @@ const logout = () => {
     router.push("/Login");
   }
 };
+
+const route = useRoute();
+watch( 
+    route,()=>{
+        const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        if((userInfo && userInfo.id) != null){
+            isLoggedIn.value = true;
+            console.log(isLoggedIn.value)
+        } else {
+            isLoggedIn.value = false;
+            console.log(isLoggedIn.value)
+        }
+        // console.log(this.isLoggedIn)
+    }
+);
+
 
 // //查詢邏輯
 
