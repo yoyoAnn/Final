@@ -6,5 +6,6 @@
         public int UserId { get; set; }
         public int BookId { get; set; }
         public int Qty { get; set; }
+        public int payment { get; set; }
     }
 }
