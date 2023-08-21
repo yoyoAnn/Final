@@ -30,7 +30,7 @@ namespace EBookStoreAPI.Controllers
                 return NotFound();
             }
 
-            return await _context.Articles.OrderByDescending(a=>a.CreatedTime).ToListAsync();
+            return await _context.Articles.OrderByDescending(a=>a.CreatedTime).Take(3).ToListAsync();
         }
 
         // GET: api/Articles/5
@@ -63,7 +63,7 @@ namespace EBookStoreAPI.Controllers
 
         // GET: api/Articles/writer/5
         [HttpGet("writer/{id}")]
-        public async Task<ActionResult<ArticlesDto>> GetWriter(int id)
+        public async Task<ActionResult<WritersDto>> GetWriter(int id)
         {
             //if (_context.Articles == null)
             //{

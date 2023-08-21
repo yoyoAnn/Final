@@ -1,6 +1,6 @@
 <template>
     <div class="block text-center" m="t-4">
-        <span class="articlecarouseltitle">《精選專欄文章》</span>
+        <span class="articlecarouseltitle">《最新專欄文章》</span>
         <el-carousel trigger="click" height="300px">
             <el-carousel-item class="article" v-for="(article, index) in articles" :key="index">
                 <a :href="`/article/${article.id}`">
