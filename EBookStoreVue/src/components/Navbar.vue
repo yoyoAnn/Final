@@ -92,7 +92,7 @@ import { ref, onMounted, watch } from "vue";
 import { ElAutocomplete } from "element-plus";
 
 const useritems = [
-  { title: "會員中心", route: "/Users" },
+  { title: "會員中心", route: "/UserProfile" },
   { title: "歷史訂單", route: "/orders" },
   { title: "收藏專欄", route: "/" },
 ];

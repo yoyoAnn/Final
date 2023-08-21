@@ -1,17 +1,9 @@
 <template>
     <div class="container">
-      <h1>註冊帳號</h1>
-      <!-- <p>提醒您點擊註冊後<br />即表示您已閱讀並同意「布可網路書店」<br />服務條款與隱私權政策</p> -->
-      <!-- <router-link to="/survice">服務條款</router-link> -->
-      <p>
-        提醒您點擊註冊後<br />
-        即表示您已閱讀並同意「布可網路書店」<br />
-        <a href="/">服務條款</a>
-        與
-        <a href="/">隱私權政策</a>
-      </p>   
+      <h1>忘記密碼</h1><hr/><br />
+    
       <a2 v-if="registrationMessage">{{ registrationMessage }}</a2>
-      
+
       <form @submit.prevent="register">
         <div class="input-group">
           <span><v-icon right icon="mdi:mdi-account" /></span>
@@ -21,17 +13,10 @@
           <span><v-icon right icon="mdi:mdi-email" /></span>
           <input v-model="registerData.email" type="email" placeholder="Email" required>
         </div>
-        <div class="input-group">
-          <span><v-icon right icon="mdi:mdi-lock" /></span>
-          <input v-model="registerData.password" type="password" placeholder="密碼" required>
-        </div>
-        <div class="input-group">
-          <span><v-icon right icon="mdi:mdi-lock" /></span>
-          <input v-model="registerData.confirmedPassword" type="password" placeholder="確認密碼" required>
-        </div>
-        <button class="btn" type="submit">註冊帳號</button>
+        <br>
+        <button class="btn" type="submit">寄送驗證信</button>
       </form>
-     
+      
     </div>
   </template>
   
@@ -43,9 +28,7 @@ data() {
     return {
     registerData: {
         account: '',
-        email: '',
-        password: '',
-        confirmedPassword: ''
+        email: '',  
     },
     registrationMessage: ''
     };
@@ -53,8 +36,8 @@ data() {
 methods: {
     async register() {
         try {
-            const response = await axios.post("https://localhost:7261/api/Users/Register", this.registerData);
-            console.log(response)
+            const response = await axios.post("https://localhost:7261/api/Users/ForgetPassword", this.registerData);
+            // console.log(response)
 
             this.registrationMessage = response.data;
             console.log(this.registrationMessage)
@@ -62,18 +45,14 @@ methods: {
             this.registerData = {
             account: '',
             email: '',
-            password: '',
-            confirmedPassword: ''
             };
-            console.log(this.registerData)
+            // console.log(this.registerData)
 
-            console.log(response.data)
-            console.log(response.status)
-            
-
+            // console.log(response.data)
+            // console.log(response.status)
 
             if (response.status == 200) {
-                this.$router.push('/ConformRegister');
+                this.$router.push('/ConfirmForgetPassword');
             }
             
         } catch (error) {
@@ -86,11 +65,10 @@ methods: {
 };
 </script>
   
-
+  
 
 <style scoped>
 
-/* @import "@/assets/registerStyle.css"; */
 body {
     font-family: Arial, sans-serif;
 
@@ -187,11 +165,8 @@ body {
     clear: both;
 }
 
-
 .container a2 {
     color: red;
-    /* margin-bottom: 30px; */
-    /* margin-top: 30px; */
 }
 
 </style>
