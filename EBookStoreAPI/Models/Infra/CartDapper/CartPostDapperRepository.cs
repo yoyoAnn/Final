@@ -23,14 +23,15 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
 
 
             sql.AppendLine(@"
-  							insert into [dbo].[Carts](UserId,BookId,Qty)
+  							insert into [dbo].[Carts](UserId,BookId,Qty,payment)
                             values
-                            (@UserId,@BookId,@Qty)				
+                            (@UserId,@BookId,@Qty,@payment)				
                               ");
 
             param.Add("UserId", dto.UserId);
             param.Add("BookId", dto.BookId);
             param.Add("Qty", dto.Qty);
+            param.Add("payment", dto.payment);
 
 
             //if (!string.IsNullOrWhiteSpace(dto.Id.ToString()))
