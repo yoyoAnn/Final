@@ -14,7 +14,7 @@
               <a href="#!" class="text-reset">關於布可</a>
             </p>
             <p>
-              <a href="#!" class="text-reset">人才招募</a>
+              <a href="/articleList/0" class="text-reset">精選專欄文章</a>
             </p>
             <p>
               <a href="#!" class="text-reset">隱私權政策</a>
@@ -40,6 +40,9 @@
             </p>
             <p>
               <a href="https://www.taaze.tw/index.html" class="text-reset">TAAZE讀冊生活</a>
+            </p>
+            <p>
+              <a href="https://readmoo.com/" class="text-reset">Readmoo讀墨</a>
             </p>
           </MDBCol>
           <!-- Grid column -->
