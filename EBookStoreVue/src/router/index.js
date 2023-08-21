@@ -45,7 +45,7 @@ const routes = [
         component: Cart
     },
     {
-        path: '/article',
+        path: '/article/:articleid',
         component: Article
 
     },
