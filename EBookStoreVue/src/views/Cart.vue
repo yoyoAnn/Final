@@ -20,18 +20,18 @@
                         <table id="cartItem" class="table fixed-cell">
                             <thead>
                                 <tr>
-                                    <th style="width: 60px;text-align:center; " class="checkWidth">
+                                    <th class="col-check">
                                         全選：<input type="checkbox" v-model="Allcheck" @change="allcheck" />
                                     </th>
                                     <th class="hidden-column">Id</th>
                                     <th class="hidden-column">會員Id</th>
                                     <th class="hidden-column">書本Id</th>
                                     <th>書籍封面</th>
-                                    <th>書籍名稱</th>
-                                    <th>價格</th>
-                                    <th>購買數量</th>
-                                    <th>小計</th>
-                                    <th>動作</th>
+                                    <th class="col-bookName">書籍名稱</th>
+                                    <th class="col-check">價格</th>
+                                    <th class="col-check">購買數量</th>
+                                    <th class="col-check">小計</th>
+                                    <th class="col-remove">動作</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -163,6 +163,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.js';
 import router from '../router/index.js';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
+import moment from 'moment-timezone';
 
 const tab = ref(null);
 
@@ -299,7 +300,7 @@ const handleCheckout = async () => {
 
                 id: cartItemsresponseResult.data.MerchantTradeNo,
                 userid: data.userId,
-                ordertime: new Date(cartItemsresponseResult.data.MerchantTradeDate).toISOString(),
+                ordertime: moment(cartItemsresponseResult.data.MerchantTradeDate).tz("Asia/Taipei").format(),
                 orderstatusid: '1',
                 totalamount: cartItemsresponseResult.data.TotalAmount,
                 totalpayment: cartItemsresponseResult.data.TotalAmount,
@@ -327,6 +328,7 @@ const handleCheckout = async () => {
 const paymentForm = ref(null)
 
 async function submitForm() {
+
     const response = await axios.post('https://localhost:7261/CartAddToOrderDB/', cartInfoData);
     updatePayment(selectedItems);
     paymentForm.value.submit()
@@ -473,10 +475,6 @@ th {
     white-space: nowrap;
 }
 
-.checkWidth {
-    width: 60px !important;
-}
-
 .quantityButton {
     padding: 5px 10px;
     background-color: #007bff;
@@ -501,5 +499,20 @@ img {
     max-height: 100vh;
     object-fit: contain;
     cursor: pointer;
+}
+
+.col-check {
+    width: 5%;
+    text-align: center
+}
+
+.col-bookName {
+    width: 50%;
+    text-align: center
+}
+
+.col-remove {
+    width: 10%;
+    text-align: center
 }
 </style>

@@ -19,6 +19,8 @@
     "core-js": "^3.6.5",
     "element-plus": "^2.3.9",
     "mdb-vue-ui-kit": "^4.0.0",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.43",
     "pinia": "^2.1.6",
     "roboto-fontface": "*",
     "vue": "^3.0.0",
