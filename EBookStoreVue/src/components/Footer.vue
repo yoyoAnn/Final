@@ -33,21 +33,13 @@
             <!-- Links -->
             <h5 class="text-uppercase fw-bold mb-4">友站連結</h5>
             <p>
-              <a
-                href="https://www.books.com.tw/?loc=tw_logo_001"
-                class="text-reset"
-                >博客來</a
-              >
+              <a href="https://www.books.com.tw/?loc=tw_logo_001" class="text-reset">博客來</a>
             </p>
             <p>
-              <a href="https://www.kingstone.com.tw/" class="text-reset"
-                >金石堂</a
-              >
+              <a href="https://www.kingstone.com.tw/" class="text-reset">金石堂</a>
             </p>
             <p>
-              <a href="https://www.taaze.tw/index.html" class="text-reset"
-                >TAAZE讀冊生活</a
-              >
+              <a href="https://www.taaze.tw/index.html" class="text-reset">TAAZE讀冊生活</a>
             </p>
           </MDBCol>
           <!-- Grid column -->
@@ -57,7 +49,7 @@
             <!-- Links -->
             <h5 class="text-uppercase fw-bold mb-4">客服中心</h5>
             <p>
-              <a href="#!" class="text-reset">常見問題</a>
+              <a href="/QA" class="text-reset">常見問題</a>
             </p>
             <p>
               <a href="#!" class="text-reset">線上客服</a>
@@ -73,8 +65,7 @@
             <!-- Links -->
             <h5 class="text-uppercase fw-bold mb-4">聯絡我們</h5>
             <p>
-              <i class="fas fa-home me-3 link-secondary"></i
-              >桃園市中壢區新生路二段421號(聖德基督學院)
+              <i class="fas fa-home me-3 link-secondary"></i>桃園市中壢區新生路二段421號(聖德基督學院)
             </p>
             <p>
               <i class="fas fa-envelope me-3 link-secondary"></i>
@@ -92,9 +83,7 @@
     </section>
     <!-- Section: Links  -->
     <!-- Section: Social media -->
-    <section
-      class="d-flex justify-content-center justify-content-lg-between p-2"
-    >
+    <section class="d-flex justify-content-center justify-content-lg-between p-2">
       <!-- Left -->
       <div class="me-5 d-none d-lg-block">
         <span>Get connected with us on social networks:</span>
@@ -104,46 +93,22 @@
       <!-- Right -->
       <div>
         <a href="" class="me-4 text-reset">
-          <MDBIcon
-            class="link-secondary"
-            iconStyle="fab"
-            icon="facebook-f"
-          ></MDBIcon>
+          <MDBIcon class="link-secondary" iconStyle="fab" icon="facebook-f"></MDBIcon>
         </a>
         <a href="" class="me-4 text-reset">
-          <MDBIcon
-            class="link-secondary"
-            iconStyle="fab"
-            icon="twitter"
-          ></MDBIcon>
+          <MDBIcon class="link-secondary" iconStyle="fab" icon="twitter"></MDBIcon>
         </a>
         <a href="" class="me-4 text-reset">
-          <MDBIcon
-            class="link-secondary"
-            iconStyle="fab"
-            icon="google"
-          ></MDBIcon>
+          <MDBIcon class="link-secondary" iconStyle="fab" icon="google"></MDBIcon>
         </a>
         <a href="" class="me-4 text-reset">
-          <MDBIcon
-            class="link-secondary"
-            iconStyle="fab"
-            icon="instagram"
-          ></MDBIcon>
+          <MDBIcon class="link-secondary" iconStyle="fab" icon="instagram"></MDBIcon>
         </a>
         <a href="" class="me-4 text-reset">
-          <MDBIcon
-            class="link-secondary"
-            iconStyle="fab"
-            icon="linkedin"
-          ></MDBIcon>
+          <MDBIcon class="link-secondary" iconStyle="fab" icon="linkedin"></MDBIcon>
         </a>
         <a href="" class="me-4 text-reset">
-          <MDBIcon
-            class="link-secondary"
-            iconStyle="fab"
-            icon="github"
-          ></MDBIcon>
+          <MDBIcon class="link-secondary" iconStyle="fab" icon="github"></MDBIcon>
         </a>
       </div>
       <!-- Right -->
@@ -151,14 +116,9 @@
     <!-- Section: Social media -->
 
     <!-- Copyright -->
-    <div
-      class="text-center p-2 copyright"
-      style="background-color: rgba(0, 0, 0, 0.05)"
-    >
+    <div class="text-center p-2 copyright" style="background-color: rgba(0, 0, 0, 0.05)">
       © 2021 Copyright:
-      <a class="text-reset fw-bold" href="https://mdbootstrap.com/"
-        >MDBootstrap.com</a
-      >
+      <a class="text-reset fw-bold" href="https://mdbootstrap.com/">MDBootstrap.com</a>
     </div>
     <!-- Copyright -->
   </MDBFooter>

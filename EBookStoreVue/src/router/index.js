@@ -9,6 +9,7 @@ import CustomerMail from '../views/CustomerMail.vue'
 import BookSearch from '../components/BookSearch.vue'
 import BookSearchAll from '../components/BookSearchAll.vue'
 import Orders from '../views/Orders.vue'
+import QA from '../views/Q&A.vue'
 import Register from '../views/Register.vue'
 import ConformRegister from '../views/ConformRegister.vue'
 import ActiveRegister from '../views/users/ActiveRegister.vue'
@@ -77,6 +78,10 @@ const routes = [
     {
         path: '/customerMail',
         component: CustomerMail
+    },
+    {
+        path: '/QA',
+        component: QA
     },
     {
         path: '/books/:bookid',

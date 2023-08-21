@@ -33,8 +33,8 @@
           <v-icon right icon="mdi:mdi-cart" />
         </v-btn>
         <v-menu open-on-hover>
-          <template v-slot:activator="{ props }" >
-            <v-btn color="grey" v-bind="props" v-if="isLoggedIn"> 
+          <template v-slot:activator="{ props }">
+            <v-btn color="grey" v-bind="props" v-if="isLoggedIn">
               <v-icon right icon="mdi:mdi-account" />
             </v-btn>
           </template>
@@ -109,10 +109,10 @@ export default {
 </script> -->
 
 
-<script  setup lang="ts">
-import { useRouter,useRoute } from "vue-router";
+<script setup lang="ts">
+import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
-import { ref, onMounted,watch,watchEffect } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { ElAutocomplete } from "element-plus";
 
 const useritems = [
@@ -125,11 +125,7 @@ const cartRoute = "/cart";
 const homeRoute = "/";
 const isLoggedIn = ref(false);
 const searchInput = ref("");
-
-
-
-
-// isLoggedIn.value = userInfo && userInfo.id;
+const route = useRoute();
 
 const logout = () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -141,21 +137,15 @@ const logout = () => {
   }
 };
 
-const route = useRoute();
-watch( 
-    route,()=>{
-        const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-        if((userInfo && userInfo.id) != null){
-            isLoggedIn.value = true;
-            console.log(isLoggedIn.value)
-        } else {
-            isLoggedIn.value = false;
-            console.log(isLoggedIn.value)
-        }
-        // console.log(this.isLoggedIn)
-    }
-);
-
+watch(route, () => {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  if ((userInfo && userInfo.id) != null) {
+    isLoggedIn.value = true;
+  } else {
+    isLoggedIn.value = false;
+  }
+  // console.log(this.isLoggedIn)
+});
 
 // //查詢邏輯
 
@@ -219,6 +209,7 @@ const handleSelect = (item: LinkItem) => {
 
 onMounted(() => {
   loadAll("");
+  // getLogStatus();
 });
 
 const router = useRouter();
