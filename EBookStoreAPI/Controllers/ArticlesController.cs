@@ -21,9 +21,9 @@ namespace EBookStoreAPI.Controllers
             _articleDapperRepository = articleDapperRepository;
         }
 
-        // GET: api/Articles
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Articles>>> GetArticles()
+		// GET: api/Articles/top3
+		[HttpGet("top3")]
+        public async Task<ActionResult<IEnumerable<Articles>>> GetTop3Articles()
         {
             if (_context.Articles == null)
             {
@@ -31,10 +31,22 @@ namespace EBookStoreAPI.Controllers
             }
 
             return await _context.Articles.OrderByDescending(a=>a.CreatedTime).Take(3).ToListAsync();
-        }
+		}
 
-        // GET: api/Articles/5
-        [HttpGet("{id}")]
+		// GET: api/Articles
+		[HttpGet]
+		public async Task<ActionResult<IEnumerable<Articles>>> GetArticles()
+		{
+			if (_context.Articles == null)
+			{
+				return NotFound();
+			}
+
+			return await _context.Articles.OrderByDescending(a => a.CreatedTime).ToListAsync();
+		}
+
+		// GET: api/Articles/5
+		[HttpGet("{id}")]
         public async Task<ActionResult<ArticlesDto>> GetArticle(int id)
         {
             //if (_context.Articles == null)

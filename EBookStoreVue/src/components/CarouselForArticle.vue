@@ -27,7 +27,7 @@ const articles = ref([]);
 
 const loadArticles = async () => {
   try {
-    const response = await fetch("https://localhost:7261/api/Articles");
+    const response = await fetch("https://localhost:7261/api/Articles/top3");
     if (!response.ok) {
       throw new Error(`Network response was not ok: ${response.status}`);
     }
