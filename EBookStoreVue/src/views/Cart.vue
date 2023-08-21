@@ -201,6 +201,8 @@ let cartInfoData = ref({
     shippingStatusId: ""
 });
 
+let selectedItems = ref([]);
+
 //const cartInfoData = ref();
 
 const validate = () => {
@@ -274,9 +276,11 @@ const handleCheckout = async () => {
         const data = {
             userId: userInfo.id,
         };
-        const response = await axios.post('https://localhost:7261/GetCartsList/', data);
 
-        cartItems.value = response.data.map(item => ({
+        // 過濾出被勾選的項目
+        selectedItems = books.value.filter(item => item.check);
+
+        cartItems.value = selectedItems.map(item => ({
             name: item.name,
             price: item.price,
             qty: item.qty
@@ -324,7 +328,21 @@ const paymentForm = ref(null)
 
 async function submitForm() {
     const response = await axios.post('https://localhost:7261/CartAddToOrderDB/', cartInfoData);
+    updatePayment(selectedItems);
     paymentForm.value.submit()
+}
+
+async function updatePayment(selectedItems) {
+    try {
+        const updateRequests = selectedItems.map(item => {
+            return axios.post(`https://localhost:7261/PaymentCart/${item.id}`, item.id);
+        });
+
+        await Promise.all(updateRequests);
+        console.log('購物車已更新');
+    } catch (error) {
+        console.error('購物車更新失敗原因:', error);
+    }
 }
 
 const totalprice = computed(() => {

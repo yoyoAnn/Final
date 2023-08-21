@@ -1,6 +1,7 @@
 ﻿using EBookStoreAPI.DTOs;
 using EBookStoreAPI.Models.EFModels;
 using EBookStoreAPI.Models.Infra.CartDapper;
+using Humanizer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -18,11 +19,13 @@ namespace EBookStoreAPI.Controllers
     {
         private readonly EBookStoreContext _context;
         private readonly OrderPostDapperRepository _orderPostDapperRepository;
+        private readonly PaymentCartDapperRepository _paymentCartDapperRepository;
 
-        public EcpayController(EBookStoreContext context, OrderPostDapperRepository orderPostDapperRepository)
+        public EcpayController(EBookStoreContext context, OrderPostDapperRepository orderPostDapperRepository, PaymentCartDapperRepository paymentCartDapperRepository)
         {
             _context = context;
             _orderPostDapperRepository = orderPostDapperRepository;
+            _paymentCartDapperRepository = paymentCartDapperRepository;
         }
 
 
@@ -125,23 +128,19 @@ namespace EBookStoreAPI.Controllers
 
 
         [HttpPost]
-        [Route("/PayInfo")]
-        public async Task<ActionResult> PayInfo(Dictionary<string, string> formData)
+        [Route("/PaymentCart/{id}")]
+        public async Task<ActionResult> PaymentCart(int id)
         {
-            // 處理付款資訊
-            string merchantTradeNo = formData["MerchantTradeNo"];
-            //var ecpayOrder = _dbContext.EcpayOrders.FirstOrDefault(m => m.MerchantTradeNo == merchantTradeNo);
-
-            //if (ecpayOrder != null)
-            //{
-            //    ecpayOrder.RtnCode = int.Parse(formData["RtnCode"]);
-            //    if (formData["RtnMsg"] == "Succeeded") ecpayOrder.RtnMsg = "已付款";
-            //    ecpayOrder.PaymentDate = Convert.ToDateTime(formData["PaymentDate"]);
-            //    ecpayOrder.SimulatePaid = int.Parse(formData["SimulatePaid"]);
-            //    _dbContext.SaveChanges();
-            //}
-
-            return Ok();
+            try
+            {
+                await _paymentCartDapperRepository.PaymentCartEdit(id);
+                return Ok($"編號{id}已完成更新");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest($"錯誤訊息: {ex.Message}");
+            }
+          
         }
     }
 }
