@@ -1,5 +1,7 @@
 ﻿using EBookStoreAPI.DTOs;
 using EBookStoreAPI.Models.EFModels;
+using EBookStoreAPI.Models.Infra;
+using Humanizer;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -27,8 +29,10 @@ namespace EBookStoreAPI.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto value)
         {
+            var hashOrigPwd = HashUtility.ToSHA256(value.Password, "!@#$$DGTEGYT");
+
             var user = await _context.Users.FirstOrDefaultAsync(u =>
-                u.Account == value.Account && u.Password == value.Password);
+                u.Account == value.Account && u.Password == hashOrigPwd);
 
             if (user == null)
             {

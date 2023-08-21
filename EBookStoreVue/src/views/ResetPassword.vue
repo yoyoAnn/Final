@@ -1,37 +1,22 @@
 <template>
     <div class="container">
-      <h1>註冊帳號</h1>
-      <!-- <p>提醒您點擊註冊後<br />即表示您已閱讀並同意「布可網路書店」<br />服務條款與隱私權政策</p> -->
-      <!-- <router-link to="/survice">服務條款</router-link> -->
-      <p>
-        提醒您點擊註冊後<br />
-        即表示您已閱讀並同意「布可網路書店」<br />
-        <a href="/">服務條款</a>
-        與
-        <a href="/">隱私權政策</a>
-      </p>   
+      <h1>重設密碼</h1><hr/><br />
+    
       <a2 v-if="registrationMessage">{{ registrationMessage }}</a2>
-      
-      <form @submit.prevent="register">
+
+      <form @submit.prevent="activateAccount">
         <div class="input-group">
-          <span><v-icon right icon="mdi:mdi-account" /></span>
-          <input v-model="registerData.account" type="text" placeholder="帳號" required>
-        </div>
-        <div class="input-group">
-          <span><v-icon right icon="mdi:mdi-email" /></span>
-          <input v-model="registerData.email" type="email" placeholder="Email" required>
+          <span><v-icon right icon="mdi:mdi-lock" /></span>
+          <input v-model="resetPasswordData.NewPassword" type="password" placeholder="新密碼" required>
         </div>
         <div class="input-group">
           <span><v-icon right icon="mdi:mdi-lock" /></span>
-          <input v-model="registerData.password" type="password" placeholder="密碼" required>
+          <input v-model="resetPasswordData.ConfirmPassword" type="password" placeholder="確認密碼" required>
         </div>
-        <div class="input-group">
-          <span><v-icon right icon="mdi:mdi-lock" /></span>
-          <input v-model="registerData.confirmedPassword" type="password" placeholder="確認密碼" required>
-        </div>
-        <button class="btn" type="submit">註冊帳號</button>
+        <br>
+        <button class="btn" type="submit">重設密碼</button>
       </form>
-     
+      
     </div>
   </template>
   
@@ -39,58 +24,55 @@
 import axios from 'axios';
   
 export default {
-data() {
+  data() {
     return {
-    registerData: {
-        account: '',
-        email: '',
-        password: '',
-        confirmedPassword: ''
-    },
-    registrationMessage: ''
+        resetPasswordData: {
+            NewPassword: '',
+            ConfirmPassword: '',
+        },
+        registrationMessage: ''
     };
-},
-methods: {
-    async register() {
+  },
+    // created() {
+    //     this.activateAccount();
+    // },
+    methods: {
+      async activateAccount() {
+        const url = 'https://localhost:7261/api/Users/ResetPassword';
+        const userId = Number(this.$route.query.userid); 
+        const confirmCode = this.$route.query.confirmCode; 
+  
+        const data = {
+          id: userId,
+          confirmCode: confirmCode,
+          newPassword: this.resetPasswordData.NewPassword,
+          confirmedPassword: this.resetPasswordData.ConfirmPassword
+        };
+  
         try {
-            const response = await axios.post("https://localhost:7261/api/Users/Register", this.registerData);
-            console.log(response)
-
-            this.registrationMessage = response.data;
-            console.log(this.registrationMessage)
-
-            this.registerData = {
-            account: '',
-            email: '',
-            password: '',
-            confirmedPassword: ''
-            };
-            console.log(this.registerData)
-
-            console.log(response.data)
-            console.log(response.status)
-            
-
-
-            if (response.status == 200) {
-                this.$router.push('/ConformRegister');
-            }
-            
+          const response = await axios.post(url, data);
+        //   console.log(response.data);
+        //   console.log(response);
+        //   console.log(url);
+        //   console.log("ok",confirmCode);
+        //   console.log("ok",id);
+        alert("已成功重新設定密碼，請重新登入");
+        this.$router.push('/Login');
         } catch (error) {
-            // this.registrationMessage = '註冊失敗';
+        //   console.log("err",id);
+        //   console.log("err",confirmCode);
             this.registrationMessage = error.response.data;
             console.error(error);
         }
-    }
-}
+      }
+    },
 };
 </script>
   
-
+  
 
 <style scoped>
 
-/* @import "@/assets/registerStyle.css"; */
 body {
     font-family: Arial, sans-serif;
 
@@ -187,11 +169,8 @@ body {
     clear: both;
 }
 
-
-.container a2 {
+.container a2{
     color: red;
-    /* margin-bottom: 30px; */
-    /* margin-top: 30px; */
 }
 
 </style>
