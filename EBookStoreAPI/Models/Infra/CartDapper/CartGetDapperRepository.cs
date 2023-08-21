@@ -27,6 +27,7 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
                             from Carts
                             left join Books on [Carts].BookId=Books.Id
                             left join BookImages on [Carts].BookId=BookImages.BookId
+                            where payment='0'
                               ");
             //if(Id != null)
             //{

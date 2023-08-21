@@ -35,10 +35,6 @@
               </a>
               <div style="padding: 14px">
                 <span class="book-title">{{ book.name }}</span>
-                <!-- <div class="bottom">
-                  <span class="pricecolor">{{ book.price }} 元</span>
-                  <el-button type="text" class="button">加入購物車</el-button>
-                </div> -->
                 <div
                   class="bottom"
                   style="
@@ -50,15 +46,7 @@
                   <span class="pricecolor" style="margin-top: 4px"
                     >{{ book.price }} 元</span
                   >
-                  <el-button
-                    class="button"
-                    style="background-color: #c80000; color: #ebeff4"
-                    ><i
-                      class="fa-solid fa-cart-shopping fa-xl"
-                      style="color: #ebeff4; margin-right: 10px"
-                    ></i>
-                    加入購物車</el-button
-                  >
+                  <BookCartbtn @add-to-cart="addToCart" :book="book" />
                 </div>
               </div>
             </el-card>
@@ -80,7 +68,6 @@
 
 <script setup lang='ts'>
 import { ref, computed, onMounted } from "vue";
-import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const books = ref([]);
 // const randomBooks = ref([]);
@@ -136,7 +123,16 @@ const nextPage = () => {
 };
 </script>
   
+<script lang="ts">
+import { defineComponent } from "vue";
+import BookCartbtn from "./BookCartBtn.vue";
 
+export default defineComponent({
+  components: {
+    BookCartbtn,
+  },
+});
+</script>
 
 <style src="../BookCSS/BookCSS.css">
 </style>

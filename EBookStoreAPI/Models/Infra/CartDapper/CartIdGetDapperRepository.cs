@@ -28,6 +28,7 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
                             left join Books on [Carts].BookId=Books.Id
                             left join BookImages on [Carts].BookId=BookImages.BookId
                             where 1=1
+                            and payment='0'
                               ");
 
             if (!string.IsNullOrWhiteSpace(dto.UserId.ToString()))

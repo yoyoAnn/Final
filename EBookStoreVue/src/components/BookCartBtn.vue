@@ -1,0 +1,65 @@
+<template>
+  <el-button
+    class="button"
+    style="background-color: #f5900d; color: #ebeff4"
+    @click="addToCart"
+    ><i
+      class="fa-solid fa-cart-shopping fa-xl"
+      style="color: #ebeff4; margin-right: 10px"
+    ></i>
+    加入購物車</el-button
+  >
+</template>
+
+
+<script setup>
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import { ref, nextTick, defineExpose, defineProps } from "vue";
+import { useRouter } from "vue-router";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
+import axios from "axios";
+
+const props = defineProps(["book"]);
+//驗證登入
+
+const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+const isLoggedIn = ref(userInfo && userInfo.id !== undefined);
+const router = useRouter();
+
+//點擊事件
+// props.addToCart(book);
+const addToCart = async () => {
+  console.log(props.book); //抓取資料如果要抓書本名 console.log(props.book.name)
+  //   props.book.stock
+  //   props.book.id
+  //   props.book.stock
+  //   userInfo.id
+  // 購物車操作
+  if (isLoggedIn.value) {
+    const Url = "https://localhost:7261/api/Carts";
+    const CartDto = {
+      UserId: userInfo.id,
+      BookId: props.book.id,
+      Qty: props.book.stock,
+      Id: 0,
+    };
+    const response = await axios.post(Url, CartDto);
+    toast("已加入購物車", {
+      autoClose: 1000,
+    });
+  } else {
+    nextTick(() => {
+      router.push("/Login");
+    });
+  }
+};
+
+defineExpose({
+  addToCart,
+});
+</script>
+
+
+<style>
+</style>

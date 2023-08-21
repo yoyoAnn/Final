@@ -21,17 +21,22 @@ namespace EBookStoreAPI.Controllers
         private readonly CartPutDapperRepository _cartPutDapperRepository;
         private readonly CartPostDapperRepository _cartPostDapperRepository;
         private readonly CartIdGetDapperRepository _cartIdGetDapperRepository;
+        private readonly OrderPostDapperRepository _orderPostDapperRepository;
 
 
 
-        public CartsController(EBookStoreContext context, CartGetDapperRepository cartDapperRepository, CartPutDapperRepository cartPutDapperRepository, CartPostDapperRepository cartPostDapperRepository, CartIdGetDapperRepository cartIdGetDapperRepository)
+        public CartsController(EBookStoreContext context, CartGetDapperRepository cartDapperRepository, CartPutDapperRepository cartPutDapperRepository, CartPostDapperRepository cartPostDapperRepository, CartIdGetDapperRepository cartIdGetDapperRepository, OrderPostDapperRepository orderPostDapperRepository)
         {
             _context = context;
             _cartDapperRepository = cartDapperRepository;
             _cartPutDapperRepository = cartPutDapperRepository;
             _cartPostDapperRepository = cartPostDapperRepository;
             _cartIdGetDapperRepository = cartIdGetDapperRepository;
+            _orderPostDapperRepository = orderPostDapperRepository;
         }
+
+
+
 
         // GET: api/Carts
         [HttpGet]
@@ -151,6 +156,8 @@ namespace EBookStoreAPI.Controllers
 
             return NoContent();
         }
+
+
 
         // POST: api/Carts
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
