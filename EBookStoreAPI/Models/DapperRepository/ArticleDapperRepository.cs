@@ -48,11 +48,12 @@ WHERE [Articles].[Id] = @Id
 
 
             sql.AppendLine(@"
-SELECT [Writers].[Id], [Writers].[Name], [Writers].[Photo], [Writers].[Profile],
-[Articles].[Id] AS ArticleId, [Articles].[Title] AS ArticleTitle
+SELECT TOP (3) [Writers].[Id], [Writers].[Name], [Writers].[Photo], [Writers].[Profile],
+[Articles].[Id] AS ArticleId, [Articles].[Title] AS ArticleTitle, [Articles].[CreatedTime]
 FROM [Writers]
 RIGHT JOIN [Articles] ON [Articles].[WriterId] = [Writers].[Id]
 WHERE [Writers].[Id] = @Id
+ORDER BY [CreatedTime] DESC
 ");
 
             param.Add("Id", id);

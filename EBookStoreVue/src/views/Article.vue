@@ -7,7 +7,6 @@
       <a href="/#">{{ article.writerName }}</a>
     </p>
     <div>
-      <!-- <WriterTab :writerId="article.writerId"></WriterTab> -->
       <v-card>
         <v-tabs v-model="tab" bg-color="light">
           <v-tab value="Profile">作者</v-tab>
@@ -35,7 +34,20 @@
               </v-row>
             </v-window-item>
 
-            <v-window-item value="Articles"> 文章列表 </v-window-item>
+            <v-window-item value="Articles">
+              <div>
+                <a
+                  class="text-h6"
+                  v-for="(item, index) in writer"
+                  :key="index"
+                  :href="`/article/${item.articleId}`"
+                  >{{ index + 1 }}. {{ item.articleTitle }}
+                  <span class="text-black">
+                    - 發表於{{ item.createdTime.substring(0, 10) }}</span
+                  ><br
+                /></a>
+              </div>
+            </v-window-item>
           </v-window>
         </v-card-text>
       </v-card>
@@ -55,9 +67,8 @@
     </div>
   </v-container>
 </template>
-    
-<script setup >
-import WriterTab from "@/components/WriterTab.vue";
+      
+  <script setup >
 import { ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
@@ -77,9 +88,8 @@ watch(
 );
 
 //取得WebAPI資料
-const loadData = async () => {
+const loadArticle = async () => {
   try {
-    //先load Article資料
     const response = await fetch(
       `https://localhost:7261/api/Articles/${articleId.value}`
     );
@@ -90,28 +100,33 @@ const loadData = async () => {
     article.value = datas[0];
     article.value.createdTime = article.value.createdTime.substring(0, 10);
     articleParagraphs.value = article.value.content.trim().split(/\r\n\r\n/);
-
-    //再load Writer資料
-    const response2 = await fetch(
+  } catch (error) {
+    console.error("Error loading books:", error);
+  }
+};
+const loadWriter = async () => {
+  try {
+    const response = await fetch(
       `https://localhost:7261/api/Articles/writer/${article.value.writerId}`
     );
     if (!response.ok) {
       throw new Error(`Network response was not ok: ${response.status}`);
     }
-    const datas2 = await response2.json();
-    writer.value = datas2;
-    console.log(datas2);
+    const datas = await response.json();
+    writer.value = datas;
+    // console.log(writer.value);
   } catch (error) {
     console.error("Error loading books:", error);
   }
 };
 
-onMounted(() => {
-  loadData();
+onMounted(async () => {
+  await loadArticle();
+  loadWriter();
 });
 </script>
-    
-<style>
+      
+  <style>
 .titleImage {
   margin-bottom: 30px;
   height: 400px;
