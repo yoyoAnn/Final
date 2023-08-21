@@ -3,29 +3,15 @@
     <v-row no-gutters>
       <v-col cols="3">
         <v-btn class="fill-height" flat color="white" router :to="homeRoute">
-          <v-img
-            class=""
-            :width="60"
-            aspect-ratio="4/3"
-            src="https://blog.flamingtext.com/blog/2023/08/08/flamingtext_com_1691517616_586896794.png"
-          ></v-img>
-          <span
-            class="text-subtitle-1 text-grey-darken-3"
-            style="display: flex; vertical-align: text-bottom"
-            >網路書店</span
-          >
+          <v-img class="" :width="60" aspect-ratio="4/3"
+            src="https://blog.flamingtext.com/blog/2023/08/08/flamingtext_com_1691517616_586896794.png"></v-img>
+          <span class="text-subtitle-1 text-grey-darken-3" style="display: flex; vertical-align: text-bottom">網路書店</span>
         </v-btn>
       </v-col>
       <v-col class="d-flex justify-center" cols="6">
         <v-responsive max-height="100" max-width="500">
-          <el-autocomplete
-            class=""
-            v-model="searchInput"
-            :fetch-suggestions="querySearchAsync"
-            placeholder="搜尋"
-            @keydown.enter="goToSearchPage"
-            @select="handleSelect"
-          />
+          <el-autocomplete class="" v-model="searchInput" :fetch-suggestions="querySearchAsync" placeholder="搜尋"
+            @keydown.enter="goToSearchPage" @select="handleSelect" />
         </v-responsive>
       </v-col>
       <v-col class="d-flex justify-end" cols="3">
@@ -39,22 +25,12 @@
             </v-btn>
           </template>
           <v-list>
-            <v-list-item
-              v-for="(useritem, index) in useritems"
-              :key="index"
-              router
-              :to="useritem.route"
-            >
+            <v-list-item v-for="(useritem, index) in useritems" :key="index" router :to="useritem.route">
               <v-list-item-title>{{ useritem.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
         </v-menu>
-        <v-btn
-          flat
-          color="grey"
-          @click="logout"
-          v-if="!$route.path.includes('/Login')"
-        >
+        <v-btn flat color="grey" @click="logout" v-if="!$route.path.includes('/Login')">
           <v-icon right icon="mdi:mdi-exit-to-app" />
         </v-btn>
       </v-col>

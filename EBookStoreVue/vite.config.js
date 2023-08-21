@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
 import mkcert from "vite-plugin-mkcert";
 
+
 const path = require('path')
 
 // https://vitejs.dev/config/
@@ -41,3 +42,5 @@ export default defineConfig({
   },
   */
 })
+
+
