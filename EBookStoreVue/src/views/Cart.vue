@@ -174,6 +174,7 @@ const Allcheck = ref(true);
 const showModalcart = ref(false)
 const cartItemsresponse = ref([]);
 const cartItems = ref([]);
+let orderItems = ref([]);
 const ReceiverName = ref('');
 const receiverNameError = ref('');
 const ReceiverPhone = ref('');
@@ -198,7 +199,7 @@ let cartInfoData = ref({
     totalamount: "",
     totalpayment: "",
     taxIdNum: "",
-    shippingFee: "60",
+    shippingFee: "80",
     shippingStatusId: ""
 });
 
@@ -304,9 +305,15 @@ const handleCheckout = async () => {
                 orderstatusid: '1',
                 totalamount: cartItemsresponseResult.data.TotalAmount,
                 totalpayment: cartItemsresponseResult.data.TotalAmount,
-                shippingFee: "60",
+                shippingFee: "80",
                 shippingStatusId: "1"
             };
+            orderItems.value = selectedItems.map(item => ({
+                OrderId: cartInfoData.id,
+                BookId: item.bookId,
+                Price: item.price,
+                Qty: item.qty
+            }));
 
             // 將資料儲存到localStorage
             localStorage.setItem('ReceiverInfo', JSON.stringify(cartInfoData));
@@ -330,11 +337,11 @@ const paymentForm = ref(null)
 async function submitForm() {
 
     const response = await axios.post('https://localhost:7261/CartAddToOrderDB/', cartInfoData);
-    updatePayment(selectedItems);
+    updatePayment(selectedItems, orderItems);
     paymentForm.value.submit()
 }
 
-async function updatePayment(selectedItems) {
+async function updatePayment(selectedItems, orderItems) {
     try {
         const updateRequests = selectedItems.map(item => {
             return axios.post(`https://localhost:7261/PaymentCart/${item.id}`, item.id);
@@ -344,6 +351,13 @@ async function updatePayment(selectedItems) {
         console.log('購物車已更新');
     } catch (error) {
         console.error('購物車更新失敗原因:', error);
+    }
+    try {
+        const postOrderItemRequests = orderItems.value.map(item => {
+            return axios.post(`https://localhost:7261/CartAddToOrderItemsDB/`, item);
+        });
+    } catch (error) {
+        console.error('訂單項目更新失敗原因:', error);
     }
 }
 
@@ -442,9 +456,6 @@ const closeModal = () => {
 
   
 <style scoped>
-/* 你的CSS樣式 */
-
-
 .hidden-column {
     display: none;
 }

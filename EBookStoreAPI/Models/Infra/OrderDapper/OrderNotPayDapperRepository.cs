@@ -25,7 +25,7 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
 
 
             sql.AppendLine(@"
-                                SELECT TOP (1000) [Orders].[Id]
+                                SELECT [Orders].[Id]
 	                                  ,UserId
                                       ,Users.[Name]
                                       ,[ReceiverName]
