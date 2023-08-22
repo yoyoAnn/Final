@@ -162,8 +162,14 @@ namespace EBookStoreAPI.Controllers
      
             if (await _context.Users.AnyAsync(u => u.Account == registerDto.Account))
             {
-                return BadRequest("帳號已存在"); 
+                return BadRequest("帳號已存在");
+                //return BadRequest(new { ErrorMessage = "帳號已存在" });
             }
+
+            //if (await _context.Users.AnyAsync(u => u.Email == registerDto.Email))
+            //{
+            //    return BadRequest("Email已存在");
+            //}
 
             if (registerDto.Password != registerDto.ConfirmedPassword)
             {
@@ -179,7 +185,7 @@ namespace EBookStoreAPI.Controllers
             {
                 Id = registerDto.Id,
                 Account = registerDto.Account,
-                Password = registerDto.Password, 
+                Password = hashOrigPwd, 
                 Email = registerDto.Email,
                 IsConfirmed = false,
                 ConfirmCode = confirmCode,
@@ -237,5 +243,162 @@ namespace EBookStoreAPI.Controllers
             return Ok("帳號啟用成功");
 
         }
+
+        [HttpPost("ForgetPassword")]
+        public async Task<ActionResult<string>> ForgetPassword(UsersDto dto)
+        {
+
+            //var user = await _context.Users.FindAsync(dto.Id);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Account == dto.Account);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            if (user.IsConfirmed == false)
+            {
+                return BadRequest("您還未啟用帳號");
+            }
+
+            try
+            {
+                var urlTemplate = "https://localhost:5173/ResetPassword?userid={0}&confirmCode={1}";
+                var confirmCode = Guid.NewGuid().ToString("N");
+                user.ConfirmCode = confirmCode;
+                await _context.SaveChangesAsync();
+
+                var url = string.Format(urlTemplate, user.Id, confirmCode);
+                new EmailHelper().SendForgetPasswordEmail(url, user.Account, user.Email);
+
+            }
+            catch (Exception ex)
+            {
+                return Ok(ex.Message);
+            }
+
+            //await _context.SaveChangesAsync();
+
+            return Ok("已成功記送重設密碼驗證信");
+        }
+
+        [HttpPost("ResetPassword")]
+        public async Task<ActionResult<string>> ResetPassword(ChangePasswordDto dto)
+        {
+
+            //var user = await _context.Users.FindAsync(dto.Id);
+            var user = await _context.Users
+                .SingleOrDefaultAsync(u => u.Id == dto.Id && u.ConfirmCode == dto.ConfirmCode);
+
+
+            if (user == null)
+            {
+                return BadRequest("驗證錯誤，請重新寄送驗證信");
+            }
+
+            var hashPassword = HashUtility.ToSHA256(dto.NewPassword, "!@#$$DGTEGYT");
+
+            if (dto.NewPassword != dto.ConfirmedPassword)
+            {
+                return BadRequest("輸入的密碼不一致，請再重新確認");
+            }
+
+            user.Password = hashPassword;
+            //user.IsConfirmed = true;
+            user.ConfirmCode = null;
+
+            await _context.SaveChangesAsync();
+
+            return Ok("重設密碼帳號驗證成功");
+        }
+
+
+        [HttpGet("GetUserProfileById")]
+        public async Task<IActionResult> GetUserProfileById(int id)
+        {
+            try
+            {
+                var user = await _context.Users.FindAsync(id);
+
+                if (user == null)
+                {
+                    return BadRequest("找不到會員資訊");
+                }
+
+                var userProfile = new
+                {
+                    Email = user.Email,
+                    Account = user.Account,
+                    Name = user.Name,
+                    Phone = user.Phone,
+                    Address = user.Address,
+                    Gender = user.Gender
+                };
+
+                return Ok(userProfile);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"錯誤資訊: {ex.Message}");
+            }
+        }
+
+
+        [HttpPut("EditProfile")]
+        public async Task<IActionResult> EditProfile(UsersDto updatedUserDto)
+        {
+            try
+            {
+                var user = await _context.Users.FindAsync(updatedUserDto.Id);
+
+                if (user == null)
+                {
+                    return BadRequest("找不到會員資訊");
+                }
+
+                user.Email = updatedUserDto.Email;
+                user.Account = updatedUserDto.Account;
+                user.Name = updatedUserDto.Name;
+                user.Phone = updatedUserDto.Phone;
+                user.Address = updatedUserDto.Address;
+                user.Gender = updatedUserDto.Gender;
+
+                await _context.SaveChangesAsync();
+
+                return Ok("資料更新成功");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"錯誤資訊: {ex.Message}");
+            }
+        }
+
+        [HttpPost("ChangePassword")]
+        public async Task<ActionResult<string>> ChangePassword(ChangePasswordDto dto)
+        {
+
+            //var user = await _context.Users.FindAsync(dto.Id);
+
+            var hashOrigPwd = HashUtility.ToSHA256(dto.OriginalPassword, "!@#$$DGTEGYT");
+            var user = await _context.Users
+                .SingleOrDefaultAsync(u => u.Id == dto.Id && u.Password == hashOrigPwd);
+
+            if (user == null)
+            {
+                return BadRequest("密碼輸入錯誤");
+            }
+
+            var hashPassword = HashUtility.ToSHA256(dto.NewPassword, "!@#$$DGTEGYT");
+
+            if (dto.NewPassword != dto.ConfirmedPassword)
+            {
+                return BadRequest("輸入的密碼不一致，請再重新確認");
+            }
+
+            user.Password = hashPassword;
+            await _context.SaveChangesAsync();
+
+            return Ok("修改密碼成功");
+        }
+
     }
 }

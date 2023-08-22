@@ -21,13 +21,26 @@
               </p>
               <p>
                 <input v-model="password" type="password" placeholder="密碼" required>
+
+                <!-- <div class="form-floating">
+                    <input :type="isActive ? 'password' : 'text'" v-model="password" class="form-control" placeholder="密碼" required>
+                    <label for="floatingPassword">密碼</label>
+                    <i :class="[isActive ? 'fa-eye' : 'fa-eye-slash', 'fas']" @click="isActive = !isActive"></i>
+                </div> -->
+
+                <!-- <div class="form-floating">
+                    <input  :type="isActive ? 'password' : 'text'" v-model="password" class="form-control" placeholder="密碼" required>
+                    <label for="floatingPassword">密碼</label>
+                    <i :class="[isActive ? 'fa-eye' : 'fa-eye-slash', 'fas', 'eye-icon']" @click="isActive = !isActive"></i>
+                </div> -->
+                
               </p>
               <p>
                 <button class="btn" type="submit">Sign In</button>
               </p>
               
               <p>
-                    <a href="">Forget password?</a>
+                    <a href="/forgetpassword">Forget password?</a>
                     <a href="/register">新增帳號</a>
                 </p>
             </form>
@@ -47,7 +60,7 @@
         account: '',
         password: '',
         id: null,
-        isLoggedIn: false, 
+        isLoggedIn: false,    
       };
     },
     methods: {
@@ -69,7 +82,7 @@
   
           const userInfo = {
             account: this.account,
-            password: this.password,
+            // password: this.password,
             id: data.userId,
           };
   
@@ -93,6 +106,6 @@
   <style scoped>
 
   @import "@/assets/loginStyle.css";
-
+  
   </style>
   

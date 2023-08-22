@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import vuetify from 'vite-plugin-vuetify'
 import mkcert from "vite-plugin-mkcert";
 
+
 const path = require('path')
 
 // https://vitejs.dev/config/
@@ -15,12 +16,11 @@ export default defineConfig({
     }),
     mkcert(),
   ],
-  // server: {
-  //   https: {
-  //     key: fs.readFileSync(`${__dirname}/src/assets/localhost-key.pem`),
-  //     cert: fs.readFileSync(`${__dirname}/src/assets/localhost.pem`),
-  //   },
-  // },
+  server: {
+    https: true,
+    port: 8080,
+    host: 'localhost'
+  },
   define: { 'process.env': {} },
   resolve: {
     alias: {
@@ -41,3 +41,5 @@ export default defineConfig({
   },
   */
 })
+
+

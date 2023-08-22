@@ -25,9 +25,13 @@ namespace EBookStoreAPI.Models.Infra
                 return sb.ToString();
             }
         }
-        public static string GetSalt()
+        //public static string GetSalt()
+        //{
+        //    return System.Configuration.ConfigurationManager.AppSettings["Salt"];
+        //}
+        public  string GetSalt()
         {
-            return System.Configuration.ConfigurationManager.AppSettings["Salt"];
+            return _configuration["AppSettings:Salt"];
         }
     }
 }

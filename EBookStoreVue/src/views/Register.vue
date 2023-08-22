@@ -9,8 +9,9 @@
         <a href="/">服務條款</a>
         與
         <a href="/">隱私權政策</a>
-        yoyoann2023@gmail.com
-      </p>    
+      </p>   
+      <a2 v-if="registrationMessage">{{ registrationMessage }}</a2>
+      
       <form @submit.prevent="register">
         <div class="input-group">
           <span><v-icon right icon="mdi:mdi-account" /></span>
@@ -30,7 +31,7 @@
         </div>
         <button class="btn" type="submit">註冊帳號</button>
       </form>
-      <p v-if="registrationMessage">{{ registrationMessage }}</p>
+     
     </div>
   </template>
   
@@ -76,7 +77,8 @@ methods: {
             }
             
         } catch (error) {
-            this.registrationMessage = '註冊失敗';
+            // this.registrationMessage = '註冊失敗';
+            this.registrationMessage = error.response.data;
             console.error(error);
         }
     }
@@ -84,7 +86,7 @@ methods: {
 };
 </script>
   
-  
+
 
 <style scoped>
 
@@ -110,6 +112,7 @@ body {
     max-width: 400px;
     text-align: center;
     margin-top: 40px;
+    margin-bottom: 40px;
 }
 
 .container h1 {
@@ -177,10 +180,18 @@ body {
 
 .btn:hover {
     background-color: #00b894;
+    color: #fff;
 }
 
 .clear {
     clear: both;
+}
+
+
+.container a2 {
+    color: red;
+    /* margin-bottom: 30px; */
+    /* margin-top: 30px; */
 }
 
 </style>

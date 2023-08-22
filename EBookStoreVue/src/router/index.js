@@ -12,7 +12,13 @@ import Orders from '../views/Orders.vue'
 import QA from '../views/Q&A.vue'
 import Register from '../views/Register.vue'
 import ConformRegister from '../views/ConformRegister.vue'
-import ActiveRegister from '../views/ActiveRegister.vue'
+import ActiveRegister from '../views/users/ActiveRegister.vue'
+import ForgetPassword from '../views/ForgetPassword.vue'
+import ConfirmForgetPassword from '../views/users/ConfirmForgetPassword.vue'
+import UserProfile from '../views/UserProfile.vue'
+import ChangePassword from '../views/ChangePassword.vue'
+import ResetPassword from '../views/ResetPassword.vue'
+
 
 //路由設定
 const routes = [
@@ -37,15 +43,35 @@ const routes = [
         component: ActiveRegister
     },
     {
+        path: "/forgetpassword",
+        component: ForgetPassword
+    },
+    {
+        path: "/confirmforgetpassword",
+        component: ConfirmForgetPassword
+    },
+    {
         path: '/users',
         component: Users
+    },
+    {
+        path: "/userprofile",
+        component: UserProfile
+    },
+    {
+        path: "/changepassword",
+        component: ChangePassword
+    },
+    {
+        path: "/resetpassword",
+        component: ResetPassword
     },
     {
         path: '/cart',
         component: Cart
     },
     {
-        path: '/article',
+        path: '/article/:articleid',
         component: Article
 
     },

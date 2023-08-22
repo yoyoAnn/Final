@@ -1,14 +1,7 @@
 <template>
-  <el-button
-    class="button"
-    style="background-color: #f5900d; color: #ebeff4"
-    @click="addToCart"
-    ><i
-      class="fa-solid fa-cart-shopping fa-xl"
-      style="color: #ebeff4; margin-right: 10px"
-    ></i>
-    加入購物車</el-button
-  >
+  <el-button class="button" style="background-color: #f5900d; color: #ebeff4" @click="addToCart"><i
+      class="fa-solid fa-cart-shopping fa-xl" style="color: #ebeff4; margin-right: 10px"></i>
+    加入購物車</el-button>
 </template>
 
 
@@ -43,6 +36,7 @@ const addToCart = async () => {
       BookId: props.book.id,
       Qty: props.book.stock,
       Id: 0,
+      payment: 0
     };
     const response = await axios.post(Url, CartDto);
     toast("已加入購物車", {
@@ -61,5 +55,4 @@ defineExpose({
 </script>
 
 
-<style>
-</style>
+<style></style>
