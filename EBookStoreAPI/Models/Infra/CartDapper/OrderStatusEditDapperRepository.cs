@@ -7,40 +7,29 @@ using System.Text;
 
 namespace EBookStoreAPI.Models.Infra.CartDapper
 {
-    public class OrderPostDapperRepository
+    public class OrderStatusEditDapperRepository
     {
         private readonly EbookStoreDepperContext _connStr;
 
-        public OrderPostDapperRepository(EbookStoreDepperContext context)
+        public OrderStatusEditDapperRepository(EbookStoreDepperContext context)
         {
             _connStr = context;
         }
 
 
-        public async Task PayInfoPost(OrdersDto dto)
+        public async Task PayInfoEdit(EcpayReturnDto dto)
         {
             DynamicParameters param = new DynamicParameters(); // Dapper 動態參數
             StringBuilder sql = new StringBuilder();
 
 
             sql.AppendLine(@"                  
-  							insert into [dbo].[Orders](Id,UserId,ReceiverName,ReceiverAddress,ReceiverPhone,VehicleNum,Remark,OrderTime,OrderStatusId,TotalAmount,TotalPayment,OrderStatusId)
-                            values
-                                                    (@Id,@UserId,@ReceiverName,@ReceiverAddress,@ReceiverPhone,@VehicleNum,@Remark,@OrderTime,@OrderStatusId,@TotalAmount,@TotalPayment,'1')				
-                              ");
+  						          update Orders
+                                  set OrderStatusId='6'
+                                  where(1=1)
+                                  and Id=@Id  ");
 
-            param.Add("Id", dto.Id);
-            param.Add("UserId", dto.UserId);
-            param.Add("ReceiverName", dto.ReceiverName);
-            param.Add("ReceiverAddress", dto.ReceiverAddress);
-            param.Add("ReceiverPhone", dto.ReceiverPhone);
-            param.Add("VehicleNum", dto.VehicleNum);
-            param.Add("Remark", dto.Remark);
-            param.Add("OrderTime", dto.OrderTime);
-            param.Add("OrderStatusId", dto.OrderStatusId);
-            param.Add("TotalAmount", dto.TotalAmount);
-            param.Add("TotalPayment", dto.TotalPayment);
-
+            param.Add("Id", dto.MerchantTradeNo);
 
             //if (!string.IsNullOrWhiteSpace(dto.Id.ToString()))
             //{

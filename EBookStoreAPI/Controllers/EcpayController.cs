@@ -4,6 +4,7 @@ using EBookStoreAPI.Models.Infra.CartDapper;
 using Humanizer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Security.Cryptography.Xml;
@@ -20,20 +21,22 @@ namespace EBookStoreAPI.Controllers
         private readonly EBookStoreContext _context;
         private readonly OrderPostDapperRepository _orderPostDapperRepository;
         private readonly PaymentCartDapperRepository _paymentCartDapperRepository;
+        private readonly OrderStatusEditDapperRepository _orderStatusEditDapperRepository;
 
-        public EcpayController(EBookStoreContext context, OrderPostDapperRepository orderPostDapperRepository, PaymentCartDapperRepository paymentCartDapperRepository)
+        public EcpayController(EBookStoreContext context, OrderPostDapperRepository orderPostDapperRepository, PaymentCartDapperRepository paymentCartDapperRepository, OrderStatusEditDapperRepository orderStatusEditDapperRepository)
         {
             _context = context;
             _orderPostDapperRepository = orderPostDapperRepository;
             _paymentCartDapperRepository = paymentCartDapperRepository;
+            _orderStatusEditDapperRepository = orderStatusEditDapperRepository;
         }
-
+        string orderId = "";
 
         [HttpPost("Ecpay")]
         public ActionResult<IDictionary<string, string>> GetOrderDetails(IEnumerable<Ecpay> dto)
         {
-            var orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
-            var website = $" https://127.0.0.1:5173/";
+            orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
+            var website = $"https://127.0.0.1:8080/";
 
             int totalAmountTemp = 60;
             string totalItemName = string.Empty;
@@ -60,8 +63,8 @@ namespace EBookStoreAPI.Controllers
                     { "TradeDesc",  "無"},//交易描述
                     { "ItemName",  totalItemName},//商品名稱 如果商品名稱有多筆，需在金流選擇頁一行一行顯示商品名稱的話，商品名稱請以符號#分隔。
 
-                    { "ReturnURL",  $"{website}PayInfo"/*/api/Ecpay/AddPayInfo*/},//回傳網址
-                   // { "OrderResultURL", $"{website}PayInfo/{orderId}"},//交易結果回傳頁面
+                    { "ReturnURL",  $"https://localhost:7261/api/Ecpay/EcpayReturn/{orderId}"},//回傳網址
+                    { "OrderResultURL",$"https://localhost:7261/api/Ecpay/EcpayReturn/{orderId}"},//交易結果回傳頁面
                     //{ "PaymentInfoURL",  $"{website}/api/Ecpay/AddAccountInfo"},
                     //{ "ClientRedirectURL",  $"{website}/Home/AccountInfo/{orderId}"},
                     { "MerchantID",  "3002607"},//特店編號
@@ -69,12 +72,31 @@ namespace EBookStoreAPI.Controllers
                     { "PaymentType",  "aio"},//交易類型
                     { "ChoosePayment",  "ALL"},//付款方式
                     { "EncryptType",  "1"},//加密類型
-                    {"ClientBackURL", website }//付款完成通知回傳網址
+                    {"ClientBackURL", $"{website}orders" }//付款完成通知回傳網址
             };
 
             order["CheckMacValue"] = GetCheckMacValue(order);//檢查碼
             return Ok(order);
         }
+
+        [HttpPost("EcpayReturn/{orderId}")]
+        public  IActionResult EcpayReturn([FromForm]  EcpayReturnDto info)
+        {
+            if (info.RtnMsg == "Succeeded")
+            {
+                _orderStatusEditDapperRepository.PayInfoEdit(info);
+
+
+
+                return Redirect($"https://localhost:8080/orders/");
+            }
+            else
+            {
+                return Ok(info.RtnMsg);
+            }
+
+        }
+
 
         private string GetCheckMacValue(Dictionary<string, string> order)
         {
@@ -125,8 +147,6 @@ namespace EBookStoreAPI.Controllers
 
         }
 
-
-
         [HttpPost]
         [Route("/PaymentCart/{id}")]
         public async Task<ActionResult> PaymentCart(int id)
@@ -136,11 +156,15 @@ namespace EBookStoreAPI.Controllers
                 await _paymentCartDapperRepository.PaymentCartEdit(id);
                 return Ok($"編號{id}已完成更新");
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest($"錯誤訊息: {ex.Message}");
             }
-          
+
         }
+
+
+
+
     }
 }
