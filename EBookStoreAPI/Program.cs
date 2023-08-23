@@ -51,6 +51,9 @@ builder.Services.AddScoped<OrderPostDapperRepository>();
 builder.Services.AddScoped<PaymentCartDapperRepository>();
 builder.Services.AddScoped<OrderStatusEditDapperRepository>();
 builder.Services.AddScoped<OrderNotPayDapperRepository>();
+builder.Services.AddScoped<OrderItemPostDapperRepository>();
+builder.Services.AddScoped<OrderItemsDapperRepository>();
+
 
 builder.Services.AddSingleton<EbookStoreDepperContext>();
 

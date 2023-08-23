@@ -1,45 +1,87 @@
 <template>
-    <div>
-        <!-- Tabs Component -->
-        <v-tabs v-model="activeTab">
-            <v-tab key="not-paid">未付款</v-tab>
-            <v-tab key="paid">已付款</v-tab>
-        </v-tabs>
+    <form ref="paymentForm" method="POST" action="https://payment-stage.ecpay.com.tw/Cashier/AioCheckOut/V5">
+        <div v-for="(value, key) in ecpayData" :key="key">
+            <input type="hidden" :name="key" :value="value">
+        </div>
+    </form>
+    <div class="common-layout">
+        <el-container>
+            <el-header>
+                <!-- Tabs Component -->
+                <el-tabs v-model="activeTab" @tab-click="handleClick">
+                    <el-tab-pane label="尚未付款" name="not-paid"></el-tab-pane>
+                    <el-tab-pane label="已付款" name="paid"></el-tab-pane>
+                    <el-tab-pane label="交易完成" name="final"></el-tab-pane>
+                    <el-tab-pane label="已取消" name="cancel"></el-tab-pane>
+                </el-tabs>
+            </el-header>
+            <el-main>
+                <!-- Not Paid Orders Table -->
+                <el-table v-if="activeTab === 'not-paid'" :data="notPaidOrders" style="width: 100%"
+                    @expand-change="handleExpand">
+                    <el-table-column type="expand">
+                        <template #default="{ row }">
+                            <el-table :data="expandOrderItems[row.id]" style="width: 100%">
+                                <!-- Add your item table columns here. For instance: -->
+                                <el-table-column width="500" prop="name" label="書名"></el-table-column>
+                                <el-table-column prop="price" label="價格"></el-table-column>
+                                <el-table-column prop="qty" label="數量"></el-table-column>
+                                <el-table-column label="小計">
+                                    <template #default="{ row }">
+                                        {{ computeSubtotal(row.price, row.qty) }}
+                                    </template>
+                                </el-table-column>
+                                <!-- ... Add other columns for items here ... -->
+                            </el-table>
+                        </template>
+                    </el-table-column>
 
-        <v-tabs-items v-model="activeTab">
-            <!-- Not Paid Orders Table -->
-            <v-tab-item key="not-paid">
-                <v-data-table :headers="headers" :items="notPaidOrders" class="elevation-1">
-                    <template #orderTime="{ item }">
-                        {{ formatDate(item.orderTime) }}
-                    </template>
-                </v-data-table>
-            </v-tab-item>
-
-            <!-- Paid Orders Table -->
-            <v-tab-item key="paid">
-                <!-- This will be populated later when you have data for paid orders -->
-            </v-tab-item>
-        </v-tabs-items>
+                    <el-table-column v-for="header in headers" :key="header.value" :prop="header.value"
+                        :label="header.text"></el-table-column>
+                    <el-table-column label="訂單時間" prop="orderTime">
+                        <template #default="{ row }">
+                            {{ formatDate(row.orderTime) }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作">
+                        <template #default="{ row }">
+                            <el-button type="primary" @click="completePayment(row)">完成付款</el-button>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <!-- Paid Orders Table -->
+                <!-- You can add the table for paid orders here later when you have data -->
+            </el-main>
+        </el-container>
     </div>
 </template>
   
 <script setup>
 import { ref, onMounted } from 'vue';
 import axios from "axios";
+import { nextTick } from 'vue';
 
 const activeTab = ref("not-paid");
 const notPaidOrders = ref([]);
+const formattedItems = ref([]);
+const expandOrderItems = ref({});  // Data for expanded rows
+const showEcpayForm = ref(false);
+const paymentForm = ref(null)
+const ecpayData = ref({});
+
 const headers = [
-    { text: "訂單ID", value: "id" },
-    { text: "姓名", value: "name" },
+    { text: "訂單編號", value: "id" },
     { text: "收件人", value: "receiverName" },
-    { text: "地址", value: "receiverAddress" },
-    { text: "電話", value: "receiverPhone" },
-    // ... (you can continue with other columns you want to show in the table)
-    { text: "訂單時間", value: "orderTime" },
+    { text: "收件地址", value: "receiverAddress" },
+    { text: "聯絡電話", value: "receiverPhone" },
+    { text: "出貨狀態", value: "shippingStatusName" },
+    { text: "運費", value: "shippingFee" },
     { text: "總金額", value: "totalAmount" },
 ];
+
+const computeSubtotal = (price, qty) => {
+    return price * qty;
+};
 
 const getNotPaidOrders = async () => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
@@ -53,14 +95,86 @@ const getNotPaidOrders = async () => {
     }
 };
 
+const fetchOrderItems = async (orderId) => {
+    try {
+        const response = await axios.post("https://localhost:7261/GetOrderItemList", { orderId });
+        expandOrderItems.value[orderId] = response.data;
+    } catch (error) {
+        console.error("Error fetching order items:", error);
+    }
+};
+
+const handleExpand = (row, expanded) => {
+    if (expanded && !expandOrderItems.value[row.id]) {
+        fetchOrderItems(row.id);
+    }
+};
+
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("zh-TW") + " " + date.toLocaleTimeString("zh-TW");
 };
 
 onMounted(getNotPaidOrders);
+
+const completePayment = async (order) => {
+    let items = expandOrderItems.value[order.id];
+
+    // 如果子行資料還沒有，那就先去載入
+    if (!items || items.length === 0) {
+        await fetchOrderItems(order.id);  // 等待資料載入完成
+        items = expandOrderItems.value[order.id];
+    }
+
+    // 再次確認資料是否載入成功
+    if (!items || items.length === 0) {
+        console.error("找不到訂單的子行資料：", order.id);
+        return;
+    }
+
+    formattedItems.value = items.map(item => ({
+        orderId: order.id,
+        name: item.name,
+        price: item.price,
+        qty: item.qty
+    }));
+
+    try {
+        const cartItemsresponseResult = await axios.post("https://localhost:7261/api/EcpayAgain/EcpayAgain", formattedItems.value);
+        console.log(cartItemsresponseResult);
+        console.log("正在生成訂單資料：", order.id);
+
+        ecpayData.value = cartItemsresponseResult.data;
+
+        await nextTick();
+
+        console.log(ecpayData.value.MerchantID);
+
+        paymentForm.value.submit()
+
+
+    } catch (error) {
+        console.error("生成訂單資料錯誤：", error);
+    }
+
+
+};
 </script>
   
 <style scoped>
-/* Add your CSS styles here */
+.el-header,
+.el-main {
+    background-color: white;
+}
+
+.el-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.el-table .cell,
+.el-table th div {
+    white-space: nowrap;
+}
 </style>

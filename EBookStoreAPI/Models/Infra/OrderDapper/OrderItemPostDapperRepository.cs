@@ -1,45 +1,38 @@
 ﻿using Dapper;
 using EBookStoreAPI.Context;
 using EBookStoreAPI.DTOs;
+using EBookStoreAPI.DTOs.Orders;
 using EBookStoreAPI.Models.EFModels;
 using Microsoft.Data.SqlClient;
 using System.Text;
 
 namespace EBookStoreAPI.Models.Infra.CartDapper
 {
-    public class OrderPostDapperRepository
+    public class OrderItemPostDapperRepository
     {
         private readonly EbookStoreDepperContext _connStr;
-
-        public OrderPostDapperRepository(EbookStoreDepperContext context)
+        public OrderItemPostDapperRepository(EbookStoreDepperContext context)
         {
             _connStr = context;
         }
 
 
-        public async Task PayInfoPost(OrdersDto dto)
+        public async Task OrderItemPost(OrderItemsDto dto)
         {
             DynamicParameters param = new DynamicParameters(); // Dapper 動態參數
             StringBuilder sql = new StringBuilder();
 
 
-            sql.AppendLine(@"                  
-  							insert into [dbo].[Orders](Id,UserId,ReceiverName,ReceiverAddress,ReceiverPhone,VehicleNum,Remark,OrderTime,OrderStatusId,TotalAmount,TotalPayment,ShippingStatusId)
-                            values
-                                                    (@Id,@UserId,@ReceiverName,@ReceiverAddress,@ReceiverPhone,@VehicleNum,@Remark,@OrderTime,@OrderStatusId,@TotalAmount,@TotalPayment,'1')				
+            sql.AppendLine(@"
+  					         insert into OrderItems(OrderId,BookId,Price,Qty)
+                             values
+                             (@OrderId,@BookId,@Price,@Qty)			
                               ");
 
-            param.Add("Id", dto.Id);
-            param.Add("UserId", dto.UserId);
-            param.Add("ReceiverName", dto.ReceiverName);
-            param.Add("ReceiverAddress", dto.ReceiverAddress);
-            param.Add("ReceiverPhone", dto.ReceiverPhone);
-            param.Add("VehicleNum", dto.VehicleNum);
-            param.Add("Remark", dto.Remark);
-            param.Add("OrderTime", dto.OrderTime);
-            param.Add("OrderStatusId", dto.OrderStatusId);
-            param.Add("TotalAmount", dto.TotalAmount);
-            param.Add("TotalPayment", dto.TotalPayment);
+            param.Add("OrderId", dto.OrderId);
+            param.Add("BookId", dto.BookId);
+            param.Add("Price", dto.Price);
+            param.Add("Qty", dto.Qty);
 
 
             //if (!string.IsNullOrWhiteSpace(dto.Id.ToString()))
