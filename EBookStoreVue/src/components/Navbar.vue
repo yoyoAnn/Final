@@ -154,7 +154,7 @@ const state = ref("");
 interface LinkItem {
   value: string;
   categoryName: string;
-  publisherName: string;
+  author: string;
 }
 
 const links = ref<LinkItem[]>([]);
@@ -177,7 +177,7 @@ async function loadAll(queryString: string) {
           return {
             value: result.name,
             categoryName: result.categoryName,
-            publisherName: result.publisherName,
+            author: result.author,
           };
         });
       }

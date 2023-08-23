@@ -18,6 +18,7 @@ import ConfirmForgetPassword from '../views/users/ConfirmForgetPassword.vue'
 import UserProfile from '../views/UserProfile.vue'
 import ChangePassword from '../views/ChangePassword.vue'
 import ResetPassword from '../views/ResetPassword.vue'
+import BookSearchAuthor from "../components/BookSearchAuthor.vue";
 
 
 //路由設定
@@ -101,6 +102,11 @@ const routes = [
     {
         path: '/orders',
         component: Orders
+    },
+    {
+        path: '/booksearchauthor',
+        name: 'book-searchauthor',
+        component: BookSearchAuthor
     }
 ]
 
