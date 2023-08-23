@@ -15,19 +15,13 @@ namespace EBookStoreAPI.Controllers
     public class EcpayAgainController : ControllerBase
     {
 
-        private readonly EBookStoreContext _context;
-        private readonly OrderPostDapperRepository _orderPostDapperRepository;
-        private readonly PaymentCartDapperRepository _paymentCartDapperRepository;
         private readonly OrderStatusEditDapperRepository _orderStatusEditDapperRepository;
-        private readonly OrderItemPostDapperRepository _orderItemPostDapperRepository;
+        private readonly OrderIdEditDapperRepository _orderIdEditDapperRepository;
 
-        public EcpayAgainController(EBookStoreContext context, OrderPostDapperRepository orderPostDapperRepository, PaymentCartDapperRepository paymentCartDapperRepository, OrderStatusEditDapperRepository orderStatusEditDapperRepository, OrderItemPostDapperRepository orderItemPostDapperRepository)
+        public EcpayAgainController(OrderStatusEditDapperRepository orderStatusEditDapperRepository, OrderIdEditDapperRepository orderIdEditDapperRepository)
         {
-            _context = context;
-            _orderPostDapperRepository = orderPostDapperRepository;
-            _paymentCartDapperRepository = paymentCartDapperRepository;
             _orderStatusEditDapperRepository = orderStatusEditDapperRepository;
-            _orderItemPostDapperRepository = orderItemPostDapperRepository;
+            _orderIdEditDapperRepository = orderIdEditDapperRepository;
         }
         string orderId = "";
 
@@ -35,12 +29,12 @@ namespace EBookStoreAPI.Controllers
         public ActionResult<IDictionary<string, string>> GetOrderDetails(IEnumerable<EcPayAgain> dto)
         {
             orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
-            var website = $"https://127.0.0.1:8080/";
+            var website = $"https://127.0.0.1:8081/";
 
             int totalAmountTemp = 80;
             string totalItemName = string.Empty;
 
-
+            string oldorderid = dto.FirstOrDefault().orderId;
 
 
             foreach (var item in dto)
@@ -65,8 +59,8 @@ namespace EBookStoreAPI.Controllers
                     { "TradeDesc",  "無"},//交易描述
                     { "ItemName",  totalItemName},//商品名稱 如果商品名稱有多筆，需在金流選擇頁一行一行顯示商品名稱的話，商品名稱請以符號#分隔。
 
-                    { "ReturnURL",  $"https://localhost:7261/api/Ecpay/EcpayReturnAgain/{orderId}"},//回傳網址
-                    { "OrderResultURL",$"https://localhost:7261/api/Ecpay/EcpayReturnAgain/{orderId}"},//交易結果回傳頁面
+                    { "ReturnURL",  $"https://localhost:7261/api/EcpayAgain/EcpayReturnAgain/{orderId}"},//回傳網址
+                    { "OrderResultURL",$"https://localhost:7261/api/EcpayAgain/EcpayReturnAgain/{orderId}"},//交易結果回傳頁面
                     //{ "PaymentInfoURL",  $"{website}/api/Ecpay/AddAccountInfo"},
                     //{ "ClientRedirectURL",  $"{website}/Home/AccountInfo/{orderId}"},
                     { "MerchantID",  "3002607"},//特店編號
@@ -79,6 +73,11 @@ namespace EBookStoreAPI.Controllers
 
             order["CheckMacValue"] = GetCheckMacValue(order);//檢查碼
 
+            var editdto = new oldNewOrderId();
+            editdto.oldOrderid = oldorderid;
+            editdto.newOrderid = orderId;
+
+            _orderIdEditDapperRepository.OrderIdEditPost(editdto);
 
             return Ok(order);
         }
@@ -92,7 +91,7 @@ namespace EBookStoreAPI.Controllers
 
 
 
-                return Redirect($"https://localhost:8080/orders/");
+                return Redirect($"https://127.0.0.1:8081/orders/");
             }
             else
             {

@@ -27,12 +27,14 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
 
             sql.AppendLine(@"
                                 SELECT    [OrderItems].[Id]
+										  ,[Image]
                                           ,[OrderId]
                                           ,Books.[Name]
                                           ,[OrderItems].[Price]
                                           ,[Qty]
                                       FROM [EBookStore].[dbo].[OrderItems]
                                     LEFT JOIN Books on Books.Id=[OrderItems].BookId
+									LEFT JOIN BookImages on BookImages.BookId=Books.Id
                                   where(1=1)                                   
 
                               ");
