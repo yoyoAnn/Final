@@ -17,15 +17,22 @@
         </v-btn>
       </v-col>
       <v-col class="d-flex justify-center" cols="6">
-        <v-responsive max-height="100" max-width="500">
+        <v-responsive max-height="100" max-width="600">
           <el-autocomplete
-            class=""
+            style="width: 400px"
             v-model="searchInput"
             :fetch-suggestions="querySearchAsync"
             placeholder="搜尋"
             @keydown.enter="goToSearchPage"
             @select="handleSelect"
-          />
+          >
+            <template #append>
+              <div class="append-container" @click="goToSearchPage">
+                <i class="fas fa-search search-icon"></i>
+                <div class="overlay"></div>
+              </div>
+            </template>
+          </el-autocomplete>
         </v-responsive>
       </v-col>
       <v-col class="d-flex justify-end" cols="3">
@@ -67,46 +74,6 @@
 
 
 
-<!-- <script>
-export default {
-  data: () => ({
-    useritems: [
-      { title: "會員中心", route: "/Users" },
-      { title: "歷史訂單", route: "/orders" },
-      { title: "收藏專欄", route: "/" },
-    ],
-    cartRoute: "/cart",
-    homeRoute: "/",
-    isLoggedIn: false,
-  }),
-
-  watch: { 
-    '$route'() {
-        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
-
-        if((userInfo && userInfo.id) != null){
-            this.isLoggedIn = true;
-        } else {
-            this.isLoggedIn = false;
-        }
-        // console.log(this.isLoggedIn)
-    }
-  },
-  methods: {
-    logout() {
-      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-      if (userInfo && userInfo.id) {
-        localStorage.removeItem('userInfo');
-        this.isLoggedIn = false;
-        this.$router.push('/Login');
-      } else {
- 
-        this.$router.push('/Login'); 
-      }
-    },
-  },
-};
-</script> -->
 
 
 <script setup lang="ts">
@@ -203,7 +170,8 @@ const querySearchAsync = (
 };
 
 const handleSelect = (item: LinkItem) => {
-  console.log(item);
+  searchInput.value = item.value;
+  goToSearchPage();
 };
 
 onMounted(() => {
@@ -223,4 +191,17 @@ function goToSearchPage() {
 
 
 
-<style></style>
+<style>
+.append-container {
+  cursor: pointer;
+}
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  z-index: 1;
+}
+</style>

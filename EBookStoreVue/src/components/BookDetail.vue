@@ -22,14 +22,6 @@
       </div>
       <div class="center-button">
         <BookCheckout @add-to-cart="addToCart" :book="book" />
-        <!-- <el-button
-          round
-          type="danger"
-          @click="checkout"
-          :disabled="book.stock === 0"
-          >直接結帳</el-button
-        > -->
-        <!-- 結帳需要跳到結帳介面 -->
       </div>
     </div>
   </div>
