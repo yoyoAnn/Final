@@ -9,5 +9,6 @@
         public string Email { get; set; }
         public int ArticleId { get; set; }
         public string ArticleTitle { get; set; }
-    }
+		public DateTime CreatedTime { get; set; }
+	}
 }
