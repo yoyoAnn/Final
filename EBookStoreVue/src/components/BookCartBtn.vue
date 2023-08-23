@@ -4,6 +4,7 @@
     round
     style="background-color: #f5900d; color: #ebeff4"
     @click="addToCart"
+    :disabled="props.book.stock === 0"
     ><i
       class="fa-solid fa-cart-shopping fa-xl"
       style="color: #ebeff4; margin-right: 10px"
