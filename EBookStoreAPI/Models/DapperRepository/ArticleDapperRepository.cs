@@ -13,7 +13,7 @@ namespace EBookStoreAPI.Models.DapperRepository
         {
             _context = context;
         }
-        public IEnumerable<ArticlesDto> GetArticles(int? writerId)
+        public IEnumerable<ArticlesDto> GetArticles(int? writerId, string? searchText)
         {
             DynamicParameters param = new DynamicParameters(); // Dapper 動態參數
             StringBuilder sql = new StringBuilder();
@@ -34,12 +34,26 @@ LEFT JOIN [BookImages] ON [Articles].[BookId] = [BookImages].[BookId]
                 sql.AppendLine(@"WHERE [Articles].[WriterId]=@WriterId");
                 param.Add("WriterId", writerId);
             }
+            
+            if(writerId == null && searchText != null)
+            {
+                string text = "%" + searchText + "%";
+                sql.AppendLine(@"WHERE ([Articles].[Title] LIKE @SearchText or [Books].[Name] LIKE @SearchText or [Writers].[Name] LIKE @SearchText)");
+                param.Add("SearchText", text);
+            }
+
+            if (writerId != null && searchText != null)
+            {
+                string text = "%" + searchText + "%";
+                sql.AppendLine(@" AND ([Articles].[Title] LIKE @SearchText or [Books].[Name] LIKE @SearchText or [Writers].[Name] LIKE @SearchText)");
+                param.Add("SearchText", text);
+            }
 
             using (var connection = _context.CreateConnection())
             {
                 connection.Open();
                 IEnumerable<ArticlesDto> article = connection.Query<ArticlesDto>(sql.ToString(), param);
-                return article;
+                return article; 
             }
 
         }

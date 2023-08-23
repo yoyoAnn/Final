@@ -35,7 +35,7 @@ namespace EBookStoreAPI.Controllers
 
 		// GET: api/Articles
 		[HttpGet]
-		public async Task<ActionResult<IEnumerable<ArticlesDto>>> GetArticles(int? writerId)
+		public async Task<ActionResult<IEnumerable<ArticlesDto>>> GetArticles(int? writerId,string? searchText)
 		{
 			//if (_context.Articles == null)
 			//{
@@ -46,7 +46,7 @@ namespace EBookStoreAPI.Controllers
 
             try
             {
-                var articles = _articleDapperRepository.GetArticles(writerId);
+                var articles = _articleDapperRepository.GetArticles(writerId, searchText);
                 return Ok(articles);
             }
             catch (Exception ex)

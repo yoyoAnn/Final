@@ -10,7 +10,7 @@
       </v-col>
       <v-col class="d-flex justify-center" cols="6">
         <v-responsive max-height="100" max-width="500">
-          <el-autocomplete class="" v-model="searchInput" :fetch-suggestions="querySearchAsync" placeholder="搜尋"
+          <el-autocomplete class="" v-model="searchInput" :fetch-suggestions="querySearchAsync" placeholder="書本關鍵字搜尋"
             @keydown.enter="goToSearchPage" @select="handleSelect" />
         </v-responsive>
       </v-col>
