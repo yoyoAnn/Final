@@ -45,23 +45,20 @@ namespace EBookStoreAPI.Controllers
 
 
         [HttpPost("filter")]
-        public async Task<IEnumerable<BooksSearchDto>> FilterBooks([FromBody]BooksSearchDto bookDto)
+        public async Task<IEnumerable<BooksDto>> FilterBooks([FromBody]BooksSearchDto bookDto)
         {
-            var filteredBooks = _context.Books.Where(book => book.Id == bookDto.Id ||
-                                              book.Isbn.Contains(bookDto.ISBN) ||
-                                              book.CategoryId == _repo.GetCategoryIdByCategoryName(bookDto.CategoryName) ||
-                                              book.Name.Contains(bookDto.Name) ||
-                                              book.PublisherId == _repo.GetPublisherIdByPublisherName(bookDto.PublisherName))
-                                              .Select(book=> new BooksSearchDto
-                                              {
-                                                  Id = book.Id,
-                                                  Name = book.Name,
-                                                  CategoryName = _repo.GetCategoryNameByCategoryId(book.CategoryId),
-                                                  PublisherName = _repo.GetPublisherNameByPublisherId(book.PublisherId),
-                                                  ISBN = book.Isbn
-                                              });
+            var filterBooks = await _repo.GetFilterBook(bookDto);
 
-            return await filteredBooks.ToListAsync();
+            return filterBooks;
+        }
+
+
+        [HttpGet("Top5Order")]
+        public async Task<IEnumerable<BooksDto>> Top5OrderBooks()
+        {
+            var Top5Books = await _repo.GetTop5OrderBook();
+
+            return Top5Books;
         }
 
     }
