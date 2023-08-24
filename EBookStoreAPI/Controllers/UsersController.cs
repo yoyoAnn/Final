@@ -17,12 +17,13 @@ using Microsoft.AspNetCore.Http;
 using System.Runtime.InteropServices;
 using System.Configuration;
 using Humanizer;
-
+using Microsoft.AspNetCore.Cors;
 
 namespace EBookStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [EnableCors("AllowAll")]
     public class UsersController : ControllerBase
     {
         private readonly EBookStoreContext _context;
@@ -213,10 +214,12 @@ namespace EBookStoreAPI.Controllers
             var host = HttpContext.Request.Host.ToUriComponent();
             //var urluserid = user.Id;
             //var urlconfirmCode = confirmCode;
-            //var urlTemplate = $"{scheme}://5173/ActiveRegister?userid={urluserid}&confirmCode={urlconfirmCode}";
-            //var urlTemplate = "https://localhost:5173/Users/ActiveRegister?userid={0}&confirmCode={1}";
-            var urlTemplate = "https://localhost:5173/ActiveRegister?userid={0}&confirmCode={1}";
+            //var urlTemplate = $"{scheme}://8080/ActiveRegister?userid={urluserid}&confirmCode={urlconfirmCode}";
+            //var urlTemplate = "https://localhost:8080/Users/ActiveRegister?userid={0}&confirmCode={1}";
 
+            //var urlTemplate = "https://localhost:8080/ActiveRegister?userid={0}&confirmCode={1}";
+            var urlTemplate = "https://127.0.0.1:8080/ActiveRegister?userid={0}&confirmCode={1}";
+        
             try
             {
                 // 寄送email
@@ -273,7 +276,7 @@ namespace EBookStoreAPI.Controllers
 
             try
             {
-                var urlTemplate = "https://localhost:5173/ResetPassword?userid={0}&confirmCode={1}";
+                var urlTemplate = "https://localhost:8080/ResetPassword?userid={0}&confirmCode={1}";
                 var confirmCode = Guid.NewGuid().ToString("N");
                 user.ConfirmCode = confirmCode;
                 await _context.SaveChangesAsync();
