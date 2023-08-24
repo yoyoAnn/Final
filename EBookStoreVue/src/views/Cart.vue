@@ -75,7 +75,7 @@
                         </table>
                         <h2><span style="color: blue;">小計</span>+<span style="color: red;">運費</span>：<span
                                 style="color: blue;">{{ getprice(totalprice)
-                                }}</span> + <span style="color: red;">60</span> ={{ getprice(totalprice + 60) }} </h2>
+                                }}</span> + <span style="color: red;">80</span> ={{ getprice(totalprice + 80) }} </h2>
 
                     </v-window-item>
 

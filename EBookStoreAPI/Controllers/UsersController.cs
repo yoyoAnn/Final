@@ -14,6 +14,9 @@ using NuGet.Common;
 using EBookStoreAPI.Models.Infra;
 using System.Diagnostics.Metrics;
 using Microsoft.AspNetCore.Http;
+using System.Runtime.InteropServices;
+using System.Configuration;
+using Humanizer;
 
 
 namespace EBookStoreAPI.Controllers
@@ -24,11 +27,16 @@ namespace EBookStoreAPI.Controllers
     {
         private readonly EBookStoreContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public UsersController(EBookStoreContext context, IHttpContextAccessor httpContextAccessor)
+        public UsersController(EBookStoreContext context, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment webHostEnvironment, IConfiguration configuration)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
+            //_environment = environment;
+            _webHostEnvironment = webHostEnvironment;
+            _configuration = configuration;
         }
 
         // GET: api/Users
@@ -36,10 +44,10 @@ namespace EBookStoreAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Users>>> GetUsers()
         {
-          if (_context.Users == null)
-          {
-              return NotFound();
-          }
+            if (_context.Users == null)
+            {
+                return NotFound();
+            }
             return await _context.Users.ToListAsync();
         }
 
@@ -47,10 +55,10 @@ namespace EBookStoreAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Users>> GetUsers(int id)
         {
-          if (_context.Users == null)
-          {
-              return NotFound();
-          }
+            if (_context.Users == null)
+            {
+                return NotFound();
+            }
             var users = await _context.Users.FindAsync(id);
 
             if (users == null)
@@ -97,10 +105,10 @@ namespace EBookStoreAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Users>> PostUsers(Users users)
         {
-          if (_context.Users == null)
-          {
-              return Problem("Entity set 'EBookStoreContext.Users'  is null.");
-          }
+            if (_context.Users == null)
+            {
+                return Problem("Entity set 'EBookStoreContext.Users'  is null.");
+            }
             _context.Users.Add(users);
             await _context.SaveChangesAsync();
 
@@ -159,7 +167,7 @@ namespace EBookStoreAPI.Controllers
         [HttpPost("Register")]
         public async Task<ActionResult<string>> Register(RegisterDto registerDto)
         {
-     
+
             if (await _context.Users.AnyAsync(u => u.Account == registerDto.Account))
             {
                 return BadRequest("帳號已存在");
@@ -185,7 +193,7 @@ namespace EBookStoreAPI.Controllers
             {
                 Id = registerDto.Id,
                 Account = registerDto.Account,
-                Password = hashOrigPwd, 
+                Password = hashOrigPwd,
                 Email = registerDto.Email,
                 IsConfirmed = false,
                 ConfirmCode = confirmCode,
@@ -225,14 +233,14 @@ namespace EBookStoreAPI.Controllers
                 return Ok(ex.Message);
 
             }
-           
+
             return Ok("註冊成功");
         }
 
         [HttpPost("ActiveRegister")]
         public async Task<ActionResult<string>> ActiveRegister(UsersDto dto)
         {
-                       
+
             var user = await _context.Users.FindAsync(dto.Id);
 
             user.IsConfirmed = true;
@@ -253,12 +261,15 @@ namespace EBookStoreAPI.Controllers
 
             if (user == null)
             {
-                return NotFound();
+                //return NotFound();
+                return BadRequest("帳號或 Email 錯誤");
             }
             if (user.IsConfirmed == false)
             {
                 return BadRequest("您還未啟用帳號");
             }
+
+
 
             try
             {
@@ -399,6 +410,161 @@ namespace EBookStoreAPI.Controllers
 
             return Ok("修改密碼成功");
         }
+
+
+        //[HttpPost("UploadImage")]
+        //public async Task<ActionResult> UploadImage()
+        //{
+        //    bool Results = false;
+        //    try
+        //    {
+        //        var _uploadedfiles = Request.Form.Files;
+        //        foreach (IFormFile source in _uploadedfiles)
+        //        {
+        //            string Filename = source.FileName;
+        //            string Filepath = GetFilePath(Filename); //
+
+        //            if (!System.IO.Directory.Exists(Filepath))
+        //            {
+        //                System.IO.Directory.CreateDirectory(Filepath);
+        //            }
+
+        //            string imagepath = Filepath + "\\image.png";
+
+        //            if (System.IO.File.Exists(imagepath))
+        //            {
+        //                System.IO.File.Delete(imagepath);
+        //            }
+        //            using (FileStream stream = System.IO.File.Create(imagepath))
+        //            {
+        //                await source.CopyToAsync(stream);
+        //                Results = true;
+        //            }
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //    }
+        //    return Ok(Results);
+
+        //}
+
+        //[NonAction]
+        //private string GetFilePath(string ProductCode) //
+        //{
+        //    return this._environment.WebRootPath + "\\Uploads\\Users\\" + ProductCode; //
+        //}
+
+
+
+        [HttpPost("UploadImage")]
+        public async Task<IActionResult> UploadImage()
+        {
+            try
+            {
+                var imageFile = Request.Form.Files[0];
+                if (imageFile != null && imageFile.Length > 0)
+                {
+                    var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, _configuration["StaticFilesConfig:ImagesFolder"]);
+                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + imageFile.FileName;
+                    var filePath = Path.Combine(imagePath, uniqueFileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(stream);
+                    }
+
+                    //var user = await _context.Users.FindAsync(dto.Id);
+                    //if (user == null)
+                    //{
+                    //    return BadRequest("找不到會員資訊");
+                    //}
+                    //user.Photo = uniqueFileName;
+                    //await _context.SaveChangesAsync();
+
+                   
+                    var imageUrl = "https://localhost:7261/api/Users/GetImage/" + uniqueFileName;
+                    return Ok(imageUrl);
+                }
+                else
+                {
+                    return BadRequest("未找到圖片");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "上傳圖片錯誤: " + ex.Message);
+            }
+        }
+
+
+        [HttpGet("GetImage/{imageName}")]  //上傳圖片name
+        public IActionResult GetImage(string imageName)
+        {
+            var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, _configuration["StaticFilesConfig:ImagesFolder"], imageName);
+            if (System.IO.File.Exists(imagePath))
+            {
+                var imageBytes = System.IO.File.ReadAllBytes(imagePath);
+                return File(imageBytes, "image/png"); 
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+
+        [HttpPost("UpdateUserPhoto")]  //更新資料庫name
+        public async Task<IActionResult> UpdateUserPhoto(UsersDto dto)
+        {
+            try
+            {
+                var user = await _context.Users.FindAsync(dto.Id);
+                if (user == null)
+                {
+                    return BadRequest("找不到會員資訊");
+                }
+
+                user.Photo = dto.Photo;
+                await _context.SaveChangesAsync();
+
+                return Ok("圖片資料庫更新成功");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "更新圖片name錯誤: " + ex.Message);
+            }
+        }
+
+
+        [HttpPost("GetDefaultImage")]  //DefaultImage
+        public async Task<IActionResult> GetDefaultImage(int id)
+        {
+            try
+            {
+                var user = await _context.Users.FindAsync(id);
+
+                if (user == null)
+                {
+                    return BadRequest("找不到會員資訊");
+                }
+
+                var userProfile = new
+                {
+                    Photo = user.Photo,
+                };
+
+                return Ok(userProfile);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"錯誤資訊: {ex.Message}");
+            }
+        }
+
+
 
     }
 }

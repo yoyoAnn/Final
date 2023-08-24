@@ -27,6 +27,13 @@ export default {
         //   console.log(url);
           console.log("ok",userId);
           console.log("ok",confirmCode);
+
+          console.log("ok",response.status);
+          if (response.status == 200) {
+            setTimeout(() => {
+                window.location = "https://localhost:5173/Login";
+            }, 1000);
+          } 
         } catch (error) {
          
         //   console.error(error);
