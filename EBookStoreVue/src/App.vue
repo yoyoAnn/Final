@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <BackTop></BackTop>
     <!-- <v-navigation-drawer app>
     </v-navigation-drawer> -->
     <v-app-bar app>
@@ -12,7 +13,7 @@
       </v-container>
     </v-main>
 
-    <v-footer style="padding: 0%;">
+    <v-footer style="padding: 0%">
       <Footer></Footer>
     </v-footer>
   </v-app>
@@ -21,11 +22,14 @@
 <script>
 import Navbar from "./components/Navbar.vue";
 import Footer from "./components/Footer.vue";
+import BackTop from "./components/Bookbacktop.vue";
 
 export default {
   name: "App",
   components: {
-    Navbar, Footer
+    Navbar,
+    Footer,
+    BackTop,
   },
   data: () => ({}),
 };
