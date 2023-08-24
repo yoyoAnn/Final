@@ -10,13 +10,18 @@
       <h3>書名 : {{ book.name }}</h3>
       <p>出版社 : {{ book.publisherName }}</p>
       <P>出版日期 : {{ book.publisherDateTxt }}</P>
-      <p>作者 : {{ book.author }}</p>
+      <p>
+        作者 :
+        <a :href="`/booksearchauthor?searchString=${book.author}`">{{
+          book.author
+        }}</a>
+      </p>
       <p>ISBN : {{ book.isbn }}</p>
       <p>價格 : {{ book.price }} 元</p>
       <p>分類 : {{ book.categoryName }}</p>
     </div>
     <div class="stock-info">
-      <p>庫存尚餘 : {{ book.stock }} ， 限購 {{ book.stock }} 份</p>
+      <p>庫存尚餘 : {{ book.stock }} ， 限購 {{ book.stock }}份</p>
       <div class="center-button">
         <BookCartbtn @click="checkout" @add-to-cart="addToCart" :book="book" />
       </div>
@@ -129,7 +134,7 @@ export default defineComponent({
   border: 1px solid #ccc;
   padding: 10px;
   width: 200px;
-  height: 170px;
+  height: 200px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;

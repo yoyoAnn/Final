@@ -43,7 +43,7 @@ const addToCart = async () => {
     const CartDto = {
       UserId: userInfo.id,
       BookId: props.book.id,
-      Qty: props.book.stock,
+      Qty: 1,
       Id: 0,
       payment: 0,
     };
