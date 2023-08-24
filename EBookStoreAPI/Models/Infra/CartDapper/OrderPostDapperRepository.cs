@@ -24,9 +24,9 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
 
 
             sql.AppendLine(@"                  
-  							insert into [dbo].[Orders](Id,UserId,ReceiverName,ReceiverAddress,ReceiverPhone,VehicleNum,Remark,OrderTime,OrderStatusId,TotalAmount,TotalPayment)
+  							insert into [dbo].[Orders](Id,UserId,ReceiverName,ReceiverAddress,ReceiverPhone,VehicleNum,Remark,OrderTime,OrderStatusId,TotalAmount,TotalPayment,ShippingStatusId)
                             values
-                                                    (@Id,@UserId,@ReceiverName,@ReceiverAddress,@ReceiverPhone,@VehicleNum,@Remark,@OrderTime,@OrderStatusId,@TotalAmount,@TotalPayment)				
+                                                    (@Id,@UserId,@ReceiverName,@ReceiverAddress,@ReceiverPhone,@VehicleNum,@Remark,@OrderTime,@OrderStatusId,@TotalAmount,@TotalPayment,'1')				
                               ");
 
             param.Add("Id", dto.Id);
@@ -57,13 +57,21 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
             //    sql.AppendLine(@"and UserId=@UserId");
             //    param.Add("UserId", dto.UserId);
             //}
-            using (var connection = _connStr.CreateConnection())
+            try
             {
-                connection.Open();
-            
-                connection.Execute(sql.ToString(), param);
-             
+                using (var connection = _connStr.CreateConnection())
+                {
+                    connection.Open();
+
+                    connection.Execute(sql.ToString(), param);
+
+                }
             }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+            }
+
         }
     }
 }

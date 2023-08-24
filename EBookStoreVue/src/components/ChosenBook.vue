@@ -70,7 +70,7 @@
 import { ref, computed, onMounted } from "vue";
 
 const books = ref([]);
-// const randomBooks = ref([]);
+
 const currentPage = ref(1);
 const itemsPerPage = 4;
 const numberOfRandomBooks = 10;

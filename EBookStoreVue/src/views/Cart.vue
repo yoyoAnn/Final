@@ -20,18 +20,18 @@
                         <table id="cartItem" class="table fixed-cell">
                             <thead>
                                 <tr>
-                                    <th style="width: 60px;text-align:center; " class="checkWidth">
+                                    <th class="col-check">
                                         全選：<input type="checkbox" v-model="Allcheck" @change="allcheck" />
                                     </th>
                                     <th class="hidden-column">Id</th>
                                     <th class="hidden-column">會員Id</th>
                                     <th class="hidden-column">書本Id</th>
                                     <th>書籍封面</th>
-                                    <th>書籍名稱</th>
-                                    <th>價格</th>
-                                    <th>購買數量</th>
-                                    <th>小計</th>
-                                    <th>動作</th>
+                                    <th class="col-bookName">書籍名稱</th>
+                                    <th class="col-check">價格</th>
+                                    <th class="col-check">購買數量</th>
+                                    <th class="col-check">小計</th>
+                                    <th class="col-remove">動作</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -75,7 +75,7 @@
                         </table>
                         <h2><span style="color: blue;">小計</span>+<span style="color: red;">運費</span>：<span
                                 style="color: blue;">{{ getprice(totalprice)
-                                }}</span> + <span style="color: red;">60</span> ={{ getprice(totalprice + 60) }} </h2>
+                                }}</span> + <span style="color: red;">80</span> ={{ getprice(totalprice + 80) }} </h2>
 
                     </v-window-item>
 
@@ -163,6 +163,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.js';
 import router from '../router/index.js';
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
+import moment from 'moment-timezone';
 
 const tab = ref(null);
 
@@ -173,6 +174,7 @@ const Allcheck = ref(true);
 const showModalcart = ref(false)
 const cartItemsresponse = ref([]);
 const cartItems = ref([]);
+let orderItems = ref([]);
 const ReceiverName = ref('');
 const receiverNameError = ref('');
 const ReceiverPhone = ref('');
@@ -197,7 +199,7 @@ let cartInfoData = ref({
     totalamount: "",
     totalpayment: "",
     taxIdNum: "",
-    shippingFee: "60",
+    shippingFee: "80",
     shippingStatusId: ""
 });
 
@@ -299,13 +301,19 @@ const handleCheckout = async () => {
 
                 id: cartItemsresponseResult.data.MerchantTradeNo,
                 userid: data.userId,
-                ordertime: new Date(cartItemsresponseResult.data.MerchantTradeDate).toISOString(),
+                ordertime: moment(cartItemsresponseResult.data.MerchantTradeDate).tz("Asia/Taipei").format(),
                 orderstatusid: '1',
                 totalamount: cartItemsresponseResult.data.TotalAmount,
                 totalpayment: cartItemsresponseResult.data.TotalAmount,
-                shippingFee: "60",
+                shippingFee: "80",
                 shippingStatusId: "1"
             };
+            orderItems.value = selectedItems.map(item => ({
+                OrderId: cartInfoData.id,
+                BookId: item.bookId,
+                Price: item.price,
+                Qty: item.qty
+            }));
 
             // 將資料儲存到localStorage
             localStorage.setItem('ReceiverInfo', JSON.stringify(cartInfoData));
@@ -327,12 +335,13 @@ const handleCheckout = async () => {
 const paymentForm = ref(null)
 
 async function submitForm() {
+
     const response = await axios.post('https://localhost:7261/CartAddToOrderDB/', cartInfoData);
-    updatePayment(selectedItems);
+    updatePayment(selectedItems, orderItems);
     paymentForm.value.submit()
 }
 
-async function updatePayment(selectedItems) {
+async function updatePayment(selectedItems, orderItems) {
     try {
         const updateRequests = selectedItems.map(item => {
             return axios.post(`https://localhost:7261/PaymentCart/${item.id}`, item.id);
@@ -342,6 +351,13 @@ async function updatePayment(selectedItems) {
         console.log('購物車已更新');
     } catch (error) {
         console.error('購物車更新失敗原因:', error);
+    }
+    try {
+        const postOrderItemRequests = orderItems.value.map(item => {
+            return axios.post(`https://localhost:7261/CartAddToOrderItemsDB/`, item);
+        });
+    } catch (error) {
+        console.error('訂單項目更新失敗原因:', error);
     }
 }
 
@@ -440,9 +456,6 @@ const closeModal = () => {
 
   
 <style scoped>
-/* 你的CSS樣式 */
-
-
 .hidden-column {
     display: none;
 }
@@ -473,10 +486,6 @@ th {
     white-space: nowrap;
 }
 
-.checkWidth {
-    width: 60px !important;
-}
-
 .quantityButton {
     padding: 5px 10px;
     background-color: #007bff;
@@ -501,5 +510,20 @@ img {
     max-height: 100vh;
     object-fit: contain;
     cursor: pointer;
+}
+
+.col-check {
+    width: 5%;
+    text-align: center
+}
+
+.col-bookName {
+    width: 50%;
+    text-align: center
+}
+
+.col-remove {
+    width: 10%;
+    text-align: center
 }
 </style>

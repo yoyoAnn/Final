@@ -1,48 +1,41 @@
-﻿using EBookStoreAPI.DTOs;
-using EBookStoreAPI.DTOs.Orders;
+﻿using EBookStoreAPI.DTOs.Orders;
+using EBookStoreAPI.DTOs;
 using EBookStoreAPI.Models.EFModels;
 using EBookStoreAPI.Models.Infra.CartDapper;
-using Humanizer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.EntityFrameworkCore;
 using System.Net;
-using System.Security.Cryptography.Xml;
 using System.Text;
-using XAct;
 using XSystem.Security.Cryptography;
 
 namespace EBookStoreAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EcpayController : ControllerBase
+    public class EcpayAgainController : ControllerBase
     {
-        private readonly EBookStoreContext _context;
-        private readonly OrderPostDapperRepository _orderPostDapperRepository;
-        private readonly PaymentCartDapperRepository _paymentCartDapperRepository;
-        private readonly OrderStatusEditDapperRepository _orderStatusEditDapperRepository;
-        private readonly OrderItemPostDapperRepository _orderItemPostDapperRepository;
 
-        public EcpayController(EBookStoreContext context, OrderPostDapperRepository orderPostDapperRepository, PaymentCartDapperRepository paymentCartDapperRepository, OrderStatusEditDapperRepository orderStatusEditDapperRepository, OrderItemPostDapperRepository orderItemPostDapperRepository)
+        private readonly OrderStatusEditDapperRepository _orderStatusEditDapperRepository;
+        private readonly OrderIdEditDapperRepository _orderIdEditDapperRepository;
+
+        public EcpayAgainController(OrderStatusEditDapperRepository orderStatusEditDapperRepository, OrderIdEditDapperRepository orderIdEditDapperRepository)
         {
-            _context = context;
-            _orderPostDapperRepository = orderPostDapperRepository;
-            _paymentCartDapperRepository = paymentCartDapperRepository;
             _orderStatusEditDapperRepository = orderStatusEditDapperRepository;
-            _orderItemPostDapperRepository = orderItemPostDapperRepository;
+            _orderIdEditDapperRepository = orderIdEditDapperRepository;
         }
         string orderId = "";
 
-        [HttpPost("Ecpay")]
-        public ActionResult<IDictionary<string, string>> GetOrderDetails(IEnumerable<Ecpay> dto)
+        [HttpPost("EcpayAgain")]
+        public ActionResult<IDictionary<string, string>> GetOrderDetails(IEnumerable<EcPayAgain> dto)
         {
             orderId = Guid.NewGuid().ToString().Replace("-", "").Substring(0, 20);
-            var website = $"https://127.0.0.1:8080/";
+            var website = $"https://127.0.0.1:8081/";
 
             int totalAmountTemp = 80;
             string totalItemName = string.Empty;
+
+            string oldorderid = dto.FirstOrDefault().orderId;
+
 
             foreach (var item in dto)
             {
@@ -66,8 +59,8 @@ namespace EBookStoreAPI.Controllers
                     { "TradeDesc",  "無"},//交易描述
                     { "ItemName",  totalItemName},//商品名稱 如果商品名稱有多筆，需在金流選擇頁一行一行顯示商品名稱的話，商品名稱請以符號#分隔。
 
-                    { "ReturnURL",  $"https://localhost:7261/api/Ecpay/EcpayReturn/{orderId}"},//回傳網址
-                    { "OrderResultURL",$"https://localhost:7261/api/Ecpay/EcpayReturn/{orderId}"},//交易結果回傳頁面
+                    { "ReturnURL",  $"https://localhost:7261/api/EcpayAgain/EcpayReturnAgain/{orderId}"},//回傳網址
+                    { "OrderResultURL",$"https://localhost:7261/api/EcpayAgain/EcpayReturnAgain/{orderId}"},//交易結果回傳頁面
                     //{ "PaymentInfoURL",  $"{website}/api/Ecpay/AddAccountInfo"},
                     //{ "ClientRedirectURL",  $"{website}/Home/AccountInfo/{orderId}"},
                     { "MerchantID",  "3002607"},//特店編號
@@ -79,11 +72,18 @@ namespace EBookStoreAPI.Controllers
             };
 
             order["CheckMacValue"] = GetCheckMacValue(order);//檢查碼
+
+            var editdto = new oldNewOrderId();
+            editdto.oldOrderid = oldorderid;
+            editdto.newOrderid = orderId;
+
+            _orderIdEditDapperRepository.OrderIdEditPost(editdto);
+
             return Ok(order);
         }
 
-        [HttpPost("EcpayReturn/{orderId}")]
-        public  IActionResult EcpayReturn([FromForm]  EcpayReturnDto info)
+        [HttpPost("EcpayReturnAgain/{orderId}")]
+        public IActionResult EcpayReturn([FromForm] EcpayReturnDto info)
         {
             if (info.RtnMsg == "Succeeded")
             {
@@ -91,7 +91,7 @@ namespace EBookStoreAPI.Controllers
 
 
 
-                return Redirect($"https://localhost:8080/orders/");
+                return Redirect($"https://127.0.0.1:8081/orders/");
             }
             else
             {
@@ -128,67 +128,64 @@ namespace EBookStoreAPI.Controllers
             return result.ToString();
         }
 
-        [HttpPost]
-        [Route("/CartAddToOrderDB")]
-        public async Task<ActionResult> CartAddToOrderDB(OrdersDto dto)
-        {
-            if (_context.Carts == null)
-            {
-                return NotFound();
-            }
+        //[HttpPost]
+        //[Route("/CartAddToOrderDBAgain")]
+        //public async Task<ActionResult> CartAddToOrderDB(OrdersDto dto)
+        //{
+        //    if (_context.Carts == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            //return await _context.Carts.ToListAsync();
-            try
-            {
-                var carts = _orderPostDapperRepository.PayInfoPost(dto);
-                return Ok(carts);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"錯誤訊息: {ex.Message}");
-            }
-        }
+        //    return await _context.Carts.ToListAsync();
+        //    try
+        //    {
+        //        var carts = _orderPostDapperRepository.PayInfoPost(dto);
+        //        return Ok(carts);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest($"錯誤訊息: {ex.Message}");
+        //    }
+        //}
 
-        [HttpPost]
-        [Route("/CartAddToOrderItemsDB")]
-        public async Task<ActionResult> CartAddToOrderItemsDB(OrderItemsDto dto)
-        {
-            if (_context.Carts == null)
-            {
-                return NotFound();
-            }
+        //[HttpPost]
+        //[Route("/CartAddToOrderItemsDBAgain")]
+        //public async Task<ActionResult> CartAddToOrderItemsDB(OrderItemsDto dto)
+        //{
+        //    if (_context.Carts == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            //return await _context.Carts.ToListAsync();
-            try
-            {
-                var carts = _orderItemPostDapperRepository.OrderItemPost(dto);
-                return Ok(carts);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"錯誤訊息: {ex.Message}");
-            }
-        }
-
-
-        [HttpPost]
-        [Route("/PaymentCart/{id}")]
-        public async Task<ActionResult> PaymentCart(int id)
-        {
-            try
-            {
-                await _paymentCartDapperRepository.PaymentCartEdit(id);
-                return Ok($"編號{id}已完成更新");
-            }
-            catch (Exception ex)
-            {
-                return BadRequest($"錯誤訊息: {ex.Message}");
-            }
-
-        }
+        //    return await _context.Carts.ToListAsync();
+        //    try
+        //    {
+        //        var carts = _orderItemPostDapperRepository.OrderItemPost(dto);
+        //        return Ok(carts);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest($"錯誤訊息: {ex.Message}");
+        //    }
+        //}
 
 
+        //[HttpPost]
+        //[Route("/PaymentCartAgain/{id}")]
+        //public async Task<ActionResult> PaymentCart(int id)
+        //{
+        //    try
+        //    {
+        //        await _paymentCartDapperRepository.PaymentCartEdit(id);
+        //        return Ok($"編號{id}已完成更新");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return BadRequest($"錯誤訊息: {ex.Message}");
+        //    }
 
+        //}
 
     }
 }

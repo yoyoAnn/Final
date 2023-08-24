@@ -16,12 +16,11 @@ export default defineConfig({
     }),
     mkcert(),
   ],
-  // server: {
-  //   https: {
-  //     key: fs.readFileSync(`${__dirname}/src/assets/localhost-key.pem`),
-  //     cert: fs.readFileSync(`${__dirname}/src/assets/localhost.pem`),
-  //   },
-  // },
+  server: {
+    https: true,
+    port: 8080,
+    host: 'localhost'
+  },
   define: { 'process.env': {} },
   resolve: {
     alias: {

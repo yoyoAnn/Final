@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import Users from '../views/Users.vue'
 import Cart from '../views/Cart.vue'
 import Article from '../views/Article.vue'
+import ArticleList from '../views/ArticleList.vue'
 import Books from '../components/BookDetail.vue'
 import Login from '../views/Login.vue'
 import CustomerMail from '../views/CustomerMail.vue'
@@ -18,6 +19,7 @@ import ConfirmForgetPassword from '../views/users/ConfirmForgetPassword.vue'
 import UserProfile from '../views/UserProfile.vue'
 import ChangePassword from '../views/ChangePassword.vue'
 import ResetPassword from '../views/ResetPassword.vue'
+import BookSearchAuthor from "../components/BookSearchAuthor.vue";
 
 
 //路由設定
@@ -76,6 +78,11 @@ const routes = [
 
     },
     {
+        path: '/articleList/:writerid',
+        component: ArticleList
+
+    },
+    {
         path: '/customerMail',
         component: CustomerMail
     },
@@ -101,6 +108,11 @@ const routes = [
     {
         path: '/orders',
         component: Orders
+    },
+    {
+        path: '/booksearchauthor',
+        name: 'book-searchauthor',
+        component: BookSearchAuthor
     }
 ]
 

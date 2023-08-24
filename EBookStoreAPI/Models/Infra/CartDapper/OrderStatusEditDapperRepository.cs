@@ -7,32 +7,29 @@ using System.Text;
 
 namespace EBookStoreAPI.Models.Infra.CartDapper
 {
-    public class CartPostDapperRepository
+    public class OrderStatusEditDapperRepository
     {
         private readonly EbookStoreDepperContext _connStr;
-        public CartPostDapperRepository(EbookStoreDepperContext context)
+
+        public OrderStatusEditDapperRepository(EbookStoreDepperContext context)
         {
             _connStr = context;
         }
 
 
-        public async Task CartItemPost(CartsDto dto)
+        public async Task PayInfoEdit(EcpayReturnDto dto)
         {
             DynamicParameters param = new DynamicParameters(); // Dapper 動態參數
             StringBuilder sql = new StringBuilder();
 
 
-            sql.AppendLine(@"
-  							insert into [dbo].[Carts](UserId,BookId,Qty,payment)
-                            values
-                            (@UserId,@BookId,@Qty,@payment)				
-                              ");
+            sql.AppendLine(@"                  
+  						          update Orders
+                                  set OrderStatusId='6'
+                                  where(1=1)
+                                  and Id=@Id  ");
 
-            param.Add("UserId", dto.UserId);
-            param.Add("BookId", dto.BookId);
-            param.Add("Qty", dto.Qty);
-            param.Add("payment", dto.payment);
-
+            param.Add("Id", dto.MerchantTradeNo);
 
             //if (!string.IsNullOrWhiteSpace(dto.Id.ToString()))
             //{

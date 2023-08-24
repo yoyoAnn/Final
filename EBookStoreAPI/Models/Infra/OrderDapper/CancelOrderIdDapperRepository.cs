@@ -1,37 +1,38 @@
 ﻿using Dapper;
 using EBookStoreAPI.Context;
 using EBookStoreAPI.DTOs;
+using EBookStoreAPI.DTOs.Orders;
 using EBookStoreAPI.Models.EFModels;
 using Microsoft.Data.SqlClient;
 using System.Text;
 
 namespace EBookStoreAPI.Models.Infra.CartDapper
 {
-    public class CartPostDapperRepository
+    public class CancelOrderIdDapperRepository
     {
         private readonly EbookStoreDepperContext _connStr;
-        public CartPostDapperRepository(EbookStoreDepperContext context)
+        public CancelOrderIdDapperRepository(EbookStoreDepperContext context)
         {
             _connStr = context;
         }
 
 
-        public async Task CartItemPost(CartsDto dto)
+        public async Task CancelOrder(OrderId dto)
         {
+
             DynamicParameters param = new DynamicParameters(); // Dapper 動態參數
             StringBuilder sql = new StringBuilder();
 
 
             sql.AppendLine(@"
-  							insert into [dbo].[Carts](UserId,BookId,Qty,payment)
-                            values
-                            (@UserId,@BookId,@Qty,@payment)				
+  						          update Orders
+								  set
+								  OrderStatusId='3'
+								  where
+								  Id=@orderId			
                               ");
 
-            param.Add("UserId", dto.UserId);
-            param.Add("BookId", dto.BookId);
-            param.Add("Qty", dto.Qty);
-            param.Add("payment", dto.payment);
+            param.Add("orderId", dto.orderId);
 
 
             //if (!string.IsNullOrWhiteSpace(dto.Id.ToString()))
@@ -49,12 +50,19 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
             //    sql.AppendLine(@"and UserId=@UserId");
             //    param.Add("UserId", dto.UserId);
             //}
-            using (var connection = _connStr.CreateConnection())
+            try
             {
-                connection.Open();
-            
-                connection.Execute(sql.ToString(), param);
-             
+                using (var connection = _connStr.CreateConnection())
+                {
+                    connection.Open();
+
+                    connection.Execute(sql.ToString(), param);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
             }
         }
     }
