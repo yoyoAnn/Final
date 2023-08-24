@@ -1,40 +1,44 @@
 <template>
-  <el-carousel :interval="5000" trigger="click" type="card" height="400px">
-    <el-carousel-item v-for="(item, i) in items" :key="i">
-      <img :src="item.src" :alt="item.title" />
+  <h2>暢銷排行</h2>
+  <el-carousel :interval="10000" type="card" height="600px">
+    <el-carousel-item v-for="(book, i) in books" :key="i">
+      <div class="item">
+        <el-badge :value="'TOP ' + (i + 1)" style="font: 50px sans-serif">
+          <a :href="`/books/${book.id}`">
+            <img
+              :src="`/src/BooksImage/${book.bookImage}`"
+              style="height: 400px; width: auto; max-width: 100%"
+            />
+          </a>
+        </el-badge>
+      </div>
     </el-carousel-item>
   </el-carousel>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      items: [
-        {
-          title: "神的棲息地",
-          src: "https://im2.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/095/68/0010956899.jpg&v=646de789k&w=348&h=348",
-        },
-        {
-          title: "護理師",
-          src: "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/096/23/0010962314.jpg&v=64abdef5k&w=348&h=348",
-        },
-        {
-          title: "秘密：東野圭吾之所以成為東野圭吾的完美傑作！",
-          src: "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/096/04/0010960476.jpg&v=648d8c4bk&w=348&h=348",
-        },
-        {
-          title: "困惑的心",
-          src: "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/096/03/0010960332.jpg&v=648c3a1ek&w=348&h=348",
-        },
-        {
-          title: "顯微鏡下的大明",
-          src: "https://im1.book.com.tw/image/getImage?i=https://www.books.com.tw/img/001/092/69/0010926947.jpg&w=348&h=348&v=62b440ab",
-        },
-      ],
-    };
-  },
+<script setup>
+import { ref, onMounted } from "vue";
+import { CaretBottom } from "@element-plus/icons-vue";
+
+const books = ref([]);
+
+const loadBooks = async () => {
+  try {
+    const response = await fetch("https://localhost:7261/api/Books/Top5Order");
+    if (!response.ok) {
+      throw new Error(`Network response was not ok: ${response.status}`);
+    }
+    const datas = await response.json();
+    books.value = datas;
+    console.log(books.value);
+  } catch (error) {
+    console.error("Error loading books:", error);
+  }
 };
+
+onMounted(async () => {
+  await loadBooks();
+});
 </script>
     
 <style>
@@ -43,9 +47,9 @@ export default {
   opacity: 0.75;
   line-height: 200px;
   margin: 0;
-  display: flex;
-  text-align: center;
-  align-content: end;
+  /* display: flex; */
+  /* text-align: center; */
+  /* align-content: center; */
 }
 .el-carousel__item {
   height: 600px;
@@ -59,5 +63,13 @@ export default {
   display: flex;
   align-content: center;
   justify-items: center;
+}
+.item {
+  margin-top: 50px;
+  margin-left: 250px;
+}
+
+.el-dropdown {
+  margin-top: 1.1rem;
 }
 </style>

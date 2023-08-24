@@ -2,19 +2,19 @@
   <el-button
     class="button"
     round
-    style="background-color: #f5900d; color: #ebeff4"
+    style="background-color: #f50d0d; color: #ebeff4"
     @click="addToCart"
     :disabled="props.book.stock === 0"
     ><i
       class="fa-solid fa-cart-shopping fa-xl"
       style="color: #ebeff4; margin-right: 10px"
     ></i>
-    加入購物車</el-button
+    直接結帳</el-button
   >
 </template>
-
-
-<script setup>
+  
+  
+  <script setup>
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { ref, nextTick, defineExpose, defineProps } from "vue";
 import { useRouter } from "vue-router";
@@ -51,6 +51,7 @@ const addToCart = async () => {
     toast("已加入購物車", {
       autoClose: 1000,
     });
+    router.push("/cart");
   } else {
     nextTick(() => {
       router.push("/Login");
@@ -62,6 +63,6 @@ defineExpose({
   addToCart,
 });
 </script>
-
-
-<style></style>
+  
+  
+  <style></style>

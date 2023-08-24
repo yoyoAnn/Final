@@ -1,6 +1,4 @@
 <template>
-  <NavbarC />
-  <Bookbt />
   <div class="row">
     <div class="col-3"></div>
     <div class="col-6"></div>
@@ -10,7 +8,7 @@
   <!-- 全部書籍 -->
 
   <v-container>
-    <h2>搜尋書籍</h2>
+    <h2>書籍一覽</h2>
     <el-row class="button-row">
       <el-col :span="1"> </el-col>
       <el-col :span="20">
@@ -109,8 +107,6 @@ const loadBooks = async () => {
         );
       });
     }
-
-    console.log(category.value);
   } catch (error) {
     console.error("Error loading books:", error);
   }
@@ -159,18 +155,12 @@ const handleCurrentChange = (val: number) => {
     
 <script lang="ts">
 import { defineComponent } from "vue";
-import NavbarC from "./Categorybar.vue";
-import Books from "./ChosenBook.vue";
 import BooksNewDate from "./BookSearchFromNewsDate.vue";
-import Bookbt from "./Bookbacktop.vue";
 import BookCartbtn from "./BookCartBtn.vue";
 
 export default defineComponent({
   components: {
-    NavbarC,
-    Books,
     BooksNewDate,
-    Bookbt,
     BookCartbtn,
   },
 });

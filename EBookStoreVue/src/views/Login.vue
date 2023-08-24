@@ -14,7 +14,7 @@
         </div>
         <div class="col-right">
           <div class="login-form">
-            <h2>登入</h2>
+            <h2>登入</h2>     
             <form @submit.prevent="login">
               <p>
                 <input v-model="account" type="text" placeholder="帳號" required>
@@ -60,7 +60,8 @@
         account: '',
         password: '',
         id: null,
-        isLoggedIn: false,    
+        isLoggedIn: false, 
+        errorMessage: '',   
       };
     },
     methods: {
