@@ -57,8 +57,13 @@
           </v-list>
         </v-menu>
         <!-- <v-btn flat color="grey" @click="logout" v-if="isLoggedIn || !$route.path.includes('/Login')"> -->
-        <v-btn flat @click="logout" v-if="isLoggedIn || !$route.path.includes('/Login')">
-          <a href="/Login" style="color: gray;">登出</a>
+        <v-btn
+          flat
+          @click="logout"
+          v-if="isLoggedIn || !$route.path.includes('/Login')"
+        >
+          <a href="/Login" style="color: gray">登出</a></v-btn
+        >
         <v-btn
           flat
           color="grey"
@@ -67,16 +72,20 @@
         >
           <v-icon right icon="mdi:mdi-exit-to-app" />
         </v-btn>
-        <v-btn flat style="color: gray;" @click="logout" v-if="!isLoggedIn && !$route.path.includes('/Login')">
-          <a href="/Login" style="color: gray;">登入</a>
+        <v-btn
+          flat
+          style="color: gray"
+          @click="logout"
+          v-if="!isLoggedIn && !$route.path.includes('/Login')"
+        >
+          <a href="/Login" style="color: gray">登入</a>
         </v-btn>
-        
+
         <!--<div>
             <v-btn flat style="color: gray;" @click="logoutButton">
             {{ isLoggedIn ? '登出' : '登入' }}
             </v-btn>
         </div>-->
-
       </v-col>
 
       <!-- <v-spacer></v-spacer> -->
@@ -108,12 +117,12 @@ const searchInput = ref("");
 const route = useRoute();
 
 const logoutButton = () => {
-    if (isLoggedIn.value) {
+  if (isLoggedIn.value) {
     logout();
-    router.push('/Login');
-    } else {
-    router.push('/Login');
-    }
+    router.push("/Login");
+  } else {
+    router.push("/Login");
+  }
 };
 
 const logout = () => {
