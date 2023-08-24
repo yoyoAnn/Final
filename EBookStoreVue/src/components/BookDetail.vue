@@ -18,24 +18,10 @@
     <div class="stock-info">
       <p>庫存尚餘 : {{ book.stock }} ， 限購 {{ book.stock }} 份</p>
       <div class="center-button">
-        <!-- <el-button
-          round
-          type="warning"
-          @click="addToCart"
-          :disabled="book.stock === 0"
-          >加入購物車</el-button
-        > -->
-        <BookCartbtn @add-to-cart="addToCart" :book="book" />
+        <BookCartbtn @click="checkout" @add-to-cart="addToCart" :book="book" />
       </div>
       <div class="center-button">
-        <el-button
-          round
-          type="danger"
-          @click="checkout"
-          :disabled="book.stock === 0"
-          >直接結帳</el-button
-        >
-        <!-- 結帳需要跳到結帳介面 -->
+        <BookCheckout @add-to-cart="addToCart" :book="book" />
       </div>
     </div>
   </div>
@@ -55,14 +41,15 @@
 
 
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, inject, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
 const book = ref([]);
 const bookId = ref("");
-
+const addToCart = inject("addToCart");
 // 獲取參數
 const route = useRoute();
+// const router = useRouter();
 
 watch(
   () => {
@@ -87,12 +74,6 @@ onMounted(() => {
   loadBookDetails();
 });
 
-const addToCart = () => {
-  if (book.value.stock > 0) {
-    book.value.stock--;
-  }
-};
-
 const checkout = () => {
   if (book.value.stock > 0) {
     book.value.stock--;
@@ -106,12 +87,14 @@ import Books from "./ChosenBook.vue";
 import NavbarC from "./Categorybar.vue";
 import Bookbt from "./Bookbacktop.vue";
 import BookCartbtn from "./BookCartBtn.vue";
+import BookCheckout from "./BookCheckout.vue";
 export default defineComponent({
   components: {
     Books,
     NavbarC,
     Bookbt,
     BookCartbtn,
+    BookCheckout,
   },
 });
 </script>

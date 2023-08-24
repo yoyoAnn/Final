@@ -10,7 +10,7 @@
   <!-- 全部書籍 -->
 
   <v-container>
-    <h2>搜尋書籍</h2>
+    <h2>同作者書籍</h2>
     <el-row class="button-row">
       <el-col :span="1"> </el-col>
       <el-col :span="20">
@@ -32,7 +32,7 @@
               </a>
               <div style="padding: 20px; margin: 16px">
                 <span class="book-title">{{ book.name }}</span>
-                <a :href="`/booksearchauthor?searchString=${book.author}`">{{
+                <a :href="`booksearchall?searchString=${book.author}`">{{
                   book.author
                 }}</a
                 ><span> 著</span>

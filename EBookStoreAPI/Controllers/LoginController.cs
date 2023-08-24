@@ -36,16 +36,19 @@ namespace EBookStoreAPI.Controllers
 
             if (user == null)
             {
-                return BadRequest("帳號密碼錯誤");
+                return BadRequest("帳號或密碼錯誤");
             }
-            else
+            else if (user.IsConfirmed != true) {
+                return BadRequest("帳號尚未啟用");
+            }
+            else 
             {
                 var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Account),
-                //new Claim("FullName", user.Name),
-                new Claim("UserId", user.Id.ToString()),
-            };
+                {
+                    new Claim(ClaimTypes.Name, user.Account),
+                    //new Claim("FullName", user.Name),
+                    new Claim("UserId", user.Id.ToString()),
+                };
 
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties

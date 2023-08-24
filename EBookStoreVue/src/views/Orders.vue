@@ -7,22 +7,25 @@
     <div class="common-layout">
         <el-container>
             <el-header>
-                <!-- Tabs Component -->
                 <el-tabs v-model="activeTab" @tab-click="handleClick">
-                    <el-tab-pane label="尚未付款" name="not-paid"></el-tab-pane>
-                    <el-tab-pane label="已付款" name="paid"></el-tab-pane>
+                    <el-tab-pane label="未付款" name="not-paid"></el-tab-pane>
+                    <el-tab-pane label="處理中" name="paid"></el-tab-pane>
                     <el-tab-pane label="交易完成" name="final"></el-tab-pane>
                     <el-tab-pane label="已取消" name="cancel"></el-tab-pane>
                 </el-tabs>
             </el-header>
             <el-main>
-                <!-- Not Paid Orders Table -->
                 <el-table v-if="activeTab === 'not-paid'" :data="notPaidOrders" style="width: 100%"
                     @expand-change="handleExpand">
                     <el-table-column type="expand">
                         <template #default="{ row }">
                             <el-table :data="expandOrderItems[row.id]" style="width: 100%">
-                                <!-- Add your item table columns here. For instance: -->
+                                <el-table-column width="200" prop="image" label="封面">
+                                    <template #default="{ row }">
+                                        <img :src="getImagePath(row.image)" alt="Book Cover"
+                                            style="max-width: 100%; height: auto;">
+                                    </template>
+                                </el-table-column>
                                 <el-table-column width="500" prop="name" label="書名"></el-table-column>
                                 <el-table-column prop="price" label="價格"></el-table-column>
                                 <el-table-column prop="qty" label="數量"></el-table-column>
@@ -31,29 +34,71 @@
                                         {{ computeSubtotal(row.price, row.qty) }}
                                     </template>
                                 </el-table-column>
-                                <!-- ... Add other columns for items here ... -->
                             </el-table>
                         </template>
                     </el-table-column>
 
-                    <el-table-column v-for="header in headers" :key="header.value" :prop="header.value"
-                        :label="header.text"></el-table-column>
-                    <el-table-column label="訂單時間" prop="orderTime">
+                    <el-table-column v-for="header in headers" :key="header.value" :prop="header.value" :label="header.text"
+                        :width="getColumnWidth(header.value)"></el-table-column>
+                    <el-table-column label="訂單時間" prop="orderTime" width="180">
                         <template #default="{ row }">
                             {{ formatDate(row.orderTime) }}
                         </template>
                     </el-table-column>
-                    <el-table-column label="操作">
+                    <el-table-column label="操作" width="220">
                         <template #default="{ row }">
                             <el-button type="primary" @click="completePayment(row)">完成付款</el-button>
+                            <el-button type="danger" @click="promptCancelOrder(row)">取消訂單</el-button>
                         </template>
+
                     </el-table-column>
                 </el-table>
-                <!-- Paid Orders Table -->
-                <!-- You can add the table for paid orders here later when you have data -->
+
+                <el-table v-if="activeTab === 'paid'" :data="paidOrders" style="width: 100%" @expand-change="handleExpand">
+                    <el-table-column type="expand">
+                        <template #default="{ row }">
+                            <el-table :data="expandOrderItems[row.id]" style="width: 100%">
+                                <el-table-column width="200" prop="image" label="封面">
+                                    <template #default="{ row }">
+                                        <img :src="getImagePath(row.image)" alt="Book Cover"
+                                            style="max-width: 100%; height: auto;">
+                                    </template>
+                                </el-table-column>
+                                <el-table-column width="500" prop="name" label="書名"></el-table-column>
+                                <el-table-column prop="price" label="價格"></el-table-column>
+                                <el-table-column prop="qty" label="數量"></el-table-column>
+                                <el-table-column label="小計">
+                                    <template #default="{ row }">
+                                        {{ computeSubtotal(row.price, row.qty) }}
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column v-for="header in paidheaders" :key="header.value" :prop="header.value"
+                        :label="header.text" :width="getColumnWidth(header.value)"></el-table-column>
+                    <el-table-column label="訂單時間" prop="orderTime" width="180">
+                        <template #default="{ row }">
+                            {{ formatDate(row.orderTime) }}
+                        </template>
+                    </el-table-column>
+
+                </el-table>
             </el-main>
         </el-container>
     </div>
+
+
+    <el-dialog v-model="showCancelDialog" title="確認">
+        <span>您確定要取消這筆訂單嗎？</span>
+        <template v-slot:footer>
+            <span class="dialog-footer">
+                <el-button @click="showCancelDialog = false">取 消</el-button>
+                <el-button type="primary" @click="confirmCancelOrder">確 定</el-button>
+            </span>
+        </template>
+    </el-dialog>
 </template>
   
 <script setup>
@@ -63,21 +108,48 @@ import { nextTick } from 'vue';
 
 const activeTab = ref("not-paid");
 const notPaidOrders = ref([]);
+const paidOrders = ref([]);
 const formattedItems = ref([]);
 const expandOrderItems = ref({});  // Data for expanded rows
 const showEcpayForm = ref(false);
 const paymentForm = ref(null)
 const ecpayData = ref({});
+const showCancelDialog = ref(false);
+const orderToCancel = ref(null);
 
 const headers = [
     { text: "訂單編號", value: "id" },
     { text: "收件人", value: "receiverName" },
     { text: "收件地址", value: "receiverAddress" },
     { text: "聯絡電話", value: "receiverPhone" },
-    { text: "出貨狀態", value: "shippingStatusName" },
+    // { text: "出貨狀態", value: "shippingStatusName" },
     { text: "運費", value: "shippingFee" },
     { text: "總金額", value: "totalAmount" },
 ];
+
+const paidheaders = [
+    { text: "訂單編號", value: "id" },
+    { text: "出貨狀態", value: "shippingStatusName" },
+    { text: "收件人", value: "receiverName" },
+    { text: "收件地址", value: "receiverAddress" },
+    { text: "聯絡電話", value: "receiverPhone" },
+    { text: "運費", value: "shippingFee" },
+    { text: "總金額", value: "totalAmount" },
+];
+
+const getColumnWidth = (value) => {
+    if (value === 'id') return '200';
+    if (value === 'receiverAddress') return '350';
+    if (value === 'shippingFee') return '60';
+    if (value === 'receiverPhone') return '110';
+    if (value === 'receiverAddress') return '300';
+    if (value === 'shippingStatusName') return '100';
+    return undefined;
+};
+
+const getImagePath = (imageName) => {
+    return `/src/BooksImage/${imageName}`;
+};
 
 const computeSubtotal = (price, qty) => {
     return price * qty;
@@ -90,6 +162,13 @@ const getNotPaidOrders = async () => {
             id: userInfo.id
         });
         notPaidOrders.value = response.data;
+
+
+        const responsePaid = await axios.post("https://localhost:7261/GetOrderPaidList", {
+            id: userInfo.id
+        });
+
+        paidOrders.value = responsePaid.data;
     } catch (error) {
         console.error("Error fetching not paid orders:", error);
     }
@@ -157,7 +236,33 @@ const completePayment = async (order) => {
         console.error("生成訂單資料錯誤：", error);
     }
 
+};
 
+const confirmCancelOrder = async () => {
+    if (!orderToCancel.value) return;
+
+    try {
+        const response = await axios.post("https://localhost:7261/CancelOrder", {
+            orderId: orderToCancel.value
+        });
+
+        if (response.status === 200) {
+            console.log("訂單已取消");
+            getNotPaidOrders();
+        } else {
+            console.error("取消訂單失敗：", response.data);
+        }
+    } catch (error) {
+        console.error("取消訂單時出錯：", error);
+    }
+    console.log("訂單已取消");
+    showCancelDialog.value = false;
+};
+
+
+const promptCancelOrder = (order) => {
+    orderToCancel.value = order.id;  // 保存要取消的訂單的編號
+    showCancelDialog.value = true;
 };
 </script>
   
@@ -171,10 +276,5 @@ const completePayment = async (order) => {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.el-table .cell,
-.el-table th div {
-    white-space: nowrap;
 }
 </style>
