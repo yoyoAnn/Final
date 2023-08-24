@@ -52,5 +52,14 @@ namespace EBookStoreAPI.Controllers
             return filterBooks;
         }
 
+
+        [HttpGet("Top5Order")]
+        public async Task<IEnumerable<BooksDto>> Top5OrderBooks()
+        {
+            var Top5Books = await _repo.GetTop5OrderBook();
+
+            return Top5Books;
+        }
+
     }
 }

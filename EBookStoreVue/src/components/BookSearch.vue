@@ -13,7 +13,7 @@
   <!-- 全部書籍 -->
 
   <v-container>
-    <h2>全部書籍</h2>
+    <h2>同類別書籍</h2>
     <el-row class="button-row">
       <el-col :span="1">
         <i
