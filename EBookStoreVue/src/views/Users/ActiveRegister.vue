@@ -31,7 +31,7 @@ export default {
           console.log("ok",response.status);
           if (response.status == 200) {
             setTimeout(() => {
-                window.location = "https://localhost:5173/Login";
+                window.location = "https://127.0.0.1:8080/Login";
             }, 1000);
           } 
         } catch (error) {
