@@ -15,7 +15,7 @@
                 </el-tabs>
             </el-header>
             <el-main>
-                <el-table v-if="activeTab === 'not-paid'" :data="notPaidOrders" style="width: 100%"
+                <el-table stripe v-if="activeTab === 'not-paid'" :data="notPaidOrders" style="width: 100%"
                     @expand-change="handleExpand">
                     <el-table-column type="expand">
                         <template #default="{ row }">
@@ -40,21 +40,17 @@
 
                     <el-table-column v-for="header in headers" :key="header.value" :prop="header.value" :label="header.text"
                         :width="getColumnWidth(header.value)"></el-table-column>
-                    <el-table-column label="訂單時間" prop="orderTime" width="180">
-                        <template #default="{ row }">
-                            {{ formatDate(row.orderTime) }}
-                        </template>
-                    </el-table-column>
+
                     <el-table-column label="操作" width="220">
                         <template #default="{ row }">
                             <el-button type="primary" @click="completePayment(row)">完成付款</el-button>
                             <el-button type="danger" @click="promptCancelOrder(row)">取消訂單</el-button>
                         </template>
-
                     </el-table-column>
                 </el-table>
 
-                <el-table v-if="activeTab === 'paid'" :data="paidOrders" style="width: 100%" @expand-change="handleExpand">
+                <el-table v-if="activeTab === 'paid'" :data="paidOrders" style="width: 100%" @expand-change="handleExpand"
+                    :row-class-name="tableRowClassName">
                     <el-table-column type="expand">
                         <template #default="{ row }">
                             <el-table :data="expandOrderItems[row.id]" style="width: 100%">
@@ -78,11 +74,79 @@
 
                     <el-table-column v-for="header in paidheaders" :key="header.value" :prop="header.value"
                         :label="header.text" :width="getColumnWidth(header.value)"></el-table-column>
-                    <el-table-column label="訂單時間" prop="orderTime" width="180">
+                    <el-table-column label="出貨時間" prop="shippingTime" width="180">
                         <template #default="{ row }">
-                            {{ formatDate(row.orderTime) }}
+                            {{ formatDate(row.shippingTime) }}
                         </template>
                     </el-table-column>
+                    <el-table-column label="操作" width="220">
+                        <template #default="{ row }">
+                            <el-button v-if="canReturn(row.shippingTime, row.shippingStatusName)" type="warning"
+                                @click="returnPayment(row)">我要退貨</el-button>
+                        </template>
+                    </el-table-column>
+
+                </el-table>
+
+                <el-table stripe v-if="activeTab === 'final'" :data="finalOrders" style="width: 100%"
+                    @expand-change="handleExpand">
+                    <el-table-column type="expand">
+                        <template #default="{ row }">
+                            <el-table :data="expandOrderItems[row.id]" style="width: 100%">
+                                <el-table-column width="200" prop="image" label="封面">
+                                    <template #default="{ row }">
+                                        <img :src="getImagePath(row.image)" alt="Book Cover"
+                                            style="max-width: 100%; height: auto;">
+                                    </template>
+                                </el-table-column>
+                                <el-table-column width="500" prop="name" label="書名"></el-table-column>
+                                <el-table-column prop="price" label="價格"></el-table-column>
+                                <el-table-column prop="qty" label="數量"></el-table-column>
+                                <el-table-column label="小計">
+                                    <template #default="{ row }">
+                                        {{ computeSubtotal(row.price, row.qty) }}
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column v-for="header in finalheaders" :key="header.value" :prop="header.value"
+                        :label="header.text" :width="getColumnWidth(header.value)"></el-table-column>
+                    <el-table-column label="出貨時間" prop="shippingTime" width="180">
+                        <template #default="{ row }">
+                            {{ formatDate(row.shippingTime) }}
+                        </template>
+                    </el-table-column>
+
+                </el-table>
+
+                <el-table stripe v-if="activeTab === 'cancel'" :data="cancelOrders" style="width: 100%"
+                    @expand-change="handleExpand">
+                    <el-table-column type="expand">
+                        <template #default="{ row }">
+                            <el-table :data="expandOrderItems[row.id]" style="width: 100%">
+                                <el-table-column width="200" prop="image" label="封面">
+                                    <template #default="{ row }">
+                                        <img :src="getImagePath(row.image)" alt="Book Cover"
+                                            style="max-width: 100%; height: auto;">
+                                    </template>
+                                </el-table-column>
+                                <el-table-column width="500" prop="name" label="書名"></el-table-column>
+                                <el-table-column prop="price" label="價格"></el-table-column>
+                                <el-table-column prop="qty" label="數量"></el-table-column>
+                                <el-table-column label="小計">
+                                    <template #default="{ row }">
+                                        {{ computeSubtotal(row.price, row.qty) }}
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </template>
+                    </el-table-column>
+
+                    <el-table-column v-for="header in cancelheaders" :key="header.value" :prop="header.value"
+                        :label="header.text" :width="getColumnWidth(header.value)"></el-table-column>
+
 
                 </el-table>
             </el-main>
@@ -90,12 +154,24 @@
     </div>
 
 
-    <el-dialog v-model="showCancelDialog" title="確認">
-        <span>您確定要取消這筆訂單嗎？</span>
+    <el-dialog v-model="showCancelDialog" title="確認" icon="warning">
+        <span>您確定要取消這筆訂單嗎？</span><br>
+        <span>此操作無法復原</span>
         <template v-slot:footer>
             <span class="dialog-footer">
                 <el-button @click="showCancelDialog = false">取 消</el-button>
                 <el-button type="primary" @click="confirmCancelOrder">確 定</el-button>
+            </span>
+        </template>
+    </el-dialog>
+
+    <el-dialog v-model="showReturnDialog" title="確認" icon="warning">
+        <span>您確定要退貨這筆訂單嗎？</span><br>
+        <span>此操作無法復原</span>
+        <template v-slot:footer>
+            <span class="dialog-footer">
+                <el-button @click="showReturnDialog = false">取 消</el-button>
+                <el-button type="primary" @click="confirmReturnOrder">確 定</el-button>
             </span>
         </template>
     </el-dialog>
@@ -109,13 +185,18 @@ import { nextTick } from 'vue';
 const activeTab = ref("not-paid");
 const notPaidOrders = ref([]);
 const paidOrders = ref([]);
+const finalOrders = ref([]);
+const cancelOrders = ref([]);
 const formattedItems = ref([]);
 const expandOrderItems = ref({});  // Data for expanded rows
 const showEcpayForm = ref(false);
 const paymentForm = ref(null)
 const ecpayData = ref({});
 const showCancelDialog = ref(false);
+const showReturnDialog = ref(false);
 const orderToCancel = ref(null);
+const orderToReturn = ref(null);
+const checkItemToFinal = ref([])
 
 const headers = [
     { text: "訂單編號", value: "id" },
@@ -129,7 +210,29 @@ const headers = [
 
 const paidheaders = [
     { text: "訂單編號", value: "id" },
+    { text: "訂單狀態", value: "orderStatusName" },
     { text: "出貨狀態", value: "shippingStatusName" },
+    { text: "收件人", value: "receiverName" },
+    { text: "收件地址", value: "receiverAddress" },
+    { text: "聯絡電話", value: "receiverPhone" },
+    { text: "運費", value: "shippingFee" },
+    { text: "總金額", value: "totalAmount" },
+];
+
+const finalheaders = [
+    { text: "訂單編號", value: "id" },
+    { text: "訂單狀態", value: "orderStatusName" },
+    { text: "出貨狀態", value: "shippingStatusName" },
+    { text: "收件人", value: "receiverName" },
+    { text: "收件地址", value: "receiverAddress" },
+    { text: "聯絡電話", value: "receiverPhone" },
+    { text: "運費", value: "shippingFee" },
+    { text: "總金額", value: "totalAmount" },
+];
+
+const cancelheaders = [
+    { text: "訂單編號", value: "id" },
+    //{ text: "出貨狀態", value: "shippingStatusName" },
     { text: "收件人", value: "receiverName" },
     { text: "收件地址", value: "receiverAddress" },
     { text: "聯絡電話", value: "receiverPhone" },
@@ -144,7 +247,21 @@ const getColumnWidth = (value) => {
     if (value === 'receiverPhone') return '110';
     if (value === 'receiverAddress') return '300';
     if (value === 'shippingStatusName') return '100';
+    if (value === 'orderStatusName') return '100';
+
     return undefined;
+};
+
+const tableRowClassName = ({ row }) => {
+    if (row.shippingStatusName === '退貨處理中') {
+        return 'warning-color';
+    }
+
+    if (row.orderStatusName === '已付款' && row.shippingStatusName === '已取貨') {
+        return 'success-color';
+    }
+
+    return '';
 };
 
 const getImagePath = (imageName) => {
@@ -169,6 +286,27 @@ const getNotPaidOrders = async () => {
         });
 
         paidOrders.value = responsePaid.data;
+
+        checkItemToFinal.value = paidOrders.value.map(item => ({
+            id: item.id,
+            orderDateTime: item.shippingTime
+        }));
+        const checkToFinal = await axios.post("https://localhost:7261/CheckOrderToFinal", checkItemToFinal.value);
+
+
+
+        const responseFinal = await axios.post("https://localhost:7261/GetFinalOrder", {
+            id: userInfo.id
+        });
+
+        finalOrders.value = responseFinal.data;
+
+
+        const responseCancel = await axios.post("https://localhost:7261/GetCancelOrder", {
+            id: userInfo.id
+        });
+
+        cancelOrders.value = responseCancel.data;
     } catch (error) {
         console.error("Error fetching not paid orders:", error);
     }
@@ -247,6 +385,7 @@ const confirmCancelOrder = async () => {
         });
 
         if (response.status === 200) {
+
             console.log("訂單已取消");
             getNotPaidOrders();
         } else {
@@ -259,14 +398,55 @@ const confirmCancelOrder = async () => {
     showCancelDialog.value = false;
 };
 
+const confirmReturnOrder = async () => {
+    if (!orderToReturn.value) return;
+
+    try {
+        const requestData = {
+            id: orderToReturn.value.id,
+            orderDateTime: orderToReturn.value.shippingTime
+        };
+
+        const response = await axios.post("https://localhost:7261/RetornOrder", requestData);
+
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        const responsemail = await axios.get("https://localhost:7261/api/Users/GetUserProfileById", { params: { id: userInfo.id } });
+        const response2 = await axios.post("https://localhost:7261/RetornOrderMailSent", {
+            id: responsemail.data.id,
+            name: responsemail.data.name,
+            email: responsemail.data.email
+        });
+
+
+        getNotPaidOrders();
+        showReturnDialog.value = false;
+
+    } catch (error) {
+        console.error("退貨申請發生錯誤", error);
+    }
+};
+
+const returnPayment = async (order) => {
+    orderToReturn.value = order;  // 保存要退款的訂單的資訊
+    showReturnDialog.value = true;
+};
 
 const promptCancelOrder = (order) => {
     orderToCancel.value = order.id;  // 保存要取消的訂單的編號
     showCancelDialog.value = true;
 };
+
+const canReturn = (ShippingTime, shippingStatusName) => {
+    const orderDate = new Date(ShippingTime);
+    const currentDate = new Date();
+    const diffTime = Math.abs(currentDate - orderDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    return diffDays <= 7 && shippingStatusName === '已取貨';
+};
 </script>
   
-<style scoped>
+<style>
 .el-header,
 .el-main {
     background-color: white;
@@ -276,5 +456,13 @@ const promptCancelOrder = (order) => {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.warning-color {
+    background-color: #e8ca99 !important;
+}
+
+.success-color {
+    background-color: #f0f9eb !important;
 }
 </style>
