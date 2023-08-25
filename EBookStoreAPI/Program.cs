@@ -74,6 +74,9 @@ builder.Services.AddScoped<OrderItemsDapperRepository>();
 builder.Services.AddScoped<OrderIdEditDapperRepository>();
 builder.Services.AddScoped<OrderPayDapperRepository>();
 builder.Services.AddScoped<CancelOrderIdDapperRepository>();
+builder.Services.AddScoped<OrderCancelDapperRepository>();
+builder.Services.AddScoped<OrderFinalDapperRepository>();
+builder.Services.AddScoped<OrderReturnDapperRepository>();
 
 
 
