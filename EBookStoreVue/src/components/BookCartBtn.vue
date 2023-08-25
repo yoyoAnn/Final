@@ -32,6 +32,15 @@ const router = useRouter();
 //點擊事件
 // props.addToCart(book);
 const addToCart = async () => {
+  // 判斷庫存
+  if (props.book.stock === 0) {
+    toast("沒庫存", {
+      autoClose: 1000,
+      position: "bottom-right",
+    });
+    return;
+  }
+
   console.log(props.book); //抓取資料如果要抓書本名 console.log(props.book.name)
   //   props.book.stock
   //   props.book.id
@@ -50,6 +59,7 @@ const addToCart = async () => {
     const response = await axios.post(Url, CartDto);
     toast("已加入購物車", {
       autoClose: 1000,
+      position: "bottom-right",
     });
   } else {
     nextTick(() => {
