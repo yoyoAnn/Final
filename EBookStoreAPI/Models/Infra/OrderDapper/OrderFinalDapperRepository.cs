@@ -9,23 +9,23 @@ using System.Text;
 
 namespace EBookStoreAPI.Models.Infra.CartDapper
 {
-    public class OrderPayDapperRepository
+    public class OrderFinalDapperRepository
     {
         private readonly EbookStoreDepperContext _connStr;
-        public OrderPayDapperRepository(EbookStoreDepperContext context)
+        public OrderFinalDapperRepository(EbookStoreDepperContext context)
         {
             _connStr = context;
         }
 
 
-        public IEnumerable<OrdersVM> OrderPaidLoad(GetOrdersListId dto)
+        public IEnumerable<OrdersVM> OrderFinalLoad(GetOrdersListId dto)
         {
             DynamicParameters param = new DynamicParameters(); // Dapper 動態參數
             StringBuilder sql = new StringBuilder();
 
 
             sql.AppendLine(@"
-                                SELECT [Orders].[Id]
+                                  SELECT [Orders].[Id]
 	                                  ,UserId
                                       ,Users.[Name]
                                       ,[ReceiverName]
@@ -47,8 +47,8 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
                                   LEFT JOIN OrderStatuses on Orders.OrderStatusId=OrderStatuses.Id
                                   LEFT JOIN [ShippingStatuses] on Orders.ShippingStatusId=[ShippingStatuses].Id
                                   where(1=1) 
-                                  and OrderStatuses.[Name] in ('已付款','待退款')       
-
+                                  and (OrderStatuses.[Name]='已完成' or OrderStatuses.[Name]='已退款')
+								  and ([ShippingStatuses].[Name]='已取貨' or [ShippingStatuses].[Name]='已退貨')
                               ");
 
             if (!string.IsNullOrWhiteSpace(dto.id.ToString()))
@@ -57,7 +57,7 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
                 param.Add("userId", dto.id);
             }
 
-            sql.AppendLine(@" order by OrderTime desc");           
+            sql.AppendLine(@" order by ShippingTime desc");           
 
             //if(Id != null)
             //{

@@ -26,6 +26,7 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
             sql.AppendLine(@"                  
   						          update Orders
                                   set OrderStatusId='6'
+                                      ,OrderTime=getdate()
                                   where(1=1)
                                   and Id=@Id  ");
 
