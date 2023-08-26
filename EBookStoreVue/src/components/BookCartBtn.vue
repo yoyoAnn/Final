@@ -29,10 +29,12 @@ const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 const isLoggedIn = ref(userInfo && userInfo.id !== undefined);
 const router = useRouter();
 
+const cartItems = ref([]);
 //點擊事件
 // props.addToCart(book);
 const addToCart = async () => {
   // 判斷庫存
+
   if (props.book.stock === 0) {
     toast("沒庫存", {
       autoClose: 1000,
@@ -41,6 +43,7 @@ const addToCart = async () => {
     return;
   }
 
+  console.log(props.book.stock);
   console.log(props.book); //抓取資料如果要抓書本名 console.log(props.book.name)
   //   props.book.stock
   //   props.book.id
@@ -57,6 +60,9 @@ const addToCart = async () => {
       payment: 0,
     };
     const response = await axios.post(Url, CartDto);
+    if (props.book.stock > 0) {
+      props.book.stock--;
+    }
     toast("已加入購物車", {
       autoClose: 1000,
       position: "bottom-right",
@@ -67,7 +73,7 @@ const addToCart = async () => {
     });
   }
 };
-
+const checkout = () => {};
 defineExpose({
   addToCart,
 });
