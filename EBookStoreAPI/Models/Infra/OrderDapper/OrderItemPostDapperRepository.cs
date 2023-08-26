@@ -66,5 +66,39 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
             }
 
         }
+
+
+        public async Task UpdateStock(OrderItemsDto dto)
+        {
+            DynamicParameters param = new DynamicParameters(); // Dapper 動態參數
+            StringBuilder sql = new StringBuilder();
+
+
+            sql.AppendLine(@"
+                              update Books
+                              set
+                              Stock=Stock-@qty
+                              where
+                              [Id]=@Id		
+                              ");
+            param.Add("Id", dto.BookId);
+            param.Add("qty", dto.Qty);
+
+            try
+            {
+                using (var connection = _connStr.CreateConnection())
+                {
+                    connection.Open();
+
+                    connection.Execute(sql.ToString(), param);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Message.ToString();
+            }
+
+        }
     }
 }

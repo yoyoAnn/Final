@@ -9,6 +9,9 @@ using EBookStoreAPI.Models;
 using EBookStoreAPI.Models.EFModels;
 using EBookStoreAPI.Models.Infra.CartDapper;
 using EBookStoreAPI.DTOs;
+using EBookStoreAPI.DTOs.Orders;
+using XAct;
+using Humanizer;
 
 namespace EBookStoreAPI.Controllers
 {
@@ -40,7 +43,7 @@ namespace EBookStoreAPI.Controllers
         {
             if (_context.Carts == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
 
             //return await _context.Carts.ToListAsync();
@@ -179,16 +182,66 @@ namespace EBookStoreAPI.Controllers
                 return Problem("Entity set 'EBookStoreContext.Carts'  is null.");
             }
 
+            var cartstemp = _cartIdGetDapperRepository.CartItemLoad(carts);
+
+            var newCart = cartstemp.FirstOrDefault(item => item.bookId == carts.BookId);
+
+
             try
             {
-                await _cartPostDapperRepository.CartItemPost(carts);
-                return Ok("已新增至購物車");
+                bool itemExists = await _cartPostDapperRepository.IfHasValue(carts);
+
+                int stock = await _cartPostDapperRepository.bookStock(carts);
+
+                if (newCart != null)
+                {
+                    if (newCart.qty >= stock)
+                    {
+                        return Ok(new { message = $"不能超過庫存量" });
+                    }
+                }
+
+                if (itemExists)
+                {
+                    await _cartPostDapperRepository.CartItemAdd1(carts);
+                    return Ok(new { message = "已新增至購物車" });
+                }
+                else
+                {
+                    await _cartPostDapperRepository.CartItemPost(carts);
+                    return Ok(new { message = "已新增至購物車" });
+                }
+
             }
             catch (Exception ex)
             {
                 return BadRequest($"錯誤訊息: {ex.Message}");
             }
 
+        }
+
+        [HttpPost("/CheckCarts")]
+        public async Task<ActionResult<CheckCartDto>> CheckCarts(IEnumerable<CheckCartDto> carts)
+        {
+            try
+            {
+                foreach (CheckCartDto cart in carts)
+                {
+                    var carttemp = await _cartDapperRepository.CheckCart(cart);
+
+                    if (cart.qty > carttemp)
+                    {
+                        return BadRequest(new { message = $"{cart.name}  已超過庫存量" });
+                    }
+
+                }
+                return Ok(new { message = "庫存夠" });
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"錯誤訊息: {ex.Message}");
+            }
         }
 
         // DELETE: api/Carts/5
