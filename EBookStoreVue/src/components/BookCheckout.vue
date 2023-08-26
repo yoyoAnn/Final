@@ -29,6 +29,16 @@ const addToCart = async () => {
   //   props.book.id
   //   props.book.stock
   //   userInfo.id
+
+  // 判斷庫存
+  if (props.book.stock === 0) {
+    toast("沒庫存", {
+      autoClose: 1000,
+      position: "bottom-right",
+    });
+    return;
+  }
+
   // 購物車操作
   if (isLoggedIn.value) {
     const Url = "https://localhost:7261/api/Carts";
