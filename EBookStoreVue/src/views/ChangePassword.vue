@@ -30,17 +30,17 @@
             
                     <div class="input-group">
                     <label for="OriginalPassword" class="input-label">原始密碼</label>
-                    <input id="OriginalPassword" type="password" v-model="originalPassword" class="input-field" />
+                    <input id="OriginalPassword" type="password" v-model="originalPassword" class="input-field" required/>
                     </div>
 
                     <div class="input-group">
                     <label for="Password" class="input-label">新的密碼</label>
-                    <input id="Password" type="password" v-model="newPassword" class="input-field" />
+                    <input id="Password" type="password" v-model="newPassword" class="input-field" required minlength="8"/>
                     </div>
 
                     <div class="input-group">
                     <label for="ConfirmPassword" class="input-label">確認密碼</label>
-                    <input id="ConfirmPassword" type="password" v-model="confirmedPassword" class="input-field" />
+                    <input id="ConfirmPassword" type="password" v-model="confirmedPassword" class="input-field" required minlength="8"/>
                     </div>
 
                     
@@ -83,12 +83,24 @@ const navigateToPage = (page) => {
 const updatePassword = () => {
     successAlert.value = false;
     errorAlert.value = false;
+    errorMessage.value = '';
 
     if (newPassword.value !== confirmedPassword.value) {
         errorMessage.value = '輸入的密碼不一致，請再重新確認';
         errorAlert.value = true;
         return;
     }
+    if (!originalPassword.value || !newPassword.value || !confirmedPassword.value) {
+        errorMessage.value = '請填寫所有欄位';
+        errorAlert.value = true;
+        return;
+    }
+    if (newPassword.value.length < 8) {
+        errorMessage.value = '新的密碼長度至少需要 8 碼';
+        errorAlert.value = true;
+        return;
+    }
+
     // console.log(originalPassword.value)
     // console.log(newPassword.value)
     // console.log(confirmedPassword.value)
@@ -120,7 +132,7 @@ const updatePassword = () => {
 
 </script>
 
-<style>
+<style scoped>
 .form-container {
 /* display: flex; */
 flex-direction: column;

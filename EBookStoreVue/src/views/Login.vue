@@ -1,4 +1,4 @@
-   <template>
+<template>
     <div class="wrapper login-3">
       <div class="container">
         <div class="col-left">
@@ -13,8 +13,14 @@
           </div>
         </div>
         <div class="col-right">
+          
           <div class="login-form">
-            <h2>登入</h2>     
+            <!-- <h2>登入</h2>      -->
+
+            <div class="errormessage">
+                <a2 v-if="errorMessage" class="error-message">{{ errorMessage }}</a2>
+            </div>
+
             <form @submit.prevent="login">
               <p>
                 <input v-model="account" type="text" placeholder="帳號" required>
@@ -33,13 +39,35 @@
                     <label for="floatingPassword">密碼</label>
                     <i :class="[isActive ? 'fa-eye' : 'fa-eye-slash', 'fas', 'eye-icon']" @click="isActive = !isActive"></i>
                 </div> -->
-                
+
               </p>
+
+              <!-- <div class="input-section">
+                <div class="captcha-section">
+                    <input v-model="captchaInput" type="text" placeholder="請輸入驗證碼" required>
+                </div>
+                <div class="captcha-image">
+                    <s-identify :identifyCode="identifyCode" :contentWidth="120" :contentHeight="40"></s-identify>
+                </div>
+              </div>
+
+              <p>
+                <button class="btn" type="submit" :disabled="!isCaptchaValid">Sign In</button>
+              </p> -->
+
               <p>
                 <button class="btn" type="submit">Sign In</button>
               </p>
-              
-              <p>
+                
+                        
+              <!-- <hr> -->
+
+                <p class="googleloginicon">
+                    <GoogleLogin :callback="callback" prompt style="width: 100%;"></GoogleLogin>
+                </p>
+             
+
+                <p>
                     <a href="/forgetpassword">Forget password?</a>
                     <a href="/register">新增帳號</a>
                 </p>
@@ -54,18 +82,39 @@
   </template>
   
   <script>
+  import GoogleLogin from "../components/GoogleLogin.vue";
+  import SIdentify from "../components/SIdentify.vue";
+
   export default {
+    components:{
+        GoogleLogin,
+    },
+    components: { SIdentify },
     data() {
       return {
         account: '',
         password: '',
         id: null,
         isLoggedIn: false, 
-        errorMessage: '',   
+        errorMessage: '',  
+        
+        identifyCode: "",
+        identifyCodes: "0123456789abcdwerwshdjeJKDHRJHKOOPLMKQ",
+        captchaInput: '',
       };
     },
+    computed: {
+    isCaptchaValid() {
+      return this.captchaInput.toLowerCase() === this.identifyCode.toLowerCase();
+    },
+    },
+    created () {this.refreshCode()},
     methods: {
       async login() {
+        // if (!this.isCaptchaValid) {
+        //     this.errorMessage = '驗證碼錯誤';
+        //     return;
+        // }
         const response = await fetch(`https://localhost:7261/api/Login`, {
           method: 'POST',
           headers: {
@@ -78,6 +127,7 @@
           }),
         });
   
+
         if (response.ok) {
           const data = await response.json();
   
@@ -95,18 +145,46 @@
           this.$router.push('/');
 
           
+        } else if (response.status === 400) {
+            const errorData = await response.text();
+            console.log(response)
+            this.errorMessage = errorData; 
         } else {
-          console.error('Login failed');
+            console.error('Login failed');
         }
       },
+
+      // 驗證碼
+      refreshCode() {
+             this.identifyCode = "";
+             this.makeCode(this.identifyCodes,4);
+           },
+           randomNum (min, max) {
+             max = max + 1
+             return Math.floor(Math.random() * (max - min) + min)
+           },
+          
+           makeCode (data, len) {
+             for (let i = 0; i < len; i++) {
+             this.identifyCode += data[this.randomNum(0, data.length - 1)]
+           }
+        }
+
+
     },
   };
-  </script>
+</script>
   
 
-  <style scoped>
+<style scoped>
 
-  @import "@/assets/loginStyle.css";
-  
-  </style>
-  
+@import "@/assets/loginStyle.css";
+
+.container a2 {
+    color: red;
+}
+.errormessage{
+    margin-bottom: 20px;
+}
+
+</style>

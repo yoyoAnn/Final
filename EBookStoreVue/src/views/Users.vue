@@ -1,7 +1,7 @@
 <template>
   <h2>會員中心</h2>
 </template>
-    
+
 <script setup >
 import { ref, reactive, onMounted } from "vue";
 
@@ -17,6 +17,6 @@ onMounted(() => {
   loadProducts();
 });
 </script>
-    
+
 <style>
 </style>

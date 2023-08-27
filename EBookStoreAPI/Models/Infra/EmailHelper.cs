@@ -11,9 +11,9 @@ namespace EBookStoreAPI.Models.Infra
         public void SendForgetPasswordEmail(string url, string account, string email)
         {
             var subject = "[重設密碼通知]";
-            var body = $@"Hi {account},
+            var body = $@"您好 {account}，
 <br />
-請點擊此連結 [<a href='{url}' target='_blank'>我要重設密碼</a>], 以進行重設密碼, 如果您沒有提出申請, 請忽略本信, 謝謝";
+我們已收到您的密碼重設要求，請點擊此連結 [<a href='{url}' target='_blank'>我要重設密碼</a>]， 以進行密碼重設。<div><br></div><div><br></div><div><font color=""#666666"">不是您提出的申請嗎?</font></div><div><font color=""#666666"">可以由此<a href=""https://127.0.0.1:8080/customerMail"">聯絡客服</a></font></div>";
 
             var from = senderEmail;
             var to = email;
