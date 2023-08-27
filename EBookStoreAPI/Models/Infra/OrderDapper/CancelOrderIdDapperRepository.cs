@@ -25,11 +25,18 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
 
 
             sql.AppendLine(@"
-  						          update Orders
-								  set
-								  OrderStatusId='3'
-								  where
-								  Id=@orderId			
+                        DECLARE @UpdatedOrders TABLE (OrderId NVARCHAR(20));
+
+                        UPDATE [dbo].[Orders]
+                        SET OrderStatusId = 3
+                        OUTPUT inserted.Id INTO @UpdatedOrders
+                        WHERE OrderStatusId = 1 AND Id=@orderId;
+
+                        UPDATE Books
+                        SET Books.Stock = Books.Stock + OrderItems.Qty
+                        FROM [dbo].[Books]
+                        JOIN [dbo].[OrderItems] ON Books.Id = OrderItems.BookId
+                        JOIN @UpdatedOrders uo ON OrderItems.OrderId = uo.OrderId;
                               ");
 
             param.Add("orderId", dto.orderId);
