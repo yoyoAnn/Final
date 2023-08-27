@@ -54,19 +54,19 @@
               <p>
                 <button class="btn" type="submit" :disabled="!isCaptchaValid">Sign In</button>
               </p> -->
-
+              
               <p>
                 <button class="btn" type="submit">Sign In</button>
               </p>
-                
-                        
+         
+
               <!-- <hr> -->
 
                 <p class="googleloginicon">
                     <GoogleLogin :callback="callback" prompt style="width: 100%;"></GoogleLogin>
                 </p>
-             
-
+                         
+              
                 <p>
                     <a href="/forgetpassword">Forget password?</a>
                     <a href="/register">新增帳號</a>
@@ -88,8 +88,8 @@
   export default {
     components:{
         GoogleLogin,
+        SIdentify
     },
-    components: { SIdentify },
     data() {
       return {
         account: '',
@@ -104,11 +104,13 @@
       };
     },
     computed: {
-    isCaptchaValid() {
-      return this.captchaInput.toLowerCase() === this.identifyCode.toLowerCase();
+      isCaptchaValid() {
+        return this.captchaInput.toLowerCase() === this.identifyCode.toLowerCase();
+      },
     },
+    created() {
+      this.refreshCode();
     },
-    created () {this.refreshCode()},
     methods: {
       async login() {
         // if (!this.isCaptchaValid) {
@@ -156,23 +158,22 @@
 
       // 驗證碼
       refreshCode() {
-             this.identifyCode = "";
-             this.makeCode(this.identifyCodes,4);
-           },
-           randomNum (min, max) {
-             max = max + 1
-             return Math.floor(Math.random() * (max - min) + min)
-           },
-          
-           makeCode (data, len) {
-             for (let i = 0; i < len; i++) {
-             this.identifyCode += data[this.randomNum(0, data.length - 1)]
-           }
+            this.identifyCode = "";
+            this.makeCode(this.identifyCodes,4);
+        },
+        randomNum (min, max) {
+            max = max + 1
+            return Math.floor(Math.random() * (max - min) + min)
+        },
+        
+        makeCode (data, len) {
+            for (let i = 0; i < len; i++) {
+                this.identifyCode += data[this.randomNum(0, data.length - 1)]
         }
-
+    },
 
     },
-  };
+};
 </script>
   
 
