@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using EBookStoreAPI.Models.DapperRepository;
 using Microsoft.OpenApi.Models;
+using EBookStoreAPI.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,7 @@ builder.Services.AddDbContext<EBookStoreContext>(options =>
 {
     options.UseSqlServer(EBookStoreConnectionString);
 });
-
+builder.Services.AddSingleton<WebSocketController>();
 
 builder.Services.AddControllers();
 
@@ -102,11 +103,16 @@ app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection(); //使用者瀏覽http，自動重導為https
 
 //app.UseAuthorization();
 
 app.UseStaticFiles();
+
+app.UseWebSockets(new WebSocketOptions
+{
+    KeepAliveInterval = TimeSpan.FromSeconds(30),
+});
 
 app.MapControllers();
 
