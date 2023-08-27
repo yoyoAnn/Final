@@ -54,116 +54,154 @@
                     </el-table-column>
                 </el-table>
 
-                <el-table v-if="activeTab === 'paid'" :data="paidOrders" style="width: 100%" @expand-change="handleExpand"
-                    :row-class-name="tableRowClassName">
-                    <el-table-column type="expand">
-                        <template #default="{ row }">
-                            <el-table :data="expandOrderItems[row.id]" style="width: 100%">
-                                <el-table-column width="200" prop="image" label="封面">
-                                    <template #default="{ row }">
-                                        <img :src="getImagePath(row.image)" alt="Book Cover"
-                                            style="max-width: 100%; height: auto;">
-                                    </template>
-                                </el-table-column>
-                                <el-table-column width="500" prop="name" label="書名"></el-table-column>
-                                <el-table-column prop="price" label="價格"></el-table-column>
-                                <el-table-column prop="qty" label="數量"></el-table-column>
-                                <el-table-column label="小計">
-                                    <template #default="{ row }">
-                                        {{ computeSubtotal(row.price, row.qty) }}
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </template>
-                    </el-table-column>
+                <div v-if="activeTab === 'paid'">
+                    <el-table :data="displayedPaidOrders" style="width: 100%" @expand-change="handleExpand"
+                        :row-class-name="tableRowClassName">
+                        <el-table-column type="expand">
+                            <template #default="{ row }">
+                                <el-table :data="expandOrderItems[row.id]" style="width: 100%">
+                                    <el-table-column width="200" prop="image" label="封面">
+                                        <template #default="{ row }">
+                                            <img :src="getImagePath(row.image)" alt="Book Cover"
+                                                style="max-width: 100%; height: auto;">
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column width="500" prop="name" label="書名"></el-table-column>
+                                    <el-table-column prop="price" label="價格"></el-table-column>
+                                    <el-table-column prop="qty" label="數量"></el-table-column>
+                                    <el-table-column label="小計">
+                                        <template #default="{ row }">
+                                            {{ computeSubtotal(row.price, row.qty) }}
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </template>
+                        </el-table-column>
 
-                    <el-table-column v-for="header in paidheaders" :key="header.value" :prop="header.value"
-                        :label="header.text" :width="getColumnWidth(header.value)"></el-table-column>
-                    <el-table-column label="訂單日期" prop="orderTime" width="180">
-                        <template #default="{ row }">
-                            {{ formatDate(row.orderTime) }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="出貨日期" prop="shippingTime" width="180">
-                        <template #default="{ row }">
-                            {{ formatDate(row.shippingTime) }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="操作" width="220">
-                        <template #default="{ row }">
-                            <el-button v-if="canReturn(row.shippingTime, row.shippingStatusName)" type="warning"
-                                @click="returnPayment(row)">我要退貨</el-button>
-                        </template>
-                    </el-table-column>
+                        <el-table-column v-for="header in paidheaders" :key="header.value" :prop="header.value"
+                            :label="header.text" :width="getColumnWidth(header.value)"></el-table-column>
+                        <el-table-column label="訂單日期" prop="orderTime" width="180">
+                            <template #default="{ row }">
+                                {{ formatDate(row.orderTime) }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="出貨日期" prop="shippingTime" width="180">
+                            <template #default="{ row }">
+                                {{ formatDate(row.shippingTime) }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="操作" width="220">
+                            <template #default="{ row }">
+                                <el-button v-if="canReturn(row.shippingTime, row.shippingStatusName)" type="warning"
+                                    @click="returnPayment(row)">我要退貨</el-button>
+                            </template>
+                        </el-table-column>
 
-                </el-table>
+                    </el-table>
+                    <div style="text-align: right;">
+                        <el-select v-model="pageSize" placeholder="選擇每頁數量" style="margin: 15px 0;">
+                            <el-option label="10" :value="10"></el-option>
+                            <el-option label="20" :value="20"></el-option>
+                            <el-option label="30" :value="30"></el-option>
+                        </el-select>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end;">
+                        <el-pagination :total="paidOrders.length" :page-size="pageSize" v-model:current-page="currentPage"
+                            layout="total, prev, pager, next">
+                        </el-pagination>
+                    </div>
+                </div>
 
-                <el-table stripe v-if="activeTab === 'final'" :data="finalOrders" style="width: 100%"
-                    @expand-change="handleExpand">
-                    <el-table-column type="expand">
-                        <template #default="{ row }">
-                            <el-table :data="expandOrderItems[row.id]" style="width: 100%">
-                                <el-table-column width="200" prop="image" label="封面">
-                                    <template #default="{ row }">
-                                        <img :src="getImagePath(row.image)" alt="Book Cover"
-                                            style="max-width: 100%; height: auto;">
-                                    </template>
-                                </el-table-column>
-                                <el-table-column width="500" prop="name" label="書名"></el-table-column>
-                                <el-table-column prop="price" label="價格"></el-table-column>
-                                <el-table-column prop="qty" label="數量"></el-table-column>
-                                <el-table-column label="小計">
-                                    <template #default="{ row }">
-                                        {{ computeSubtotal(row.price, row.qty) }}
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </template>
-                    </el-table-column>
+                <div v-if="activeTab === 'final'">
+                    <el-table stripe :data="displayedFinalOrders" style="width: 100%" @expand-change="handleExpand">
+                        <el-table-column type="expand">
+                            <template #default="{ row }">
+                                <el-table :data="expandOrderItems[row.id]" style="width: 100%">
+                                    <el-table-column width="200" prop="image" label="封面">
+                                        <template #default="{ row }">
+                                            <img :src="getImagePath(row.image)" alt="Book Cover"
+                                                style="max-width: 100%; height: auto;">
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column width="500" prop="name" label="書名"></el-table-column>
+                                    <el-table-column prop="price" label="價格"></el-table-column>
+                                    <el-table-column prop="qty" label="數量"></el-table-column>
+                                    <el-table-column label="小計">
+                                        <template #default="{ row }">
+                                            {{ computeSubtotal(row.price, row.qty) }}
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </template>
+                        </el-table-column>
 
-                    <el-table-column v-for="header in finalheaders" :key="header.value" :prop="header.value"
-                        :label="header.text" :width="getColumnWidth(header.value)"></el-table-column>
-                    <el-table-column label="訂單日期" prop="orderTime" width="180">
-                        <template #default="{ row }">
-                            {{ formatDate(row.orderTime) }}
-                        </template>
-                    </el-table-column>
-                    <el-table-column label="出貨日期" prop="shippingTime" width="180">
-                        <template #default="{ row }">
-                            {{ formatDate(row.shippingTime) }}
-                        </template>
-                    </el-table-column>
+                        <el-table-column v-for="header in finalheaders" :key="header.value" :prop="header.value"
+                            :label="header.text" :width="getColumnWidth(header.value)"></el-table-column>
+                        <el-table-column label="訂單日期" prop="orderTime" width="180">
+                            <template #default="{ row }">
+                                {{ formatDate(row.orderTime) }}
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="出貨日期" prop="shippingTime" width="180">
+                            <template #default="{ row }">
+                                {{ formatDate(row.shippingTime) }}
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <div style="text-align: right;">
+                        <el-select v-model="pageSize" placeholder="選擇每頁數量" style="margin: 15px 0;">
+                            <el-option label="10" :value="10"></el-option>
+                            <el-option label="20" :value="20"></el-option>
+                            <el-option label="30" :value="30"></el-option>
+                        </el-select>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end;">
+                        <el-pagination :total="finalOrders.length" :page-size="pageSize" v-model:current-page="currentPage"
+                            layout="total, prev, pager, next">
+                        </el-pagination>
+                    </div>
+                </div>
 
-                </el-table>
+                <div v-if="activeTab === 'cancel'">
+                    <el-table stripe :data="displayedcancelOrders" style="width: 100%" @expand-change="handleExpand">
+                        <el-table-column type="expand">
+                            <template #default="{ row }">
+                                <el-table :data="expandOrderItems[row.id]" style="width: 100%">
+                                    <el-table-column width="200" prop="image" label="封面">
+                                        <template #default="{ row }">
+                                            <img :src="getImagePath(row.image)" alt="Book Cover"
+                                                style="max-width: 100%; height: auto;">
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column width="500" prop="name" label="書名"></el-table-column>
+                                    <el-table-column prop="price" label="價格"></el-table-column>
+                                    <el-table-column prop="qty" label="數量"></el-table-column>
+                                    <el-table-column label="小計">
+                                        <template #default="{ row }">
+                                            {{ computeSubtotal(row.price, row.qty) }}
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </template>
+                        </el-table-column>
 
-                <el-table stripe v-if="activeTab === 'cancel'" :data="cancelOrders" style="width: 100%"
-                    @expand-change="handleExpand">
-                    <el-table-column type="expand">
-                        <template #default="{ row }">
-                            <el-table :data="expandOrderItems[row.id]" style="width: 100%">
-                                <el-table-column width="200" prop="image" label="封面">
-                                    <template #default="{ row }">
-                                        <img :src="getImagePath(row.image)" alt="Book Cover"
-                                            style="max-width: 100%; height: auto;">
-                                    </template>
-                                </el-table-column>
-                                <el-table-column width="500" prop="name" label="書名"></el-table-column>
-                                <el-table-column prop="price" label="價格"></el-table-column>
-                                <el-table-column prop="qty" label="數量"></el-table-column>
-                                <el-table-column label="小計">
-                                    <template #default="{ row }">
-                                        {{ computeSubtotal(row.price, row.qty) }}
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </template>
-                    </el-table-column>
+                        <el-table-column v-for="header in cancelheaders" :key="header.value" :prop="header.value"
+                            :label="header.text" :width="getColumnWidth(header.value)"></el-table-column>
+                    </el-table>
 
-                    <el-table-column v-for="header in cancelheaders" :key="header.value" :prop="header.value"
-                        :label="header.text" :width="getColumnWidth(header.value)"></el-table-column>
-
-
-                </el-table>
+                    <div style="text-align: right;">
+                        <el-select v-model="pageSize" placeholder="選擇每頁數量" style="margin: 15px 0;">
+                            <el-option label="10" :value="10"></el-option>
+                            <el-option label="20" :value="20"></el-option>
+                            <el-option label="30" :value="30"></el-option>
+                        </el-select>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end;">
+                        <el-pagination :total="cancelOrders.length" :page-size="pageSize" v-model:current-page="currentPage"
+                            layout="total, prev, pager, next">
+                        </el-pagination>
+                    </div>
+                </div>
             </el-main>
         </el-container>
     </div>
@@ -193,7 +231,7 @@
 </template>
   
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from "axios";
 import { nextTick } from 'vue';
 
@@ -211,7 +249,34 @@ const showCancelDialog = ref(false);
 const showReturnDialog = ref(false);
 const orderToCancel = ref(null);
 const orderToReturn = ref(null);
-const checkItemToFinal = ref([])
+const checkItemToFinal = ref([]);
+
+const pageSize = ref(10);
+const currentPage = ref(1);
+
+const finalpageSize = ref(10);
+const finalcurrentPage = ref(1);
+
+const cancelpageSize = ref(10);
+const cancelcurrentPage = ref(1);
+
+const displayedPaidOrders = computed(() => {
+    const start = (currentPage.value - 1) * pageSize.value;
+    const end = currentPage.value * pageSize.value;
+    return paidOrders.value.slice(start, end);
+});
+
+const displayedFinalOrders = computed(() => {
+    const start = (finalcurrentPage.value - 1) * finalpageSize.value;
+    const end = finalcurrentPage.value * finalpageSize.value;
+    return finalOrders.value.slice(start, end);
+});
+
+const displayedcancelOrders = computed(() => {
+    const start = (cancelcurrentPage.value - 1) * cancelpageSize.value;
+    const end = cancelcurrentPage.value * cancelpageSize.value;
+    return cancelOrders.value.slice(start, end);
+});
 
 const headers = [
     { text: "訂單編號", value: "id" },
@@ -257,10 +322,9 @@ const cancelheaders = [
 
 const getColumnWidth = (value) => {
     if (value === 'id') return '200';
-    if (value === 'receiverAddress') return '350';
+    if (value === 'receiverAddress') return '275';
     if (value === 'shippingFee') return '60';
     if (value === 'receiverPhone') return '110';
-    if (value === 'receiverAddress') return '300';
     if (value === 'shippingStatusName') return '100';
     if (value === 'orderStatusName') return '100';
 
