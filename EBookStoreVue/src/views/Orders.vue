@@ -15,46 +15,57 @@
                 </el-tabs>
             </el-header>
             <el-main>
-                <el-table stripe v-if="activeTab === 'not-paid'" :data="notPaidOrders" style="width: 100%"
-                    @expand-change="handleExpand">
-                    <el-table-column type="expand">
-                        <template #default="{ row }">
-                            <el-table :data="expandOrderItems[row.id]" style="width: 100%">
-                                <el-table-column width="200" prop="image" label="封面">
-                                    <template #default="{ row }">
-                                        <img :src="getImagePath(row.image)" alt="Book Cover"
-                                            style="max-width: 100%; height: auto;">
-                                    </template>
-                                </el-table-column>
-                                <el-table-column width="500" prop="name" label="書名"></el-table-column>
-                                <el-table-column prop="price" label="價格"></el-table-column>
-                                <el-table-column prop="qty" label="數量"></el-table-column>
-                                <el-table-column label="小計">
-                                    <template #default="{ row }">
-                                        {{ computeSubtotal(row.price, row.qty) }}
-                                    </template>
-                                </el-table-column>
-                            </el-table>
-                        </template>
-                    </el-table-column>
+                <div v-if="activeTab === 'not-paid'">
+                    <el-alert type="warning" show-icon :closable="false">
+                        <h6>
+                            警告:如果超過7天將自動取消訂單
+                        </h6>
+                    </el-alert>
+                    <el-table stripe :data="notPaidOrders" style="width: 100%" @expand-change="handleExpand">
+                        <el-table-column type="expand">
+                            <template #default="{ row }">
+                                <el-table :data="expandOrderItems[row.id]" style="width: 100%">
+                                    <el-table-column width="200" prop="image" label="封面">
+                                        <template #default="{ row }">
+                                            <img :src="getImagePath(row.image)" alt="Book Cover"
+                                                style="max-width: 100%; height: auto;">
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column width="500" prop="name" label="書名"></el-table-column>
+                                    <el-table-column prop="price" label="價格"></el-table-column>
+                                    <el-table-column prop="qty" label="數量"></el-table-column>
+                                    <el-table-column label="小計">
+                                        <template #default="{ row }">
+                                            {{ computeSubtotal(row.price, row.qty) }}
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </template>
+                        </el-table-column>
 
-                    <el-table-column v-for="header in headers" :key="header.value" :prop="header.value" :label="header.text"
-                        :width="getColumnWidth(header.value)"></el-table-column>
-                    <el-table-column label="訂單日期" prop="shippingTime" width="180">
-                        <template #default="{ row }">
-                            {{ formatDate(row.shippingTime) }}
-                        </template>
-                    </el-table-column>
+                        <el-table-column v-for="header in headers" :key="header.value" :prop="header.value"
+                            :label="header.text" :width="getColumnWidth(header.value)"></el-table-column>
+                        <el-table-column label="訂單日期" prop="shippingTime" width="180">
+                            <template #default="{ row }">
+                                {{ formatDate(row.shippingTime) }}
+                            </template>
+                        </el-table-column>
 
-                    <el-table-column label="操作" width="220">
-                        <template #default="{ row }">
-                            <el-button type="primary" @click="completePayment(row)">完成付款</el-button>
-                            <el-button type="danger" @click="promptCancelOrder(row)">取消訂單</el-button>
-                        </template>
-                    </el-table-column>
-                </el-table>
+                        <el-table-column label="操作" width="220">
+                            <template #default="{ row }">
+                                <el-button type="primary" @click="completePayment(row)">完成付款</el-button>
+                                <el-button type="danger" @click="promptCancelOrder(row)">取消訂單</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
 
                 <div v-if="activeTab === 'paid'">
+                    <el-alert type="success" show-icon :closable="false">
+                        <h6>
+                            超過7天將自動完成訂單且無法退貨
+                        </h6>
+                    </el-alert>
                     <el-table :data="displayedPaidOrders" style="width: 100%" @expand-change="handleExpand"
                         :row-class-name="tableRowClassName">
                         <el-table-column type="expand">
@@ -85,7 +96,7 @@
                                 {{ formatDate(row.orderTime) }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="出貨日期" prop="shippingTime" width="180">
+                        <el-table-column label="到貨日期" prop="shippingTime" width="180">
                             <template #default="{ row }">
                                 {{ formatDate(row.shippingTime) }}
                             </template>
@@ -142,7 +153,7 @@
                                 {{ formatDate(row.orderTime) }}
                             </template>
                         </el-table-column>
-                        <el-table-column label="出貨日期" prop="shippingTime" width="180">
+                        <el-table-column label="到貨日期" prop="shippingTime" width="180">
                             <template #default="{ row }">
                                 {{ formatDate(row.shippingTime) }}
                             </template>
@@ -187,6 +198,12 @@
 
                         <el-table-column v-for="header in cancelheaders" :key="header.value" :prop="header.value"
                             :label="header.text" :width="getColumnWidth(header.value)"></el-table-column>
+
+                        <el-table-column label="訂單日期" prop="orderTime" width="180">
+                            <template #default="{ row }">
+                                {{ formatDate(row.orderTime) }}
+                            </template>
+                        </el-table-column>
                     </el-table>
 
                     <div style="text-align: right;">
