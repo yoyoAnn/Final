@@ -1,16 +1,8 @@
 <template>
-  <el-button
-    class="button"
-    round
-    style="background-color: #f5900d; color: #ebeff4"
-    @click="addToCart"
-    :disabled="props.book.stock === 0"
-    ><i
-      class="fa-solid fa-cart-shopping fa-xl"
-      style="color: #ebeff4; margin-right: 10px"
-    ></i>
-    加入購物車</el-button
-  >
+  <el-button class="button" round style="background-color: #f5900d; color: #ebeff4" @click="addToCart"
+    :disabled="props.book.stock === 0"><i class="fa-solid fa-cart-shopping fa-xl"
+      style="color: #ebeff4; margin-right: 10px"></i>
+    加入購物車</el-button>
 </template>
 
 
@@ -32,6 +24,15 @@ const router = useRouter();
 //點擊事件
 // props.addToCart(book);
 const addToCart = async () => {
+  // 判斷庫存
+  if (props.book.stock === 0) {
+    toast("沒庫存", {
+      autoClose: 1000,
+      position: "bottom-right",
+    });
+    return;
+  }
+
   console.log(props.book); //抓取資料如果要抓書本名 console.log(props.book.name)
   //   props.book.stock
   //   props.book.id
@@ -43,13 +44,14 @@ const addToCart = async () => {
     const CartDto = {
       UserId: userInfo.id,
       BookId: props.book.id,
-      Qty: props.book.stock,
+      Qty: 1,
       Id: 0,
       payment: 0,
     };
     const response = await axios.post(Url, CartDto);
-    toast("已加入購物車", {
+    toast(response.data.message, {
       autoClose: 1000,
+      position: 'bottom-right',
     });
   } else {
     nextTick(() => {

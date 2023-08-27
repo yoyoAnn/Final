@@ -1,20 +1,12 @@
 <template>
-  <el-button
-    class="button"
-    round
-    style="background-color: #f50d0d; color: #ebeff4"
-    @click="addToCart"
-    :disabled="props.book.stock === 0"
-    ><i
-      class="fa-solid fa-cart-shopping fa-xl"
-      style="color: #ebeff4; margin-right: 10px"
-    ></i>
-    直接結帳</el-button
-  >
+  <el-button class="button" round style="background-color: #f50d0d; color: #ebeff4" @click="addToCart"
+    :disabled="props.book.stock === 0"><i class="fa-solid fa-cart-shopping fa-xl"
+      style="color: #ebeff4; margin-right: 10px"></i>
+    直接結帳</el-button>
 </template>
   
   
-  <script setup>
+<script setup>
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import { ref, nextTick, defineExpose, defineProps } from "vue";
 import { useRouter } from "vue-router";
@@ -37,19 +29,30 @@ const addToCart = async () => {
   //   props.book.id
   //   props.book.stock
   //   userInfo.id
+
+  // 判斷庫存
+  if (props.book.stock === 0) {
+    toast("沒庫存", {
+      autoClose: 1000,
+      position: "bottom-right",
+    });
+    return;
+  }
+
   // 購物車操作
   if (isLoggedIn.value) {
     const Url = "https://localhost:7261/api/Carts";
     const CartDto = {
       UserId: userInfo.id,
       BookId: props.book.id,
-      Qty: props.book.stock,
+      Qty: 1,
       Id: 0,
       payment: 0,
     };
     const response = await axios.post(Url, CartDto);
-    toast("已加入購物車", {
+    toast(response.data.message, {
       autoClose: 1000,
+      position: 'bottom-right',
     });
     router.push("/cart");
   } else {
@@ -65,4 +68,4 @@ defineExpose({
 </script>
   
   
-  <style></style>
+<style></style>

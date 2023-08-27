@@ -9,16 +9,16 @@ using System.Text;
 
 namespace EBookStoreAPI.Models.Infra.CartDapper
 {
-    public class OrderPayDapperRepository
+    public class OrderCancelDapperRepository
     {
         private readonly EbookStoreDepperContext _connStr;
-        public OrderPayDapperRepository(EbookStoreDepperContext context)
+        public OrderCancelDapperRepository(EbookStoreDepperContext context)
         {
             _connStr = context;
         }
 
 
-        public IEnumerable<OrdersVM> OrderPaidLoad(GetOrdersListId dto)
+        public IEnumerable<OrdersVM> OrderCancelLoad(GetOrdersListId dto)
         {
             DynamicParameters param = new DynamicParameters(); // Dapper 動態參數
             StringBuilder sql = new StringBuilder();
@@ -47,7 +47,7 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
                                   LEFT JOIN OrderStatuses on Orders.OrderStatusId=OrderStatuses.Id
                                   LEFT JOIN [ShippingStatuses] on Orders.ShippingStatusId=[ShippingStatuses].Id
                                   where(1=1) 
-                                  and OrderStatuses.[Name] in ('已付款','待退款')       
+                                  and OrderStatuses.[Name]='已取消'       
 
                               ");
 
