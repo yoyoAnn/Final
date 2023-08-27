@@ -40,6 +40,11 @@
 
                     <el-table-column v-for="header in headers" :key="header.value" :prop="header.value" :label="header.text"
                         :width="getColumnWidth(header.value)"></el-table-column>
+                    <el-table-column label="訂單日期" prop="shippingTime" width="180">
+                        <template #default="{ row }">
+                            {{ formatDate(row.shippingTime) }}
+                        </template>
+                    </el-table-column>
 
                     <el-table-column label="操作" width="220">
                         <template #default="{ row }">
@@ -74,7 +79,12 @@
 
                     <el-table-column v-for="header in paidheaders" :key="header.value" :prop="header.value"
                         :label="header.text" :width="getColumnWidth(header.value)"></el-table-column>
-                    <el-table-column label="出貨時間" prop="shippingTime" width="180">
+                    <el-table-column label="訂單日期" prop="orderTime" width="180">
+                        <template #default="{ row }">
+                            {{ formatDate(row.orderTime) }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="出貨日期" prop="shippingTime" width="180">
                         <template #default="{ row }">
                             {{ formatDate(row.shippingTime) }}
                         </template>
@@ -113,7 +123,12 @@
 
                     <el-table-column v-for="header in finalheaders" :key="header.value" :prop="header.value"
                         :label="header.text" :width="getColumnWidth(header.value)"></el-table-column>
-                    <el-table-column label="出貨時間" prop="shippingTime" width="180">
+                    <el-table-column label="訂單日期" prop="orderTime" width="180">
+                        <template #default="{ row }">
+                            {{ formatDate(row.orderTime) }}
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="出貨日期" prop="shippingTime" width="180">
                         <template #default="{ row }">
                             {{ formatDate(row.shippingTime) }}
                         </template>

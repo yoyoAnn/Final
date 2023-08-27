@@ -171,6 +171,27 @@ namespace EBookStoreAPI.Controllers
         }
 
 
+        [HttpPost("/UpdateStock")]
+        public async Task<ActionResult> UpdateStock(OrderItemsDto dto)
+        {
+            if (_context.Carts == null)
+            {
+                return NotFound();
+            }
+
+            //return await _context.Carts.ToListAsync();
+            try
+            {
+                var carts = _orderItemPostDapperRepository.UpdateStock(dto);
+                return Ok(new { message = carts });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = $"錯誤訊息: {ex.Message}" });
+            }
+        }
+
+
         [HttpPost]
         [Route("/PaymentCart/{id}")]
         public async Task<ActionResult> PaymentCart(int id)
