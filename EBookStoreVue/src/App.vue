@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <ChatRoom></ChatRoom>
     <BackTop></BackTop>
     <!-- <v-navigation-drawer app>
     </v-navigation-drawer> -->
@@ -23,6 +24,7 @@
 import Navbar from "./components/Navbar.vue";
 import Footer from "./components/Footer.vue";
 import BackTop from "./components/Bookbacktop.vue";
+import ChatRoom from "./components/ChatRoom.vue";
 
 export default {
   name: "App",
@@ -30,6 +32,7 @@ export default {
     Navbar,
     Footer,
     BackTop,
+    ChatRoom,
   },
   data: () => ({}),
 };
