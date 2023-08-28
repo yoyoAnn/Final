@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using EBookStoreAPI.Models.DapperRepository;
 using Microsoft.OpenApi.Models;
+using EBookStoreAPI.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,7 +17,7 @@ builder.Services.AddDbContext<EBookStoreContext>(options =>
 {
     options.UseSqlServer(EBookStoreConnectionString);
 });
-
+builder.Services.AddSingleton<WebSocketController>();
 
 builder.Services.AddControllers();
 
@@ -41,21 +42,20 @@ builder.Services.AddCors(options =>
 
 //CORS全部開放用上面那段，部分開放用下面這段，用註解切換
 
-//builder.Services.AddCors(options =>
-//{
-//    options.AddPolicy("AllowAll", builder =>
-//    {
-//        //builder.WithOrigins("https://127.0.0.1:8081", "https://127.0.0.1:8080", "https://payment-stage.ecpay.com.tw", "https://127.0.0.1:8080/orders", "https://127.0.0.1:8081/orders")
-//        //       .AllowAnyMethod()
-//        //       .AllowAnyHeader()
-//        //        .AllowCredentials();
-        
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+    {
+        builder.WithOrigins("https://127.0.0.1:8081", "https://127.0.0.1:8080", "https://payment-stage.ecpay.com.tw", "https://127.0.0.1:8080/orders", "https://127.0.0.1:8081/orders")
+               .AllowAnyMethod()
+               .AllowAnyHeader()
+                .AllowCredentials();
 
-//        //builder.WithOrigins("https://127.0.0.1:8081", "https://127.0.0.1:8080", "https://payment-stage.ecpay.com.tw", "https://127.0.0.1:8080/orders", "https://127.0.0.1:8081/orders")
-//        //       .AllowAnyMethod()
-//        //       .AllowAnyHeader();
-//    });
-//});
+        //builder.WithOrigins("https://127.0.0.1:8081", "https://127.0.0.1:8080", "https://payment-stage.ecpay.com.tw", "https://127.0.0.1:8080/orders", "https://127.0.0.1:8081/orders")
+        //       .AllowAnyMethod()
+        //       .AllowAnyHeader();
+    });
+});
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -104,11 +104,16 @@ app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseHttpsRedirection();
+app.UseHttpsRedirection(); //使用者瀏覽http，自動重導為https
 
 //app.UseAuthorization();
 
 app.UseStaticFiles();
+
+app.UseWebSockets(new WebSocketOptions
+{
+    KeepAliveInterval = TimeSpan.FromSeconds(30),
+});
 
 app.MapControllers();
 

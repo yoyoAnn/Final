@@ -10,3 +10,6 @@ D:\EBookStore.Site.Final\EBookStoreVue\bin\Microsoft.NodejsTools.WebRole.dll
 D:\FUEN\VUE\FINAL\EBookStore\EBookStoreVue\obj\Debug\EBookStoreVue.njsproj.AssemblyReference.cache
 D:\FUEN\VUE\FINAL\EBookStore\EBookStoreVue\obj\Debug\EBookStoreVue.njsproj.CoreCompileInputs.cache
 D:\FUEN\VUE\FINAL\EBookStore\EBookStoreVue\bin\Microsoft.NodejsTools.WebRole.dll
+D:\.FUEN28\.專題\第三次專題\EBookStoreVue\obj\Debug\EBookStoreVue.njsproj.AssemblyReference.cache
+D:\.FUEN28\.專題\第三次專題\EBookStoreVue\obj\Debug\EBookStoreVue.njsproj.CoreCompileInputs.cache
+D:\.FUEN28\.專題\第三次專題\EBookStoreVue\bin\Microsoft.NodejsTools.WebRole.dll

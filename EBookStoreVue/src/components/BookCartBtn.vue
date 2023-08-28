@@ -1,16 +1,8 @@
 <template>
-  <el-button
-    class="button"
-    round
-    style="background-color: #f5900d; color: #ebeff4"
-    @click="addToCart"
-    :disabled="props.book.stock === 0"
-    ><i
-      class="fa-solid fa-cart-shopping fa-xl"
-      style="color: #ebeff4; margin-right: 10px"
-    ></i>
-    加入購物車</el-button
-  >
+  <el-button class="button" round style="background-color: #f5900d; color: #ebeff4" @click="addToCart"
+    :disabled="props.book.stock === 0"><i class="fa-solid fa-cart-shopping fa-xl"
+      style="color: #ebeff4; margin-right: 10px"></i>
+    加入購物車</el-button>
 </template>
 
 
@@ -65,7 +57,7 @@ const addToCart = async () => {
     }
     toast("已加入購物車", {
       autoClose: 1000,
-      position: "bottom-right",
+      position: 'bottom-right',
     });
   } else {
     nextTick(() => {
