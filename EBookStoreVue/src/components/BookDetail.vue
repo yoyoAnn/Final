@@ -23,7 +23,7 @@
     <div class="stock-info">
       <p>庫存尚餘 : {{ book.stock }} ， 限購 {{ book.stock }}份</p>
       <div class="center-button">
-        <BookCartbtn @click="checkout" @add-to-cart="addToCart" :book="book" />
+        <BookCartbtn @add-to-cart="addToCart" :book="book" />
       </div>
       <div class="center-button">
         <BookCheckout @add-to-cart="addToCart" :book="book" />

@@ -35,9 +35,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 //    options.Filters.Add(new AuthorizeFilter());
 //});
 
-//builder.Services.AddCors(options => {
-//	options.AddPolicy("AllowAll", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-//});
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+});
 
 //CORS全部開放用上面那段，部分開放用下面這段，用註解切換
 
