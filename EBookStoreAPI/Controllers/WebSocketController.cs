@@ -39,11 +39,11 @@ namespace EBookStoreAPI.Controllers
             string? UserName = null;
             while (!res.CloseStatus.HasValue)
             {
-                UserName = "匿名";
+                UserName = "客服";
                 string cmd = Encoding.UTF8.GetString(buffer, 0, res.Count);
                 JObject data = JObject.Parse(cmd);
                 string Name = Convert.ToString(data["userName"]);
-                string? Message = $"{Convert.ToString(data["message"])} 發佈於: {DateTime.Now}";
+                string? Message = $"{Convert.ToString(data["message"])}";
                 if (!string.IsNullOrEmpty(Name))
                 {
                     UserName = Name;
