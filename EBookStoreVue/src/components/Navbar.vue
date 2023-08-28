@@ -35,7 +35,12 @@
           </el-autocomplete>
         </v-responsive>
       </v-col>
+      
+      
       <v-col class="d-flex justify-end" cols="3">
+        <v-btn>
+          <a class="greeting" v-if="isLoggedIn" style="color: gray;">Hi, {{ account }}</a>
+        </v-btn>
         <v-btn flat color="grey" router v-if="isLoggedIn" :to="cartRoute">
           <v-icon right icon="mdi:mdi-cart" />
         </v-btn>
@@ -94,6 +99,7 @@ import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
 import { ref, onMounted, watch } from "vue";
 import { ElAutocomplete } from "element-plus";
+import { googleLogout } from 'vue3-google-login';
 
 const useritems = [
   { title: "會員中心", route: "/UserProfile" },
@@ -107,13 +113,16 @@ const isLoggedIn = ref(false);
 const searchInput = ref("");
 const route = useRoute();
 
+const account = ref("");
+
 const logoutButton = () => {
-  if (isLoggedIn.value) {
-    logout();
-    router.push("/Login");
-  } else {
-    router.push("/Login");
-  }
+    if (isLoggedIn.value) {
+      logout();
+      googleLogout();
+      router.push('/Login');
+    } else {
+      router.push('/Login');
+    }
 };
 
 const logout = () => {
@@ -130,8 +139,10 @@ watch(route, () => {
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   if ((userInfo && userInfo.id) != null) {
     isLoggedIn.value = true;
+    account.value = userInfo.account;
   } else {
     isLoggedIn.value = false;
+    account.value = "";
   }
   // console.log(this.isLoggedIn)
 });
@@ -225,5 +236,9 @@ function goToSearchPage() {
   height: 100%;
   background-color: transparent;
   z-index: 1;
+}
+.greeting {
+  color: gray;
+  text-transform: none;  /* 不會轉換成大寫 */
 }
 </style>

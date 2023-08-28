@@ -1,5 +1,7 @@
 <template>
-    <h1>驗證成功</h1>
+    <div class="container">
+        <h1 class="title">帳號驗證成功!</h1>
+    </div>
 </template>
   
 <script>
@@ -45,4 +47,20 @@ export default {
   };
 </script>
 
+<style scoped>
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+}
+
+.title {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 50px;
+}
+</style>
   

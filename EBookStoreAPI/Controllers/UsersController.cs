@@ -260,7 +260,7 @@ namespace EBookStoreAPI.Controllers
         {
 
             //var user = await _context.Users.FindAsync(dto.Id);
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Account == dto.Account);
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Account == dto.Account && u.Email == dto.Email);
 
             if (user == null)
             {
@@ -276,7 +276,7 @@ namespace EBookStoreAPI.Controllers
 
             try
             {
-                var urlTemplate = "https://localhost:8080/ResetPassword?userid={0}&confirmCode={1}";
+                var urlTemplate = "https://127.0.0.1:8080/ResetPassword?userid={0}&confirmCode={1}";
                 var confirmCode = Guid.NewGuid().ToString("N");
                 user.ConfirmCode = confirmCode;
                 await _context.SaveChangesAsync();
@@ -295,6 +295,7 @@ namespace EBookStoreAPI.Controllers
             return Ok("已成功記送重設密碼驗證信");
         }
 
+        [EnableCors("AllowAll")]
         [HttpPost("ResetPassword")]
         public async Task<ActionResult<string>> ResetPassword(ChangePasswordDto dto)
         {
@@ -367,6 +368,12 @@ namespace EBookStoreAPI.Controllers
                 if (user == null)
                 {
                     return BadRequest("找不到會員資訊");
+                }
+
+                var userAccount = await _context.Users.FirstOrDefaultAsync(u => u.Id != user.Id && u.Account == updatedUserDto.Account);
+                if (userAccount != null)
+                {
+                    return BadRequest("帳號已存在，請試試其他帳號");
                 }
 
                 user.Email = updatedUserDto.Email;
