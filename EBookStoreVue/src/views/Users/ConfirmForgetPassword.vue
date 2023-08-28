@@ -1,6 +1,6 @@
 <template>
-<h2>重設密碼</h2>
-<p>已收到您重設密碼的申請, 請您去收信, 並按下信裡的超連結來進行重設密碼的工作</p>
+    <h2 class="ConfirmForgetPassword">重設密碼</h2>
+    <p class="ConfirmForgetPasswordP">已收到重設密碼的申請，請您去Email按下超連結來進行重設密碼的工作</p>
 </template>
 
 <script>
@@ -9,8 +9,21 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.ConfirmForgetPasswordP{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* margin-top: 40px; */
+}
+.ConfirmForgetPassword{
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+    font-size: 50px;
+    margin-top: 40px;
+}
 </style>
 
 <!-- ConfirmForgetPassword -->

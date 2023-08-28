@@ -2,16 +2,18 @@
     <div class="container">
       <h1>重設密碼</h1><hr/><br />
     
-      <a2 v-if="registrationMessage">{{ registrationMessage }}</a2>
+      <div class="errormessage">
+        <a2 v-if="errorMessage" class="error-message">{{ errorMessage }}</a2>
+      </div>
 
       <form @submit.prevent="activateAccount">
         <div class="input-group">
           <span><v-icon right icon="mdi:mdi-lock" /></span>
-          <input v-model="resetPasswordData.NewPassword" type="password" placeholder="新密碼" required>
+          <input v-model="resetPasswordData.NewPassword" type="password" placeholder="新密碼" required minlength="8">
         </div>
         <div class="input-group">
           <span><v-icon right icon="mdi:mdi-lock" /></span>
-          <input v-model="resetPasswordData.ConfirmPassword" type="password" placeholder="確認密碼" required>
+          <input v-model="resetPasswordData.ConfirmPassword" type="password" placeholder="確認密碼" required minlength="8">
         </div>
         <br>
         <button class="btn" type="submit">重設密碼</button>
@@ -30,7 +32,7 @@ export default {
             NewPassword: '',
             ConfirmPassword: '',
         },
-        registrationMessage: ''
+        errorMessage: '',  
     };
   },
     // created() {
@@ -61,8 +63,14 @@ export default {
         } catch (error) {
         //   console.log("err",id);
         //   console.log("err",confirmCode);
-            this.registrationMessage = error.response.data;
+            
             console.error(error);
+            if (error.response && error.response.data) {
+                this.errorMessage = error.response.data; 
+            } 
+            // else {
+            //     this.errorMessage = '發生未知錯誤'; 
+            // }
         }
       }
     },
@@ -173,4 +181,7 @@ body {
     color: red;
 }
 
+.container .errormessage{
+    margin-bottom: 20px;
+}
 </style>

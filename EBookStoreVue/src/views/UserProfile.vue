@@ -25,7 +25,7 @@
                         資料更新成功
                     </v-alert><br />
                     <v-alert v-model="errorAlert" type="error" closable dismissible>
-                        {{ errorMessage }}error
+                        {{ errorMessage }}
                     </v-alert>
                   
                     <h2 class="title" color="success">會員資訊</h2><hr/><br />
@@ -77,6 +77,7 @@
                             <div class="input-group">
                             <label for="account" class="input-label">帳號</label>
                             <input id="account" type="text" v-model="account" class="input-field" />
+                            <!-- <a2 v-if="errorMessage" class="error-message">{{ errorMessage }}</a2> -->
                             </div>
 
                             <div class="input-group">
@@ -86,7 +87,7 @@
 
                             <div class="input-group">
                             <label for="phone" class="input-label">手機</label>
-                            <input id="phone" type="text" v-model="phone" class="input-field" />
+                            <input id="phone" type="text" v-model="phone" class="input-field" pattern="[0-9]{10}" />
                             </div>
 
                             <div class="input-group">
@@ -198,6 +199,18 @@ const updateUserInfo = () => {
     };
     // console.log('gender2:', gender.value);
 
+    if (phone.value && !/^\d{10}$/.test(phone.value)) {
+        errorMessage.value = '手機號碼應為 10 位數字';
+        errorAlert.value = true;
+        return;
+    }
+
+    if (address.value && address.value.length > 255) {
+        errorMessage.value = '地址不能超過 255 個字';
+        errorAlert.value = true;
+        return;
+    }
+
     axios.put(`https://localhost:7261/api/Users/EditProfile`, updatedUser)
     .then(response => {
       console.log(response.data);
@@ -209,6 +222,7 @@ const updateUserInfo = () => {
       console.error(error);
       successAlert.value = false; 
       errorAlert.value = true;
+      errorMessage.value = error.response.data;
     });
 };
 
@@ -271,7 +285,7 @@ padding: 50px;
 }
 
 input {
-  /* border: 1px solid #ccc; */
+  border: 1px solid #ccc; /* 0828 */
   background-color: white;
 }
 
@@ -483,6 +497,10 @@ input {
   width: 200px; /* 圖寬 */
   height: auto; /* 讓高度按照比例自適應 */
   max-height: 200px; /* 設置最大高度，防止圖片過大 */
+}
+
+a2 {
+    color: red;
 }
 
 </style>

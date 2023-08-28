@@ -45,14 +45,14 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
     {
-        //builder.WithOrigins("https://127.0.0.1:8081", "https://127.0.0.1:8080", "https://payment-stage.ecpay.com.tw", "https://127.0.0.1:8080/orders", "https://127.0.0.1:8081/orders")
-        //       .AllowAnyMethod()
-        //       .AllowAnyHeader()
-        //        .AllowCredentials();
-
         builder.WithOrigins("https://127.0.0.1:8081", "https://127.0.0.1:8080", "https://payment-stage.ecpay.com.tw", "https://127.0.0.1:8080/orders", "https://127.0.0.1:8081/orders")
                .AllowAnyMethod()
-               .AllowAnyHeader();
+               .AllowAnyHeader()
+                .AllowCredentials();
+
+        //builder.WithOrigins("https://127.0.0.1:8081", "https://127.0.0.1:8080", "https://payment-stage.ecpay.com.tw", "https://127.0.0.1:8080/orders", "https://127.0.0.1:8081/orders")
+        //       .AllowAnyMethod()
+        //       .AllowAnyHeader();
     });
 });
 

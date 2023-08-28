@@ -20,6 +20,7 @@ import UserProfile from '../views/UserProfile.vue'
 import ChangePassword from '../views/ChangePassword.vue'
 import ResetPassword from '../views/ResetPassword.vue'
 import BookSearchAuthor from "../components/BookSearchAuthor.vue";
+import GoogleLogin from "../components/GoogleLogin.vue";
 
 
 //路由設定
@@ -67,6 +68,10 @@ const routes = [
     {
         path: "/resetpassword",
         component: ResetPassword
+    },
+    {
+        path: "/googlelogin",
+        component: GoogleLogin
     },
     {
         path: '/cart',

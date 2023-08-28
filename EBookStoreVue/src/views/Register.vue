@@ -10,7 +10,10 @@
         與
         <a href="/">隱私權政策</a>
       </p>   
-      <a2 v-if="registrationMessage">{{ registrationMessage }}</a2>
+
+      <div class="errormessage">
+        <a2 v-if="registrationMessage">{{ registrationMessage }}</a2>
+      </div>
       
       <form @submit.prevent="register">
         <div class="input-group">
@@ -23,11 +26,11 @@
         </div>
         <div class="input-group">
           <span><v-icon right icon="mdi:mdi-lock" /></span>
-          <input v-model="registerData.password" type="password" placeholder="密碼" required>
+          <input v-model="registerData.password" type="password" placeholder="密碼" required minlength="8">
         </div>
         <div class="input-group">
           <span><v-icon right icon="mdi:mdi-lock" /></span>
-          <input v-model="registerData.confirmedPassword" type="password" placeholder="確認密碼" required>
+          <input v-model="registerData.confirmedPassword" type="password" placeholder="確認密碼" required minlength="8">
         </div>
         <button class="btn" type="submit">註冊帳號</button>
       </form>
@@ -192,6 +195,10 @@ body {
     color: red;
     /* margin-bottom: 30px; */
     /* margin-top: 30px; */
+}
+
+.errormessage{
+    margin-bottom: 20px;
 }
 
 </style>

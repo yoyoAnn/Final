@@ -46,7 +46,8 @@
     "vite": "^3.0.8",
     "vite-plugin-mkcert": "^1.16.0",
     "vite-plugin-vuetify": "^1.0.0-alpha.12",
-    "vue-cli-plugin-vuetify": "~2.5.8"
+    "vue-cli-plugin-vuetify": "~2.5.8",
+    "vue3-google-login": "^2.0.20"
   },
   "eslintConfig": {
     "extends": "plugin:vue/vue3-recommended"
