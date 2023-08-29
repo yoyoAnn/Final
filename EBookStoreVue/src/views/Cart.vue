@@ -159,8 +159,15 @@
         </v-card>
     </div>
 
-    <div v-else class="container">
-        <h2>購物車無內容</h2>
+    <div v-else>
+        <v-col class="text-start">
+            <v-btn text to="/"><span class="fas fa-long-arrow-alt-left me-2"></span>繼續購物</v-btn>
+        </v-col>
+        <v-main class="d-flex align-center justify-center" style="min-height: 300px;">
+
+
+            <img src="../../public/pngkit_grocery-cart-png_1344008.png" alt="Grocery Cart" class="img-fluid">
+        </v-main>
     </div>
 
 
@@ -644,5 +651,12 @@ img {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.v-main {
+    max-width: 50%;
+    /* 調整寬度 */
+    margin: auto;
+    /* 讓 v-main 置中 */
 }
 </style>

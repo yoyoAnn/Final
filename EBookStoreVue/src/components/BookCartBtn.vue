@@ -43,7 +43,7 @@ const addToCart = async () => {
   //   userInfo.id
   // 購物車操作
   if (isLoggedIn.value) {
-    const Url = "https://localhost:7261/api/Carts";
+    const Url = "https://localhost:7261/CartsButton";
     const CartDto = {
       UserId: userInfo.id,
       BookId: props.book.id,
@@ -55,7 +55,7 @@ const addToCart = async () => {
     if (props.book.stock > 0) {
       props.book.stock--;
     }
-    toast("已加入購物車", {
+    toast(response.data.message, {
       autoClose: 1000,
       position: 'bottom-right',
     });
@@ -65,7 +65,7 @@ const addToCart = async () => {
     });
   }
 };
-const checkout = () => {};
+const checkout = () => { };
 defineExpose({
   addToCart,
 });

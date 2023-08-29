@@ -41,7 +41,7 @@ const addToCart = async () => {
 
   // 購物車操作
   if (isLoggedIn.value) {
-    const Url = "https://localhost:7261/api/Carts";
+    const Url = "https://localhost:7261/CartsButton";
     const CartDto = {
       UserId: userInfo.id,
       BookId: props.book.id,
