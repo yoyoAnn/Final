@@ -23,7 +23,7 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
 
 
             sql.AppendLine(@"
-                            select Carts.Id,userId,Books.Id as bookId, [name] ,[image],price,qty
+                            select Carts.Id,userId,Books.Id as bookId, [name] ,[image],price,qty,stock
                             from Carts
                             left join Books on [Carts].BookId=Books.Id
                             left join BookImages on [Carts].BookId=BookImages.BookId
@@ -62,6 +62,7 @@ namespace EBookStoreAPI.Models.Infra.CartDapper
             public string name { get; set; }
             public decimal price { get; set; }
             public int qty { get; set; }
+            public int stock { get; set; }
         }
 
 

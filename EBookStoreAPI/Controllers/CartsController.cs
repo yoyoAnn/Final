@@ -195,6 +195,53 @@ namespace EBookStoreAPI.Controllers
 
                 if (newCart != null)
                 {
+                    if (newCart.qty > stock)
+                    {
+                        return Ok(new { message = $"不能超過庫存量" });
+                    }
+                }
+
+                if (itemExists)
+                {
+                    await _cartPostDapperRepository.CartItemAdd1(carts);
+                    return Ok(new { message = "已新增至購物車" });
+                }
+                else
+                {
+                    await _cartPostDapperRepository.CartItemPost(carts);
+                    return Ok(new { message = "已新增至購物車" });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"錯誤訊息: {ex.Message}");
+            }
+
+        }
+
+        [HttpPost]
+        [Route("/CartsButton")]
+        public async Task<ActionResult<Carts>> CartsButton(CartsDto carts)
+        {
+            if (carts == null)
+            {
+                return Problem("Entity set 'EBookStoreContext.Carts'  is null.");
+            }
+
+            var cartstemp = _cartIdGetDapperRepository.CartItemLoad(carts);
+
+            var newCart = cartstemp.FirstOrDefault(item => item.bookId == carts.BookId);
+
+
+            try
+            {
+                bool itemExists = await _cartPostDapperRepository.IfHasValue(carts);
+
+                int stock = await _cartPostDapperRepository.bookStock(carts);
+
+                if (newCart != null)
+                {
                     if (newCart.qty >= stock)
                     {
                         return Ok(new { message = $"不能超過庫存量" });

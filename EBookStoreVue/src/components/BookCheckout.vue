@@ -13,6 +13,9 @@ import { useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import axios from "axios";
+import { useCartStore } from '../stores/cart';
+
+const cartStore = useCartStore();
 
 const props = defineProps(["book"]);
 //驗證登入
@@ -41,7 +44,7 @@ const addToCart = async () => {
 
   // 購物車操作
   if (isLoggedIn.value) {
-    const Url = "https://localhost:7261/api/Carts";
+    const Url = "https://localhost:7261/CartsButton";
     const CartDto = {
       UserId: userInfo.id,
       BookId: props.book.id,
@@ -54,6 +57,7 @@ const addToCart = async () => {
       autoClose: 1000,
       position: 'bottom-right',
     });
+    cartStore.updateCartItemsCount();
     router.push("/cart");
   } else {
     nextTick(() => {
