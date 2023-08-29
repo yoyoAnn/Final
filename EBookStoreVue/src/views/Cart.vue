@@ -199,7 +199,7 @@
 </template>
 
 <script setup>
-
+import { useCartStore } from '../stores/cart';
 import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
 import 'bootstrap/dist/js/bootstrap.bundle.js';
 import router from '../router/index.js';
@@ -209,6 +209,8 @@ import moment from 'moment-timezone';
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import cities from '../TwCity/TwCities.json';
+
+const cartStore = useCartStore();
 
 const tab = ref('1');
 
@@ -508,6 +510,7 @@ const removeItem = async (index) => {
     try {
         await axios.delete(`https://localhost:7261/api/Carts/${itemId}`);
         books.value.splice(index, 1);
+        cartStore.updateCartItemsCount();
     }
     catch (error) {
         console.error('Error deleting item:', error);
