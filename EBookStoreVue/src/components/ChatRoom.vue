@@ -144,6 +144,7 @@ onUpdated(() => {
     box-shadow: 0 0 10px #000;
     background-color: #f4f5f7;
     border-radius: 20px;
+    min-height: 80px;
     max-height: 300px;
     overflow-y: overlay;
 
@@ -260,6 +261,7 @@ onUpdated(() => {
 }
 
 .message input {
+    margin-top: 5px;
     width: 100%;
     border: 2px solid gray;
     border-radius: 30px;
