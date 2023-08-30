@@ -26,7 +26,7 @@ namespace EBookStoreAPI.Models.DapperRepository
 INSERT INTO CustomerServiceMails
 (UserAccount,Email,ProblemTypeId,ProblemStatement,OrderId,IsRead,IsReplied,CreatedTime)
 VALUES
-(@account,@email,@problemTypeId,@problemStatement,@orderId,1,1,GETDATE())
+(@account,@email,@problemTypeId,@problemStatement,@orderId,0,0,GETDATE())
                               ");
 			
 			param.Add("account", dto.UserAccount);

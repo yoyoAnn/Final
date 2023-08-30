@@ -9,43 +9,24 @@
   <div>
     <el-row class="button-row">
       <el-col :span="1">
-        <i
-          class="fa-solid fa-circle-chevron-left fa-beat-fade fa-2xl"
-          @click="prevPage"
-          :disabled="currentPage === 1"
-        ></i>
+        <i class="fa-solid fa-circle-chevron-left fa-beat-fade fa-2xl" @click="prevPage"
+          :disabled="currentPage === 1"></i>
       </el-col>
       <el-col :span="20">
         <div class="card-container">
-          <el-col
-            v-for="(book, index) in displayedBooks"
-            :key="index"
-            :span="6"
-          >
-            <el-card
-              :body-style="{ padding: '0px' }"
-              class="custom-card"
-              style="margin-right: 10px; margin-bottom: 10px"
-            >
+          <el-col v-for="(book, index) in displayedBooks" :key="index" :span="6">
+            <el-card :body-style="{ padding: '0px' }" class="custom-card" style="margin-right: 10px; margin-bottom: 10px">
               <a :href="`/books/${book.id}`">
-                <img
-                  :src="`/src/BooksImage/${book.bookImage}`"
-                  style="height: 300px; width: auto; max-width: 100%"
-                />
+                <img :src="`/src/BooksImage/${book.bookImage}`" style="height: 300px; width: auto; max-width: 100%" />
               </a>
               <div style="padding: 14px">
                 <span class="book-title">{{ book.name }}</span>
-                <div
-                  class="bottom"
-                  style="
+                <div class="bottom" style="
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                  "
-                >
-                  <span class="pricecolor" style="margin-top: 4px"
-                    >{{ book.price }} 元</span
-                  >
+                  ">
+                  <span class="pricecolor" style="margin-top: 4px">{{ book.price }} 元</span>
                   <BookCartbtn @add-to-cart="addToCart" :book="book" />
                 </div>
               </div>
@@ -54,11 +35,8 @@
         </div>
       </el-col>
       <el-col :span="1">
-        <i
-          class="fa-solid fa-circle-chevron-right fa-beat-fade fa-2xl"
-          @click="nextPage"
-          :disabled="currentPage === totalPages"
-        ></i>
+        <i class="fa-solid fa-circle-chevron-right fa-beat-fade fa-2xl" @click="nextPage"
+          :disabled="currentPage === totalPages"></i>
       </el-col>
     </el-row>
   </div>
@@ -83,7 +61,7 @@ const loadBooks = async () => {
     }
     const datas = await response.json();
     books.value = datas;
-    console.log(books.value);
+    // console.log(books.value);
   } catch (error) {
     console.error("Error loading books:", error);
   }
@@ -134,6 +112,5 @@ export default defineComponent({
 });
 </script>
 
-<style src="../BookCSS/BookCSS.css">
-</style>
+<style src="../BookCSS/BookCSS.css"></style>
   
