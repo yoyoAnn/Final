@@ -46,7 +46,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", builder =>
     {
-        builder.WithOrigins("https://127.0.0.1:8081", "https://127.0.0.1:8080", "https://payment-stage.ecpay.com.tw", "https://127.0.0.1:8080/orders", "https://127.0.0.1:8081/orders")
+        builder.WithOrigins("https://127.0.0.1:8081", "https://127.0.0.1:8080", "https://payment-stage.ecpay.com.tw", "https://127.0.0.1:8080/orders", "https://127.0.0.1:8081/orders", "http://127.0.0.1:5174")
                .AllowAnyMethod()
                .AllowAnyHeader()
                 .AllowCredentials();
