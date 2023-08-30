@@ -10,6 +10,7 @@
 <script>
 import Books from "../components/ChosenBook.vue";
 import AllBooks from "../components/AllBook.vue";
+import { useCartStore } from '../stores/cart';
 
 export default {
   name: "App",
@@ -18,8 +19,13 @@ export default {
     AllBooks,
   },
   data: () => ({}),
+  created() {
+    const { updateCartItemsCount } = useCartStore();
+    updateCartItemsCount();
+  },
 };
+
+
 </script>
     
-<style>
-</style>
+<style></style>
