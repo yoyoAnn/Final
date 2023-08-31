@@ -1,9 +1,14 @@
 <template>
     <div>
-      <GoogleLogin :callback="callback" />
+      <GoogleLogin :callback="callback"  :class="customGoogleLoginClass" style="width: 200px;"/>
+
       <!-- <p>
         {{ data }}
       </p> -->
+    </div>
+
+    <div class="errormessage">
+        <a2 v-if="errorMessage" class="error-message">{{ errorMessage }}</a2>
     </div>
 
     <!-- <div v-if="loggedIn">
@@ -15,6 +20,7 @@
     <div v-else>
         <GoogleLogin :callback="callback"></GoogleLogin>
     </div> -->
+
 
 </template>
       
@@ -29,6 +35,7 @@ export default {
     return {
       loggedIn: false, 
       user: null,
+      errorMessage: '',  
 
       //response -> token
       callback: async (response) => {
@@ -73,6 +80,8 @@ export default {
             })
             .catch((error) => {
                 console.error(error);
+                this.errorMessage = " *此Email已使用一般用戶註冊";
+                // alert("Email已註冊一般用戶")
         });
       },
     };
@@ -82,6 +91,15 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
+.container a2 {
+    color: red;
+    font-size: medium;
+}
+.errormessage{
+    margin-bottom: 20px;
+}
+
+
 
 </style>

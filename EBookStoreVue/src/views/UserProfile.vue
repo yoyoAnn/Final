@@ -44,6 +44,7 @@
                                                       -->
 
                             <!-- 1 -->
+                            
                             <div class="profile-pic-wrapper">
                                 <div class="pic-holder">
                                     <img :src="uploadedImage || defaultImageUrl" alt="Uploaded Image" id="profilePic" class="image-preview" />
@@ -63,6 +64,7 @@
                                     </label>
                                 </div>
                             </div>
+                           
 
 
 

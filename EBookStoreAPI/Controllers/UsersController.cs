@@ -175,10 +175,10 @@ namespace EBookStoreAPI.Controllers
                 //return BadRequest(new { ErrorMessage = "帳號已存在" });
             }
 
-            //if (await _context.Users.AnyAsync(u => u.Email == registerDto.Email))
-            //{
-            //    return BadRequest("Email已存在");
-            //}
+            if (await _context.Users.AnyAsync(u => u.Email == registerDto.Email))
+            {
+                return BadRequest("Email已存在");
+            }
 
             if (registerDto.Password != registerDto.ConfirmedPassword)
             {
