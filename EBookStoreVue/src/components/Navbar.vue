@@ -91,7 +91,6 @@ const cartStore = useCartStore();
 const useritems = [
   { title: "會員中心", route: "/UserProfile" },
   { title: "歷史訂單", route: "/orders" },
-  { title: "收藏專欄", route: "/" },
 ];
 
 const cartRoute = "/cart";
