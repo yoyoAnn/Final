@@ -163,10 +163,13 @@
         <v-col class="text-start">
             <v-btn text to="/"><span class="fas fa-long-arrow-alt-left me-2"></span>繼續購物</v-btn>
         </v-col>
-        <v-main class="d-flex align-center justify-center" style="min-height: 300px;">
-
-
-            <img src="../../public/pngkit_grocery-cart-png_1344008.png" alt="Grocery Cart" class="img-fluid">
+        <v-main class="d-flex align-center justify-center" style="min-height: 300px; flex-direction: column;">
+            <div>
+                <v-alert density="compact" type="warning" text="購物車為空"></v-alert>
+            </div>
+            <div>
+                <img src="../../public/pngkit_grocery-cart-png_1344008.png" alt="Grocery Cart" class="img-fluid">
+            </div>
         </v-main>
     </div>
 
@@ -203,7 +206,7 @@ import { useCartStore } from '../stores/cart';
 import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
 import 'bootstrap/dist/js/bootstrap.bundle.js';
 import router from '../router/index.js';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import axios from 'axios';
 import moment from 'moment-timezone';
 import { toast } from "vue3-toastify";
@@ -253,6 +256,10 @@ let cartInfoData = ref({
     shippingStatusId: ""
 });
 const selectedCityName = ref('');
+
+watch(selectedCityName, () => {
+    selectedDistrict.value = '';
+});
 
 const getSelectedCity = computed(() => {
     return cities.find(city => city.name === selectedCityName.value) || {};
