@@ -50,9 +50,8 @@
                 <span>點此了解</span>
                 <v-icon right icon="mdi:mdi-arrow-right-thick" />
             </div>
-            <v-btn size="large" class="bookbtn" :href="`/books/${article.bookId}`">{{
-                article.bookName
-            }}</v-btn>
+            <v-btn size="large" class="bookbtn" :href="`/books/${article.bookId}`">
+                {{ article.bookName }}</v-btn>
         </div>
     </v-container>
 </template>
@@ -88,6 +87,7 @@ const loadArticle = async () => {
         const datas = await response.json();
         article.value = datas[0];
         article.value.createdTime = article.value.createdTime.substring(0, 10);
+        article.value.bookName = article.value.bookName.substring(0, 20);
         articleParagraphs.value = article.value.content.trim().split(/\r\n\r\n/);
     } catch (error) {
         console.error("Error loading books:", error);

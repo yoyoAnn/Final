@@ -67,7 +67,7 @@ export default {
   right: 15px;
   height: 80px;
   width: 80px;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.7);
   box-shadow: var(--el-box-shadow-lighter);
   text-align: center;
   line-height: 40px;
@@ -80,6 +80,8 @@ export default {
 .goTop:hover {
   color: #fff;
   background-color: rgba(46, 125, 50, 0.7);
+  border: 3px solid #fff;
+  box-shadow: 0 0 10px #000;
 }
 
 .goTop.hide {

@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using System.Net.WebSockets;
 using System.Text;
 using Microsoft.AspNetCore.Cors;
+using EBookStoreAPI.Models.EFModels;
 
 namespace EBookStoreAPI.Controllers
 {
@@ -15,7 +16,6 @@ namespace EBookStoreAPI.Controllers
     public class WebSocketController : ControllerBase
     {
         static ConcurrentDictionary<int, WebSocket> WebSockets = new ConcurrentDictionary<int, WebSocket>();
-
         // GET: api/WebSocket/ws
         [HttpGet("ws")]
         public async Task Connect()
@@ -58,11 +58,11 @@ namespace EBookStoreAPI.Controllers
             }
             await socket.CloseAsync(res.CloseStatus.Value, res.CloseStatusDescription, CancellationToken.None);
             WebSockets.TryRemove(socket.GetHashCode(), out var remove);
-            Broadcast(JsonConvert.SerializeObject(new
-            {
-                userName = UserName,
-                message = "離開聊天室",
-            }));
+            //Broadcast(JsonConvert.SerializeObject(new
+            //{
+            //    userName = UserName,
+            //    message = "離開聊天室",
+            //}));
         }
 
 
