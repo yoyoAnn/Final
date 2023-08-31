@@ -159,8 +159,15 @@
         </v-card>
     </div>
 
-    <div v-else class="container">
-        <h2>購物車無內容</h2>
+    <div v-else>
+        <v-col class="text-start">
+            <v-btn text to="/"><span class="fas fa-long-arrow-alt-left me-2"></span>繼續購物</v-btn>
+        </v-col>
+        <v-main class="d-flex align-center justify-center" style="min-height: 300px;">
+
+
+            <img src="../../public/pngkit_grocery-cart-png_1344008.png" alt="Grocery Cart" class="img-fluid">
+        </v-main>
     </div>
 
 
@@ -192,7 +199,7 @@
 </template>
 
 <script setup>
-
+import { useCartStore } from '../stores/cart';
 import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
 import 'bootstrap/dist/js/bootstrap.bundle.js';
 import router from '../router/index.js';
@@ -202,6 +209,8 @@ import moment from 'moment-timezone';
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import cities from '../TwCity/TwCities.json';
+
+const cartStore = useCartStore();
 
 const tab = ref('1');
 
@@ -501,6 +510,7 @@ const removeItem = async (index) => {
     try {
         await axios.delete(`https://localhost:7261/api/Carts/${itemId}`);
         books.value.splice(index, 1);
+        cartStore.updateCartItemsCount();
     }
     catch (error) {
         console.error('Error deleting item:', error);
@@ -644,5 +654,12 @@ img {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.v-main {
+    max-width: 50%;
+    /* 調整寬度 */
+    margin: auto;
+    /* 讓 v-main 置中 */
 }
 </style>

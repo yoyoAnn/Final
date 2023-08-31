@@ -6,37 +6,75 @@
         <p class="mb-0">
           親愛的顧客，您好：
           <br />
-          若您對我們提供的產品、服務內容有任何問題，建議您先參考<a href="/QA">常見問題</a>，以快速找到解答。若您仍有更多疑問，請填寫下方表格，我們在收到您的信件後會盡快處理。
+          若您對我們提供的產品、服務內容有任何問題，建議您先參考<a href="/QA"
+            >常見問題</a
+          >，以快速找到解答。若您仍有更多疑問，請填寫下方表格，我們在收到您的信件後會盡快處理。
         </p>
       </div>
-      <form class="form-group mt-2 w-100 d-flex flex-column justify-content-center align-items-center" action="">
+      <form
+        class="form-group mt-2 w-100 d-flex flex-column justify-content-center align-items-center"
+        action=""
+      >
         <div class="row col-12">
           <div class="col-3 p-0">
-            <label class="form-label m-3 d-flex justify-content-start" for="Email">Email：</label>
+            <label
+              class="form-label m-3 d-flex justify-content-start"
+              for="Email"
+              >Email：</label
+            >
           </div>
           <div class="col-9">
-            <input class="form-control m-3" type="email" id="Email" v-model="form.Email" placeholder="(*必填*)"
-              @blur="validate" />
+            <input
+              class="form-control m-3"
+              type="email"
+              id="Email"
+              v-model="form.Email"
+              placeholder="(*必填*)"
+              @blur="validate"
+            />
           </div>
         </div>
         <div class="m-0 p-0 text-red">{{ errorMsg.emailErr }}</div>
         <div class="row col-12">
           <div class="col-3 p-0">
-            <label class="form-label m-3 d-flex justify-content-start" for="Account">會員帳號：</label>
+            <label
+              class="form-label m-3 d-flex justify-content-start"
+              for="Account"
+              >會員帳號：</label
+            >
           </div>
           <div class="col-9">
-            <input class="form-control m-3" type="text" id="Account" v-model="form.UserAccount" placeholder="(非必填)" />
+            <input
+              class="form-control m-3"
+              type="text"
+              id="Account"
+              v-model="form.UserAccount"
+              placeholder="(非必填)"
+            />
           </div>
         </div>
         <div class="row col-12">
           <div class="col-3 p-0">
-            <label class="form-label m-3 d-flex justify-content-start" for="OrderId">訂單編號：</label>
+            <label
+              class="form-label m-3 d-flex justify-content-start"
+              for="OrderId"
+              >訂單編號：</label
+            >
           </div>
           <div class="col-9">
-            <input class="form-control m-3" type="text" v-model="form.OrderId" placeholder="(非必填)" />
+            <input
+              class="form-control m-3"
+              type="text"
+              v-model="form.OrderId"
+              placeholder="(非必填)"
+            />
           </div>
         </div>
-        <select class="form-control m-3 w-100" v-model="form.ProblemTypeId" @blur="validate">
+        <select
+          class="form-control m-3 w-100"
+          v-model="form.ProblemTypeId"
+          @blur="validate"
+        >
           <option value="" disabled selected>問題種類</option>
           <option v-for="(item, i) in problemTypes" :value="i + 1">
             {{ item }}
@@ -46,13 +84,32 @@
           </option>-->
         </select>
         <div class="m-0 p-0 text-red">{{ errorMsg.problemTypeIdErr }}</div>
-        <textarea class="form-control m-3 w-100" style="height: 100px" maxlength="200" v-model="form.ProblemStatement"
-          placeholder="問題敘述(請勿超過200字)" @blur="validate"></textarea>
+        <textarea
+          class="form-control m-3 w-100"
+          style="height: 100px"
+          maxlength="200"
+          v-model="form.ProblemStatement"
+          placeholder="問題敘述(請勿超過200字)"
+          @blur="validate"
+        ></textarea>
         <div class="m-0 p-0 text-red">{{ errorMsg.problemStatementErr }}</div>
         <div class="row col-12 d-flex justify-content-center">
-          <input class="btn btn-primary mt-3 col-2 mr-5" type="button" name="submit" id="" @click="submitMail"
-            value="送出" />
-          <input class="btn btn-primary-outline mt-3 col-2" type="button" name="submit" id="" @click="clear" value="清除" />
+          <input
+            class="btn btn-primary mt-3 col-2 mr-5"
+            type="button"
+            name="submit"
+            id=""
+            @click="submitMail"
+            value="送出"
+          />
+          <input
+            class="btn btn-primary-outline mt-3 col-2"
+            type="button"
+            name="submit"
+            id=""
+            @click="clear"
+            value="清除"
+          />
         </div>
       </form>
     </div>
@@ -90,7 +147,7 @@ const loadProducts = async () => {
 //表單屬性
 const form = reactive({
   Id: 0,
-  UserAccount: userAccount.value,
+  UserAccount: userAccount.value ? userAccount.value : "",
   Email: "",
   OrderId: null,
   ProblemTypeId: "",
@@ -108,7 +165,8 @@ const validate = () => {
   let valid = true;
 
   // 信箱驗證
-  let emailrule = /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
+  let emailrule =
+    /^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z]+$/;
   if (!form.Email.trim()) {
     errorMsg.emailErr = "*信箱未填寫*";
     valid = false;
@@ -159,7 +217,7 @@ const submitMail = () => {
 const clear = () => {
   form.UserAccount = "";
   form.Email = "";
-  form.OrderId = "";
+  form.OrderId = null;
   form.ProblemTypeId = "";
   form.ProblemStatement = "";
 };

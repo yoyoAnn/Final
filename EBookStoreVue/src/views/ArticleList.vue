@@ -91,7 +91,6 @@ const loadArticle = async () => {
     const datas = await response.json();
     articles.value = datas;
     writerName.value = articles.value[0].writerName;
-    console.log(articles.value);
   } catch (error) {
     console.error("Error loading books:", error);
   }
