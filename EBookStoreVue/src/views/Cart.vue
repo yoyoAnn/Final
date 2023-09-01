@@ -110,8 +110,8 @@
                         </el-col>
 
                         <el-col :xs="24" :sm="12" :md="8" :lg="4" :xl="4">
-                            <el-form-item label="選擇城市">
-                                <el-select v-model="selectedCityName" placeholder="選擇城市">
+                            <el-form-item label="選擇縣市">
+                                <el-select v-model="selectedCityName" placeholder="選擇縣市">
                                     <el-option v-for="item in cities" :key="item.name" :label="item.name"
                                         :value="item.name">
                                     </el-option>
@@ -120,8 +120,8 @@
                         </el-col>
 
                         <el-col :xs="24" :sm="12" :md="8" :lg="4" :xl="4">
-                            <el-form-item label="選擇區域">
-                                <el-select v-model="selectedDistrict" placeholder="選擇區域">
+                            <el-form-item label="選擇鄉鎮區">
+                                <el-select v-model="selectedDistrict" placeholder="選擇鄉鎮區">
                                     <el-option v-for="item in getSelectedCity.districts" :key="item.name" :label="item.name"
                                         :value="item.name">
                                     </el-option>
@@ -367,7 +367,7 @@ const handleCheckout = async () => {
 
         if (cartItems.value.length === 0) {
             toast.error("購物車至少勾選一樣物品", {
-                position: 'bottom-right',
+                position: 'bottom-left',
                 autoClose: 500,
             });
             return;
@@ -379,7 +379,7 @@ const handleCheckout = async () => {
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 toast.error(error.response.data.message, {
-                    position: 'bottom-right',
+                    position: 'bottom-left',
                     autoClose: 1000,
                 });
                 return;
@@ -543,7 +543,7 @@ const increaseQuantity = (item) => {
         updateQuantity(item);
     } else {
         toast.error('不能超過庫存量!', {
-            position: 'bottom-right',
+            position: 'bottom-left',
             autoClose: 500,
         });
     }

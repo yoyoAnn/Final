@@ -1,10 +1,10 @@
 <template>
-    <div class="profile-pic-wrapper">
-        <div class="pic-holder">
-            <img :src="uploadedImage || defaultImageUrl" alt="Uploaded Image" id="profilePic" class="image-preview" />
+  <div class="profile-pic-wrapper">
+    <div class="pic-holder">
+      <img :src="uploadedImage || defaultImageUrl" alt="Uploaded Image" id="profilePic" class="image-preview" />
 
-        </div>
     </div>
+  </div>
 </template>
 
 <script setup>
@@ -28,42 +28,42 @@ const fileInput = ref(null);
 // const uploadedImage = ref("");
 const uploadedImage = ref(null);
 const defaultImage = ref("");
-const photoUrl = ref(""); 
+const photoUrl = ref("");
 const defaultImageFileName = ref(""); // 預設圖片檔名
 const defaultImageUrl = ref(""); // 完整預設圖片URL
 
 const router = useRouter();
 
 const navigateToPage = (page) => {
-    router.push(`/${page}`);
+  router.push(`/${page}`);
 };
 
 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 if (userInfo) {
-    axios.get(`https://localhost:7261/api/Users/GetUserProfileById?id=${userInfo.id}`)
+  axios.get(`https://localhost:7261/api/Users/GetUserProfileById?id=${userInfo.id}`)
     .then(response => {
-        const userProfile = response.data;
-        email.value = userProfile.email;
-        account.value = userProfile.account;
-        name.value = userProfile.name;
-        phone.value = userProfile.phone;
-        address.value = userProfile.address;
-        gender.value = userProfile.gender;
+      const userProfile = response.data;
+      email.value = userProfile.email;
+      account.value = userProfile.account;
+      name.value = userProfile.name;
+      phone.value = userProfile.phone;
+      address.value = userProfile.address;
+      gender.value = userProfile.gender;
 
 
-        // 預設圖片API 0824
-        axios.post(`https://localhost:7261/api/Users/GetDefaultImage?id=${userInfo.id}`)
+      // 預設圖片API 0824
+      axios.post(`https://localhost:7261/api/Users/GetDefaultImage?id=${userInfo.id}`)
         .then(defaultImageResponse => {
-            defaultImageFileName.value = defaultImageResponse.data.photo;
+          defaultImageFileName.value = defaultImageResponse.data.photo;
 
-            defaultImageUrl.value = `https://localhost:7261/api/Users/GetImage/${defaultImageFileName.value}`;
+          defaultImageUrl.value = `https://localhost:7261/api/Users/GetImage/${defaultImageFileName.value}`;
         })
         .catch(defaultImageError => {
-            console.error(defaultImageError);
+          console.error(defaultImageError);
         });
     })
     .catch(error => {
-        console.error(error);
+      console.error(error);
     });
 }
 
@@ -86,16 +86,17 @@ const uploadImage = async (event) => {
 
       // 提取檔名部分（從最後一個斜線 / 開始到字串結束）
       const fileName = response.data.substring(response.data.lastIndexOf("/") + 1);
-    
+
       const userInfo = JSON.parse(localStorage.getItem('userInfo'));
       const id = userInfo.id;
 
       try {
         await axios.post(
           "https://localhost:7261/api/Users/UpdateUserPhoto",
-          { id, photo: fileName } 
+          { id, photo: fileName }
         );
         console.log('圖片資料庫更新成功');
+        history.go(0);
       } catch (error) {
         console.error('更新圖片資料庫失敗:', error);
       }
@@ -120,7 +121,6 @@ export default {
 </script>
 
 <style scoped>
-
 /* 圖 */
 .profile-pic-wrapper {
   height: 100vh;
@@ -131,6 +131,7 @@ export default {
   /* justify-content: center; */
   /* align-items: center; */
 }
+
 .pic-holder {
   text-align: center;
   position: relative;
@@ -144,6 +145,7 @@ export default {
   margin-bottom: 20px;
   margin-top: 8px;
 }
+
 /* .pic-holder {
   text-align: center;
   position: relative;
@@ -198,7 +200,7 @@ export default {
 }
 
 .pic-holder:hover .upload-file-block,
-.uploadProfileInput:focus ~ .upload-file-block {
+.uploadProfileInput:focus~.upload-file-block {
   opacity: 1;
 }
 
@@ -213,14 +215,13 @@ export default {
 
 /* 圖預覽 */
 .image-preview {
-  width: 20px; 
+  width: 20px;
   height: auto;
   max-height: 50px;
-  max-width: 50px; 
+  max-width: 50px;
 }
 
 a2 {
-    color: red;
+  color: red;
 }
-
 </style>

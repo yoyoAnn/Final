@@ -260,6 +260,7 @@ const uploadImage = async (event) => {
           { id, photo: fileName }
         );
         console.log('圖片資料庫更新成功');
+        history.go(0);
       } catch (error) {
         console.error('更新圖片資料庫失敗:', error);
       }
@@ -515,4 +516,5 @@ input {
 
 a2 {
   color: red;
-}</style>
+}
+</style>
