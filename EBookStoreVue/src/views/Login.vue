@@ -42,22 +42,29 @@
 
               </p>
 
-              <!-- <div class="input-section">
+              
+              <div class="input-section">
                 <div class="captcha-section">
                     <input v-model="captchaInput" type="text" placeholder="請輸入驗證碼" required>
-                </div>
-                <div class="captcha-image">
                     <s-identify :identifyCode="identifyCode" :contentWidth="120" :contentHeight="40"></s-identify>
                 </div>
               </div>
+              
 
               <p>
-                <button class="btn" type="submit" :disabled="!isCaptchaValid">Sign In</button>
-              </p> -->
-              
-              <p>
-                <button class="btn" type="submit">Sign In</button>
+                <!-- <button class="btn" type="submit" :disabled="!isCaptchaValid">Sign In</button> -->
+                <button class="btn" type="submit" >Sign In</button>
               </p>
+              
+              <!-- <p>
+                <button class="btn" type="submit">Sign In</button>
+              </p> -->
+
+              <p>
+                <button class="btn" @click="fillDefaultLogin">Demo用 一鍵輸入</button>
+              </p>
+              
+
          
 
               <!-- <hr> -->
@@ -76,7 +83,7 @@
         </div>
       </div>
       <div class="credit">
-        © 2023 布可 版權所有。
+        <!-- © 2023 布可 版權所有。 -->
       </div>
     </div>
   </template>
@@ -113,10 +120,10 @@
     },
     methods: {
       async login() {
-        // if (!this.isCaptchaValid) {
-        //     this.errorMessage = '驗證碼錯誤';
-        //     return;
-        // }
+        if (!this.isCaptchaValid) {
+            this.errorMessage = '驗證碼錯誤';
+            return;
+        }
         const response = await fetch(`https://localhost:7261/api/Login`, {
           method: 'POST',
           headers: {
@@ -170,7 +177,12 @@
             for (let i = 0; i < len; i++) {
                 this.identifyCode += data[this.randomNum(0, data.length - 1)]
         }
-    },
+      },
+
+      fillDefaultLogin() {
+        this.account = 'allen'; 
+        this.password = '123'; 
+      },
 
     },
 };
@@ -186,6 +198,12 @@
 }
 .errormessage{
     margin-bottom: 20px;
+}
+
+.captcha-section {
+  display: flex;
+  align-items: center; 
+  margin-bottom: 20px;
 }
 
 </style>
