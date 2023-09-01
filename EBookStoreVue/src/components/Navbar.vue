@@ -3,29 +3,15 @@
     <v-row no-gutters>
       <v-col cols="3">
         <v-btn class="fill-height" flat color="white" router :to="homeRoute">
-          <v-img
-            class=""
-            :width="60"
-            aspect-ratio="4/3"
-            src="https://blog.flamingtext.com/blog/2023/08/08/flamingtext_com_1691517616_586896794.png"
-          ></v-img>
-          <span
-            class="text-subtitle-1 text-grey-darken-3"
-            style="display: flex; vertical-align: text-bottom"
-            >網路書店</span
-          >
+          <v-img class="" :width="60" aspect-ratio="4/3"
+            src="https://blog.flamingtext.com/blog/2023/08/08/flamingtext_com_1691517616_586896794.png"></v-img>
+          <span class="text-subtitle-1 text-grey-darken-3" style="display: flex; vertical-align: text-bottom">網路書店</span>
         </v-btn>
       </v-col>
       <v-col class="d-flex justify-center" cols="6">
         <v-responsive max-height="100" max-width="600">
-          <el-autocomplete
-            style="width: 400px"
-            v-model="searchInput"
-            :fetch-suggestions="querySearchAsync"
-            placeholder="搜尋"
-            @keydown.enter="goToSearchPage"
-            @select="handleSelect"
-          >
+          <el-autocomplete style="width: 400px" v-model="searchInput" :fetch-suggestions="querySearchAsync"
+            placeholder="搜尋" @keydown.enter="goToSearchPage" @select="handleAutocompleteSelect">
             <template #append>
               <div class="append-container" @click="goToSearchPage">
                 <i class="fas fa-search search-icon"></i>
@@ -35,28 +21,26 @@
           </el-autocomplete>
         </v-responsive>
       </v-col>
-      
-      
+
+
       <v-col class="d-flex justify-end" cols="3">
-        <v-btn>
+        <v-btn @click="hiUserName">
           <a class="greeting" v-if="isLoggedIn" style="color: gray;">Hi, {{ account }}</a>
         </v-btn>
         <v-btn flat color="grey" router v-if="isLoggedIn" :to="cartRoute">
           <v-icon right icon="mdi:mdi-cart" />
+          <v-badge floating color="error" :content="cartStore.cartItemsCount" overlap>
+          </v-badge>
         </v-btn>
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
             <v-btn color="grey" v-bind="props" v-if="isLoggedIn">
-              <v-icon right icon="mdi:mdi-account" />
+              <!-- <v-icon right icon="mdi:mdi-account" /> -->
+                <UserPicture />
             </v-btn>
           </template>
           <v-list>
-            <v-list-item
-              v-for="(useritem, index) in useritems"
-              :key="index"
-              router
-              :to="useritem.route"
-            >
+            <v-list-item v-for="(useritem, index) in useritems" :key="index" router :to="useritem.route">
               <v-list-item-title>{{ useritem.title }}</v-list-item-title>
             </v-list-item>
           </v-list>
@@ -95,17 +79,23 @@
 
 
 <script setup lang="ts">
+import { useCartStore } from '../stores/cart';
+
 import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
 import { ref, onMounted, watch } from "vue";
 import { ElAutocomplete } from "element-plus";
 import { googleLogout } from 'vue3-google-login';
+import UserPicture from "../components/UserPicture.vue";
+
+
+const cartStore = useCartStore();
 
 const useritems = [
   { title: "會員中心", route: "/UserProfile" },
   { title: "歷史訂單", route: "/orders" },
-  { title: "收藏專欄", route: "/" },
 ];
+
 
 const cartRoute = "/cart";
 const homeRoute = "/";
@@ -115,18 +105,22 @@ const route = useRoute();
 
 const account = ref("");
 
+const hiUserName = () => {
+    router.push("/UserProfile");
+}
+
 const logoutButton = () => {
-    if (isLoggedIn.value) {
-      logout();
-      googleLogout();
-      router.push('/Login');
-    } else {
-      router.push('/Login');
-    }
+  if (isLoggedIn.value) {
+    logout();
+    googleLogout();
+    router.push('/Login');
+  } else {
+    router.push('/Login');
+  }
 };
 
 const logout = () => {
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") || '{}');
   if (userInfo && userInfo.id) {
     localStorage.removeItem("userInfo");
     router.push("/Login");
@@ -136,7 +130,7 @@ const logout = () => {
 };
 
 watch(route, () => {
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") || '{}');
   if ((userInfo && userInfo.id) != null) {
     isLoggedIn.value = true;
     account.value = userInfo.account;
@@ -207,8 +201,19 @@ const handleSelect = (item: LinkItem) => {
   goToSearchPage();
 };
 
+const handleAutocompleteSelect = (item: Record<string, any>) => {
+  const linkItem: LinkItem = {
+    value: item.value,
+    categoryName: item.categoryName,
+    author: item.author,
+  };
+  handleSelect(linkItem);
+};
+
 onMounted(() => {
   loadAll("");
+
+  cartStore.updateCartItemsCount(0);
   // getLogStatus();
 });
 
@@ -228,6 +233,7 @@ function goToSearchPage() {
 .append-container {
   cursor: pointer;
 }
+
 .overlay {
   position: absolute;
   top: 0;
@@ -237,8 +243,11 @@ function goToSearchPage() {
   background-color: transparent;
   z-index: 1;
 }
+
 .greeting {
   color: gray;
-  text-transform: none;  /* 不會轉換成大寫 */
+  text-transform: none;
+  /* 不會轉換成大寫 */
 }
+
 </style>

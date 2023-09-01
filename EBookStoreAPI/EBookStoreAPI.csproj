@@ -14,7 +14,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Identity.Client" Version="4.54.1" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     <PackageReference Include="XAct.Core.PCL" Version="0.0.5014" />
@@ -22,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Models\EFModels\" />
-    <Folder Include="wwwroot\images\users\" />
   </ItemGroup>
 
 </Project>

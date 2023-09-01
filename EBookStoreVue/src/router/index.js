@@ -21,7 +21,7 @@ import ChangePassword from '../views/ChangePassword.vue'
 import ResetPassword from '../views/ResetPassword.vue'
 import BookSearchAuthor from "../components/BookSearchAuthor.vue";
 import GoogleLogin from "../components/GoogleLogin.vue";
-
+import UserPicture from "../components/UserPicture.vue";
 
 //路由設定
 const routes = [
@@ -60,6 +60,10 @@ const routes = [
     {
         path: "/userprofile",
         component: UserProfile
+    },
+    {
+        path: "/userpicture",
+        component: UserPicture
     },
     {
         path: "/changepassword",
