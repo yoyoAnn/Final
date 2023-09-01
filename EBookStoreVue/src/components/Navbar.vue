@@ -24,7 +24,7 @@
 
 
       <v-col class="d-flex justify-end" cols="3">
-        <v-btn>
+        <v-btn @click="hiUserName">
           <a class="greeting" v-if="isLoggedIn" style="color: gray;">Hi, {{ account }}</a>
         </v-btn>
         <v-btn flat color="grey" router v-if="isLoggedIn" :to="cartRoute">
@@ -35,7 +35,8 @@
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
             <v-btn color="grey" v-bind="props" v-if="isLoggedIn">
-              <v-icon right icon="mdi:mdi-account" />
+              <!-- <v-icon right icon="mdi:mdi-account" /> -->
+                <UserPicture />
             </v-btn>
           </template>
           <v-list>
@@ -85,14 +86,16 @@ import axios from "axios";
 import { ref, onMounted, watch } from "vue";
 import { ElAutocomplete } from "element-plus";
 import { googleLogout } from 'vue3-google-login';
+import UserPicture from "../components/UserPicture.vue";
+
 
 const cartStore = useCartStore();
 
 const useritems = [
   { title: "會員中心", route: "/UserProfile" },
   { title: "歷史訂單", route: "/orders" },
-  { title: "收藏專欄", route: "/" },
 ];
+
 
 const cartRoute = "/cart";
 const homeRoute = "/";
@@ -101,6 +104,10 @@ const searchInput = ref("");
 const route = useRoute();
 
 const account = ref("");
+
+const hiUserName = () => {
+    router.push("/UserProfile");
+}
 
 const logoutButton = () => {
   if (isLoggedIn.value) {
@@ -242,4 +249,5 @@ function goToSearchPage() {
   text-transform: none;
   /* 不會轉換成大寫 */
 }
+
 </style>
