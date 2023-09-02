@@ -46,7 +46,7 @@ const addToCart = async () => {
   if (props.book.stock === 0) {
     toast("沒庫存", {
       autoClose: 1000,
-      position: "bottom-right",
+      position: "bottom-left",
     });
     return;
   }
@@ -73,7 +73,7 @@ const addToCart = async () => {
     }
     toast(response.data.message, {
       autoClose: 1000,
-      position: "bottom-right",
+      position: 'bottom-left',
     });
     cartStore.updateCartItemsCount();
   } else {
