@@ -98,7 +98,7 @@
                         </el-table-column>
                         <el-table-column label="到貨日期" prop="shippingTime" width="180">
                             <template #default="{ row }">
-                                {{ formatDate(row.shippingTime) }}
+                                {{ row.shippingTime ? formatDate(row.shippingTime) : '' }}
                             </template>
                         </el-table-column>
                         <el-table-column label="操作" width="220">
@@ -252,7 +252,7 @@ import { ref, onMounted, computed } from 'vue';
 import axios from "axios";
 import { nextTick } from 'vue';
 
-const activeTab = ref("not-paid");
+const activeTab = ref("paid");
 const notPaidOrders = ref([]);
 const paidOrders = ref([]);
 const finalOrders = ref([]);
