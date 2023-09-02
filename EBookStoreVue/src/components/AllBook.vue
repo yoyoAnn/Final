@@ -3,12 +3,12 @@
     <div class="col-3"></div>
     <div class="col-6"></div>
     <div class="col-3"></div>
+    <h2>書籍一覽</h2>
   </div>
 
   <!-- 全部書籍 -->
 
   <v-container>
-    <h2>書籍一覽</h2>
     <el-row class="button-row">
       <el-col :span="1"> </el-col>
       <el-col :span="20">
@@ -17,6 +17,11 @@
             v-for="(book, index) in displayedBooks"
             :key="index"
             :span="6"
+            :xs="24"
+            :sm="12"
+            :md="8"
+            :lg="6"
+            :xl="6"
           >
             <el-card
               :body-style="{ padding: '0px' }"
@@ -51,25 +56,25 @@
             </el-card>
           </el-col>
         </div>
+        <!-- 分頁 -->
+        <div class="demo-pagination-block container">
+          <div class="demonstration">Change page size</div>
+          <el-pagination
+            v-model:current-page="currentPage2"
+            v-model:page-size="pageSize2"
+            :page-sizes="[12, 24, 36, 48]"
+            :small="small"
+            :disabled="disabled"
+            :background="background"
+            layout="sizes, prev, pager, next"
+            :total="filteredBooks.length"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+          />
+        </div>
       </el-col>
       <el-col :span="1"> </el-col>
     </el-row>
-    <!-- 分頁 -->
-    <div class="demo-pagination-block container">
-      <div class="demonstration">Change page size</div>
-      <el-pagination
-        v-model:current-page="currentPage2"
-        v-model:page-size="pageSize2"
-        :page-sizes="[12, 24, 36, 48]"
-        :small="small"
-        :disabled="disabled"
-        :background="background"
-        layout="sizes, prev, pager, next"
-        :total="filteredBooks.length"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
-    </div>
   </v-container>
 </template>
     
