@@ -1,5 +1,5 @@
 <template>
-  <el-col>
+  <el-col class="hidden-sm-and-down">
     <h2>暢銷排行</h2>
     <el-carousel :interval="10000" type="card" height="600px">
       <el-carousel-item v-for="(book, i) in books" :key="i">
@@ -21,6 +21,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { CaretBottom } from "@element-plus/icons-vue";
+import "element-plus/theme-chalk/display.css";
 
 const books = ref([]);
 

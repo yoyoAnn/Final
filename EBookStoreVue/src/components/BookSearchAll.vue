@@ -19,6 +19,11 @@
             v-for="(book, index) in displayedBooks"
             :key="index"
             :span="6"
+            :xs="24"
+            :sm="12"
+            :md="8"
+            :lg="6"
+            :xl="6"
           >
             <el-card
               :body-style="{ padding: '0px' }"
