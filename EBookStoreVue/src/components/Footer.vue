@@ -68,34 +68,34 @@
             <!-- Links -->
             <h5 class="text-uppercase fw-bold mb-4">聯絡我們</h5>
             <p>
-              <i class="fas fa-home me-3 link-secondary"></i>桃園市中壢區新生路二段421號(聖德基督學院)
+              <i class="fas fa-home me-3"></i>桃園市中壢區新生路二段421號(聖德基督學院)
             </p>
             <p>
-              <i class="fas fa-envelope me-3 link-secondary"></i>
+              <i class="fas fa-envelope me-3"></i>
               yoyoann2023@gmail.com
             </p>
             <p>
-              <MDBIcon icon="phone" class="me-3 link-secondary" />
+              <MDBIcon icon="phone" class="me-3" />
               (03) 453-3013
             </p>
             <div>
               <a href="" class="me-4 text-reset">
-                <MDBIcon class="link-secondary" iconStyle="fab" icon="facebook-f"></MDBIcon>
+                <MDBIcon iconStyle="fab" icon="facebook-f"></MDBIcon>
               </a>
               <a href="" class="me-4 text-reset">
-                <MDBIcon class="link-secondary" iconStyle="fab" icon="twitter"></MDBIcon>
+                <MDBIcon iconStyle="fab" icon="twitter"></MDBIcon>
               </a>
               <a href="" class="me-4 text-reset">
-                <MDBIcon class="link-secondary" iconStyle="fab" icon="google"></MDBIcon>
+                <MDBIcon iconStyle="fab" icon="google"></MDBIcon>
               </a>
               <a href="" class="me-4 text-reset">
-                <MDBIcon class="link-secondary" iconStyle="fab" icon="instagram"></MDBIcon>
+                <MDBIcon iconStyle="fab" icon="instagram"></MDBIcon>
               </a>
               <a href="" class="me-4 text-reset">
-                <MDBIcon class="link-secondary" iconStyle="fab" icon="linkedin"></MDBIcon>
+                <MDBIcon iconStyle="fab" icon="linkedin"></MDBIcon>
               </a>
               <a href="" class="me-4 text-reset">
-                <MDBIcon class="link-secondary" iconStyle="fab" icon="github"></MDBIcon>
+                <MDBIcon iconStyle="fab" icon="github"></MDBIcon>
               </a>
             </div>
           </MDBCol>
@@ -106,10 +106,10 @@
     </section>
 
     <!-- Copyright -->
-    <div class="text-center p-2 copyright" style="background-color: rgba(0, 0, 0, 0.05)">
+    <!-- <div class="text-center p-2 copyright" style="background-color: rgba(0, 0, 0, 0.05)">
       © 2021 Copyright:
       <a class="text-reset fw-bold" href="https://mdbootstrap.com/">MDBootstrap.com</a>
-    </div>
+    </div> -->
     <!-- Copyright -->
   </MDBFooter>
   <!-- Footer -->

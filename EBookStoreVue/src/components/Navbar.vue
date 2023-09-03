@@ -1,15 +1,18 @@
 <template>
-  <v-container class="py-0 fill-height">
+  <v-container class="py-1 fill-height">
     <v-row no-gutters>
-      <v-col cols="3">
+      <!-- 網站名稱 -->
+      <v-col class="d-none d-md-flex" cols="12" md="3">
         <v-btn class="fill-height" flat color="white" router :to="homeRoute">
           <v-img class="" :width="60" aspect-ratio="4/3"
             src="https://blog.flamingtext.com/blog/2023/08/08/flamingtext_com_1691517616_586896794.png"></v-img>
           <span class="text-subtitle-1 text-grey-darken-3" style="display: flex; vertical-align: text-bottom">網路書店</span>
         </v-btn>
       </v-col>
-      <v-col class="d-flex justify-center" cols="6">
-        <v-responsive max-height="100" max-width="600">
+
+      <!-- 搜尋框 -->
+      <v-col class="d-flex justify-center text-center" cols="12" md="6">
+        <v-responsive max-height="100" width="auto" max-width="600">
           <el-autocomplete style="width: 400px" v-model="searchInput" :fetch-suggestions="querySearchAsync"
             placeholder="搜尋" @keydown.enter="goToSearchPage" @select="handleAutocompleteSelect">
             <template #append>
@@ -22,9 +25,9 @@
         </v-responsive>
       </v-col>
 
-
-      <v-col class="d-flex justify-end" cols="3">
-        <v-btn @click="hiUserName">
+      <!-- 功能列 -->
+      <v-col class="d-flex justify-end d-none d-md-flex" cols="12" md="3">
+        <v-btn class="d-md-none d-xl-flex" @click="hiUserName">
           <a class="greeting" v-if="isLoggedIn" style="color: gray;">Hi, {{ account }}</a>
         </v-btn>
         <v-btn flat color="grey" router v-if="isLoggedIn" :to="cartRoute">
@@ -35,8 +38,7 @@
         <v-menu open-on-hover>
           <template v-slot:activator="{ props }">
             <v-btn color="grey" v-bind="props" v-if="isLoggedIn">
-              <!-- <v-icon right icon="mdi:mdi-account" /> -->
-                <UserPicture />
+              <UserPicture />
             </v-btn>
           </template>
           <v-list>
@@ -45,32 +47,17 @@
             </v-list-item>
           </v-list>
         </v-menu>
-        <!-- <v-btn flat color="grey" @click="logout" v-if="isLoggedIn || !$route.path.includes('/Login')"> -->
         <v-btn flat @click="logout" v-if="isLoggedIn && !$route.path.includes('/Login')">
           <a href="/Login" style="color: gray;">登出</a>
         </v-btn>
-        <!-- <v-btn
-          flat
-          color="grey"
-          @click="logout"
-          v-if="!$route.path.includes('/Login')"
-        >
-          <v-icon right icon="mdi:mdi-exit-to-app" />
-        </v-btn> -->
         <v-btn flat style="color: gray;" @click="logout" v-if="!isLoggedIn && !$route.path.includes('/Login')">
           <a href="/Login" style="color: gray;">登入</a>
         </v-btn>
-
-        <!--<div>
-            <v-btn flat style="color: gray;" @click="logoutButton">
-            {{ isLoggedIn ? '登出' : '登入' }}
-            </v-btn>
-        </div>-->
       </v-col>
 
-      <!-- <v-spacer></v-spacer> -->
     </v-row>
   </v-container>
+  <v-app-bar-nav-icon variant="text" @click="drawer = true" class="d-flex d-md-none"></v-app-bar-nav-icon>
 </template>
 
 
@@ -88,6 +75,11 @@ import { ElAutocomplete } from "element-plus";
 import { googleLogout } from 'vue3-google-login';
 import UserPicture from "../components/UserPicture.vue";
 
+const drawer = ref(false);
+const group = ref(null);
+watch(group, () => {
+  drawer.value = false;
+})
 
 const cartStore = useCartStore();
 
@@ -106,7 +98,7 @@ const route = useRoute();
 const account = ref("");
 
 const hiUserName = () => {
-    router.push("/UserProfile");
+  router.push("/UserProfile");
 }
 
 const logoutButton = () => {
@@ -249,5 +241,4 @@ function goToSearchPage() {
   text-transform: none;
   /* 不會轉換成大寫 */
 }
-
 </style>

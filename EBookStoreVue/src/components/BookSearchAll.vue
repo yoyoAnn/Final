@@ -13,45 +13,25 @@
     <el-row class="button-row">
       <el-col :span="1"> </el-col>
       <el-col :span="20">
-        <h2>搜尋書籍</h2>
+        <h2 class="text-center text-white bg-success rounded-shaped">搜尋書籍</h2>
         <div class="card-container">
-          <el-col
-            v-for="(book, index) in displayedBooks"
-            :key="index"
-            :span="6"
-            :xs="24"
-            :sm="12"
-            :md="8"
-            :lg="6"
-            :xl="6"
-          >
-            <el-card
-              :body-style="{ padding: '0px' }"
-              style="margin-right: 10px; margin-bottom: 10px"
-            >
+          <el-col v-for="(book, index) in displayedBooks" :key="index" :span="6" :xs="24" :sm="12" :md="8" :lg="6"
+            :xl="6">
+            <el-card :body-style="{ padding: '0px' }" style="margin-right: 10px; margin-bottom: 10px">
               <a :href="`/books/${book.id}`">
-                <img
-                  :src="`/src/BooksImage/${book.bookImage}`"
-                  style="height: 300px; width: auto; max-width: 100%"
-                />
+                <img :src="`/src/BooksImage/${book.bookImage}`" style="height: 300px; width: auto; max-width: 100%" />
               </a>
               <div style="padding: 20px; margin: 16px">
                 <span class="book-title">{{ book.name }}</span>
                 <a :href="`/booksearchauthor?searchString=${book.author}`">{{
                   book.author
-                }}</a
-                ><span> 著</span>
-                <div
-                  class="bottom"
-                  style="
+                }}</a><span> 著</span>
+                <div class="bottom" style="
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                  "
-                >
-                  <span class="pricecolor" style="margin-top: 4px"
-                    >{{ book.price }} 元</span
-                  >
+                  ">
+                  <span class="pricecolor" style="margin-top: 4px">{{ book.price }} 元</span>
                   <BookCartbtn @add-to-cart="addToCart" :book="book" />
                 </div>
               </div>
@@ -63,26 +43,17 @@
     </el-row>
     <!-- 分頁 -->
     <div class="demo-pagination-block container">
-      <div class="demonstration">Change page size</div>
-      <el-pagination
-        v-model:current-page="currentPage2"
-        v-model:page-size="pageSize2"
-        :page-sizes="[12, 24, 36, 48]"
-        :small="small"
-        :disabled="disabled"
-        :background="background"
-        layout="sizes, prev, pager, next"
-        :total="filteredBooks.length"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
+      <!-- <div class="demonstration">Change page size</div> -->
+      <el-pagination v-model:current-page="currentPage2" v-model:page-size="pageSize2" :page-sizes="[12, 24, 36, 48]"
+        :small="small" :disabled="disabled" :background="background" layout="sizes, prev, pager, next"
+        :total="filteredBooks.length" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </div>
   </v-container>
 </template>
     
   
   
-  <script setup lang="ts">
+<script setup lang="ts">
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
@@ -184,14 +155,15 @@ export default defineComponent({
 
 
 
-  <style src="../BookCSS/BookCSS.css" scoped>
+<style src="../BookCSS/BookCSS.css" scoped>
 .cuscard {
   margin: 10px;
 }
 
-.demo-pagination-block + .demo-pagination-block {
+.demo-pagination-block+.demo-pagination-block {
   margin-top: 10px;
 }
+
 .demo-pagination-block .demonstration {
   margin-bottom: 16px;
 }
