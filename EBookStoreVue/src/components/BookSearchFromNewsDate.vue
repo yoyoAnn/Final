@@ -7,48 +7,29 @@
   <!-- 注目新書 -->
 
   <div>
-    <h2>注目新書</h2>
+    <h2 class="text-center text-white bg-red rounded-shaped">注目新書</h2>
     <el-row class="button-row">
       <el-col :span="1">
-        <i
-          class="fa-solid fa-circle-chevron-left fa-beat-fade fa-2xl"
-          @click="prevPage"
-          :disabled="currentPage === 1"
-        ></i>
+        <i class="fa-solid fa-circle-chevron-left fa-beat-fade fa-2xl" @click="prevPage"
+          :disabled="currentPage === 1"></i>
       </el-col>
       <el-col :span="20">
         <div class="card-container">
-          <el-col
-            v-for="(book, index) in displayedBooks"
-            :key="index"
-            :span="6"
-          >
-            <el-card
-              :body-style="{ padding: '0px' }"
-              style="margin-right: 10px; margin-bottom: 10px"
-            >
+          <el-col v-for="(book, index) in displayedBooks" :key="index" :span="6">
+            <el-card :body-style="{ padding: '0px' }" style="margin-right: 10px; margin-bottom: 10px">
               <a :href="`/books/${book.id}`">
-                <img
-                  :src="`/src/BooksImage/${book.bookImage}`"
-                  style="height: 300px; width: auto; max-width: 100%"
-                />
+                <img :src="`/src/BooksImage/${book.bookImage}`" style="height: 300px; width: auto; max-width: 100%" />
               </a>
               <div style="padding: 20px; margin: 16px">
                 <span class="book-title">{{ book.name }}</span>
-                <span class="book-title" style="color: orange"
-                  >出版日期 : {{ book.publisherDateTxt }}
+                <span class="book-title" style="color: orange">出版日期 : {{ book.publisherDateTxt }}
                 </span>
-                <div
-                  class="bottom"
-                  style="
+                <div class="bottom" style="
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                  "
-                >
-                  <span class="pricecolor" style="margin-top: 4px"
-                    >{{ book.price }} 元</span
-                  >
+                  ">
+                  <span class="pricecolor" style="margin-top: 4px">{{ book.price }} 元</span>
                   <BookCartbtn @add-to-cart="addToCart" :book="book" />
                 </div>
               </div>
@@ -57,11 +38,8 @@
         </div>
       </el-col>
       <el-col :span="1">
-        <i
-          class="fa-solid fa-circle-chevron-right fa-beat-fade fa-2xl"
-          @click="nextPage"
-          :disabled="currentPage === totalPages"
-        ></i>
+        <i class="fa-solid fa-circle-chevron-right fa-beat-fade fa-2xl" @click="nextPage"
+          :disabled="currentPage === totalPages"></i>
       </el-col>
     </el-row>
   </div>
@@ -69,7 +47,7 @@
     
   
   
-  <script setup lang='ts'>
+<script setup lang='ts'>
 import { ref, computed, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 
@@ -159,7 +137,7 @@ export default defineComponent({
 });
 </script>
   
-  <style src="../BookCSS/BookCSS.css">
+<style src="../BookCSS/BookCSS.css">
 .cuscard {
   margin: 10px;
 }
