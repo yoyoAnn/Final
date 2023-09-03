@@ -4,7 +4,7 @@
 
   <div class="book-details container">
     <div class="image divimage">
-      <img :src="`/src/BooksImage/${book.bookImage}`" />
+      <img :src="`/src/BooksImage/${book.bookImage}`" style="border: none;" />
     </div>
     <div class="info">
       <h3>書名 : {{ book.name }}</h3>

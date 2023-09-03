@@ -7,8 +7,8 @@
                     <el-tab-pane label="收件人資訊" name="2"></el-tab-pane>
                 </el-tabs>
             </el-header>
-            <div v-if="tab === '1'">
-                <v-row class="mt-2">
+            <div class="m-3" v-if="tab === '1'">
+                <v-row class="my-2">
                     <v-col class="text-start">
                         <v-btn text to="/"><span class="fas fa-long-arrow-alt-left me-2"></span>繼續購物</v-btn>
                     </v-col>
@@ -85,7 +85,7 @@
 
             </div>
 
-            <div v-if="tab === '2'">
+            <div class="m-3" v-if="tab === '2'">
                 <el-form label-position="top">
                     <el-row :gutter="20">
                         <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="6">
@@ -165,10 +165,10 @@
             <v-btn text to="/"><span class="fas fa-long-arrow-alt-left me-2"></span>繼續購物</v-btn>
         </v-col>
         <v-main class="d-flex align-center justify-center" style="min-height: 300px; flex-direction: column;">
-            <div>
+            <div class="mb-5">
                 <v-alert density="compact" type="warning" text="購物車為空"></v-alert>
             </div>
-            <div>
+            <div class="mb-5">
                 <img src="../../public/pngkit_grocery-cart-png_1344008.png" alt="Grocery Cart" class="img-fluid">
             </div>
         </v-main>
