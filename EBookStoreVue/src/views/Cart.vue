@@ -147,6 +147,7 @@
                         </el-col>
 
                         <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="24" class="d-flex">
+                            <el-button @click="fillDemoData">DEMO</el-button>
                             <el-button type="success" @click="undoStep">上一步</el-button>
                             <el-button type="primary" @click="handleCheckout" class="ms-auto">
                                 <i class="fas fa-credit-card"></i> 結帳
@@ -212,6 +213,16 @@ import moment from 'moment-timezone';
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import cities from '../TwCity/TwCities.json';
+
+const fillDemoData = () => {
+    ReceiverName.value = "王小明";
+    ReceiverPhone.value = "0912345678";
+    TaxIdNum.value = "/1234567";
+    selectedCityName.value = "臺北市";
+    selectedDistrict.value = "中正區";
+    ReceiverAddress.value = "中山南路一號";
+    Remark.value = "請盡速送達";
+};
 
 const cartStore = useCartStore();
 
@@ -442,28 +453,24 @@ const paymentForm = ref(null)
 async function submitForm() {
 
     const response = await axios.post('https://localhost:7261/CartAddToOrderDB/', cartInfoData);
-    updatePayment(selectedItems, orderItems);
-    paymentForm.value.submit()
+    await updatePayment(selectedItems, orderItems);
+    await paymentForm.value.submit()
 }
 
 async function updatePayment(selectedItems, orderItems) {
     try {
-        const updateRequests = selectedItems.map(item => {
-            return axios.post(`https://localhost:7261/PaymentCart/${item.id}`, item.id);
-        });
-
-        await Promise.all(updateRequests);
+        for (const item of selectedItems) {
+            await axios.post(`https://localhost:7261/PaymentCart/${item.id}`, item.id);
+        }
         console.log('購物車已更新');
     } catch (error) {
         console.error('購物車更新失敗原因:', error);
     }
     try {
-        const postOrderItemRequests = orderItems.value.map(item => {
-            return axios.post(`https://localhost:7261/CartAddToOrderItemsDB/`, item);
-        });
-        const updateStock = orderItems.value.map(item => {
-            return axios.post(`https://localhost:7261/UpdateStock/`, item);
-        });
+        for (const item of orderItems.value) {
+            await axios.post(`https://localhost:7261/CartAddToOrderItemsDB/`, item);
+            await axios.post(`https://localhost:7261/UpdateStock/`, item);
+        }
     } catch (error) {
         console.error('訂單項目更新失敗原因:', error);
     }
@@ -537,8 +544,9 @@ const decreaseQuantity = (item) => {
     }
 };
 
-const increaseQuantity = (item) => {
-    if (item.qty < item.stock) {  // 檢查庫存
+const increaseQuantity = async (item) => {
+    const stock = await axios.get(`https://localhost:7261/api/Books/${item.bookId}`);
+    if (item.qty < stock.data.stock) {  // 檢查庫存
         item.qty++;
         updateQuantity(item);
     } else {
