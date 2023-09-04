@@ -37,7 +37,7 @@ const addToCart = async () => {
   if (props.book.stock === 0) {
     toast("沒庫存", {
       autoClose: 1000,
-      position: "bottom-right",
+      position: "bottom-left",
     });
     return;
   }
@@ -55,7 +55,7 @@ const addToCart = async () => {
     const response = await axios.post(Url, CartDto);
     toast(response.data.message, {
       autoClose: 1000,
-      position: 'bottom-right',
+      position: 'bottom-left',
     });
     cartStore.updateCartItemsCount();
     router.push("/cart");

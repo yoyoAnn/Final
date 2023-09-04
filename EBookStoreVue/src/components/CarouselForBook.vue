@@ -1,24 +1,24 @@
 <template>
-  <h2>暢銷排行</h2>
-  <el-carousel :interval="10000" type="card" height="600px">
-    <el-carousel-item v-for="(book, i) in books" :key="i">
-      <div class="item">
-        <el-badge :value="'TOP ' + (i + 1)" style="font: 50px sans-serif">
-          <a :href="`/books/${book.id}`">
-            <img
-              :src="`/src/BooksImage/${book.bookImage}`"
-              style="height: 400px; width: auto; max-width: 100%"
-            />
-          </a>
-        </el-badge>
-      </div>
-    </el-carousel-item>
-  </el-carousel>
+  <el-col class="hidden-sm-and-down">
+    <h2 class="text-center text-white bg-red rounded-shaped">暢銷排行</h2>
+    <el-carousel :interval="10000" type="card" height="600px">
+      <el-carousel-item v-for="(book, i) in books" :key="i">
+        <div class="item">
+          <el-badge :value="'TOP ' + (i + 1)" style="font: 50px sans-serif">
+            <a :href="`/books/${book.id}`">
+              <img :src="`/src/BooksImage/${book.bookImage}`" style="height: 400px; width: auto; max-width: 100%" />
+            </a>
+          </el-badge>
+        </div>
+      </el-carousel-item>
+    </el-carousel>
+  </el-col>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import { CaretBottom } from "@element-plus/icons-vue";
+import "element-plus/theme-chalk/display.css";
 
 const books = ref([]);
 
@@ -51,12 +51,14 @@ onMounted(async () => {
   /* text-align: center; */
   /* align-content: center; */
 }
+
 .el-carousel__item {
   height: 600px;
   display: flex;
   align-content: center;
   justify-items: center;
 }
+
 .el-carousel__item img {
   width: auto;
   margin: auto;
@@ -64,6 +66,7 @@ onMounted(async () => {
   align-content: center;
   justify-items: center;
 }
+
 .item {
   margin-top: 50px;
   margin-left: 250px;

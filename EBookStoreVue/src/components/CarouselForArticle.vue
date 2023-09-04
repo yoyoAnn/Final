@@ -1,18 +1,11 @@
 <template>
   <div class="block text-center" m="t-4">
-    <span class="articlecarouseltitle">《最新專欄文章》</span>
-    <el-carousel trigger="click" height="300px">
-      <el-carousel-item
-        class="article"
-        v-for="(article, index) in articles"
-        :key="index"
-      >
+    <h2 class="articlecarouseltitle  text-white bg-brown rounded-shaped">最新專欄文章</h2>
+    <el-carousel trigger="click" height="400px">
+      <el-carousel-item class="article" v-for="(article, index) in articles" :key="index">
         <a :href="`/article/${article.id}`">
           <div class="imgdiv">
-            <img
-              :src="`/src/ArticleImage/${article.image}`"
-              style="height: 300px; width: 100%; max-width: 100%"
-            />
+            <img :src="`/src/ArticleImage/${article.image}`" style="height: 400px; width: 100%; max-width: 100%" />
             <p>{{ article.title }}</p>
           </div>
         </a>

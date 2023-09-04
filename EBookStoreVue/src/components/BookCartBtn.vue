@@ -1,8 +1,21 @@
 <template>
-  <el-button class="button" round style="background-color: #f5900d; color: #ebeff4" @click="addToCart"
-    :disabled="props.book.stock === 0"><i class="fa-solid fa-cart-shopping fa-xl"
-      style="color: #ebeff4; margin-right: 10px"></i>
-    加入購物車</el-button>
+  <el-button
+    :xs="24"
+    :sm="12"
+    :md="8"
+    :lg="6"
+    :xl="6"
+    class="button"
+    round
+    style="background-color: #f5900d; color: #ebeff4"
+    @click="addToCart"
+    :disabled="props.book.stock === 0"
+    ><i
+      class="fa-solid fa-cart-shopping fa-xl"
+      style="color: #ebeff4; margin-right: 10px"
+    ></i>
+    加入購物車</el-button
+  >
 </template>
 
 
@@ -33,7 +46,7 @@ const addToCart = async () => {
   if (props.book.stock === 0) {
     toast("沒庫存", {
       autoClose: 1000,
-      position: "bottom-right",
+      position: "bottom-left",
     });
     return;
   }
@@ -60,7 +73,7 @@ const addToCart = async () => {
     }
     toast(response.data.message, {
       autoClose: 1000,
-      position: 'bottom-right',
+      position: 'bottom-left',
     });
     cartStore.updateCartItemsCount();
   } else {

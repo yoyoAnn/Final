@@ -7,8 +7,8 @@
                     <el-tab-pane label="收件人資訊" name="2"></el-tab-pane>
                 </el-tabs>
             </el-header>
-            <div v-if="tab === '1'">
-                <v-row class="mt-2">
+            <div class="m-3" v-if="tab === '1'">
+                <v-row class="my-2">
                     <v-col class="text-start">
                         <v-btn text to="/"><span class="fas fa-long-arrow-alt-left me-2"></span>繼續購物</v-btn>
                     </v-col>
@@ -85,7 +85,7 @@
 
             </div>
 
-            <div v-if="tab === '2'">
+            <div class="m-3" v-if="tab === '2'">
                 <el-form label-position="top">
                     <el-row :gutter="20">
                         <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="6">
@@ -110,8 +110,8 @@
                         </el-col>
 
                         <el-col :xs="24" :sm="12" :md="8" :lg="4" :xl="4">
-                            <el-form-item label="選擇城市">
-                                <el-select v-model="selectedCityName" placeholder="選擇城市">
+                            <el-form-item label="選擇縣市">
+                                <el-select v-model="selectedCityName" placeholder="選擇縣市">
                                     <el-option v-for="item in cities" :key="item.name" :label="item.name"
                                         :value="item.name">
                                     </el-option>
@@ -120,8 +120,8 @@
                         </el-col>
 
                         <el-col :xs="24" :sm="12" :md="8" :lg="4" :xl="4">
-                            <el-form-item label="選擇區域">
-                                <el-select v-model="selectedDistrict" placeholder="選擇區域">
+                            <el-form-item label="選擇鄉鎮區">
+                                <el-select v-model="selectedDistrict" placeholder="選擇鄉鎮區">
                                     <el-option v-for="item in getSelectedCity.districts" :key="item.name" :label="item.name"
                                         :value="item.name">
                                     </el-option>
@@ -163,10 +163,13 @@
         <v-col class="text-start">
             <v-btn text to="/"><span class="fas fa-long-arrow-alt-left me-2"></span>繼續購物</v-btn>
         </v-col>
-        <v-main class="d-flex align-center justify-center" style="min-height: 300px;">
-
-
-            <img src="../../public/pngkit_grocery-cart-png_1344008.png" alt="Grocery Cart" class="img-fluid">
+        <v-main class="d-flex align-center justify-center" style="min-height: 300px; flex-direction: column;">
+            <div class="mb-5">
+                <v-alert density="compact" type="warning" text="購物車為空"></v-alert>
+            </div>
+            <div class="mb-5">
+                <img src="../../public/pngkit_grocery-cart-png_1344008.png" alt="Grocery Cart" class="img-fluid">
+            </div>
         </v-main>
     </div>
 
@@ -203,7 +206,7 @@ import { useCartStore } from '../stores/cart';
 import { Delete, Edit, Search, Share, Upload } from '@element-plus/icons-vue'
 import 'bootstrap/dist/js/bootstrap.bundle.js';
 import router from '../router/index.js';
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import axios from 'axios';
 import moment from 'moment-timezone';
 import { toast } from "vue3-toastify";
@@ -253,6 +256,10 @@ let cartInfoData = ref({
     shippingStatusId: ""
 });
 const selectedCityName = ref('');
+
+watch(selectedCityName, () => {
+    selectedDistrict.value = '';
+});
 
 const getSelectedCity = computed(() => {
     return cities.find(city => city.name === selectedCityName.value) || {};
@@ -360,7 +367,7 @@ const handleCheckout = async () => {
 
         if (cartItems.value.length === 0) {
             toast.error("購物車至少勾選一樣物品", {
-                position: 'bottom-right',
+                position: 'bottom-left',
                 autoClose: 500,
             });
             return;
@@ -372,7 +379,7 @@ const handleCheckout = async () => {
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 toast.error(error.response.data.message, {
-                    position: 'bottom-right',
+                    position: 'bottom-left',
                     autoClose: 1000,
                 });
                 return;
@@ -536,7 +543,7 @@ const increaseQuantity = (item) => {
         updateQuantity(item);
     } else {
         toast.error('不能超過庫存量!', {
-            position: 'bottom-right',
+            position: 'bottom-left',
             autoClose: 500,
         });
     }

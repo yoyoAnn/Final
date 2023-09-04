@@ -1,5 +1,5 @@
 <template>
-  <h2>本日推薦</h2>
+  <h2 class="text-center text-black bg-yellow rounded-shaped">本日推薦</h2>
   <div class="row">
     <div class="col-3"></div>
     <div class="col-6"></div>
@@ -14,7 +14,8 @@
       </el-col>
       <el-col :span="20">
         <div class="card-container">
-          <el-col v-for="(book, index) in displayedBooks" :key="index" :span="6">
+          <el-col v-for="(book, index) in displayedBooks" :key="index" :span="6" :xs="24" :sm="12" :md="8" :lg="6"
+            :xl="6">
             <el-card :body-style="{ padding: '0px' }" class="custom-card" style="margin-right: 10px; margin-bottom: 10px">
               <a :href="`/books/${book.id}`">
                 <img :src="`/src/BooksImage/${book.bookImage}`" style="height: 300px; width: auto; max-width: 100%" />
