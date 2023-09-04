@@ -15,6 +15,7 @@
         </div>
         <br>
         <button class="btn" type="submit">寄送驗證信</button>
+        <button class="btn2" @click="fillDefaultInfo">Demo用</button>
       </form>
       
     </div>
@@ -60,7 +61,13 @@ methods: {
             this.registrationMessage = error.response.data;
             console.error(error);
         }
-    }
+    },
+    fillDefaultInfo() {
+        this.registerData = {
+            account : 'yoyo20234',
+            email : 'galaxydoge87@gmail.com',
+        };
+    },
 }
 };
 </script>
@@ -143,7 +150,7 @@ body {
 }
 
 
-.btn {
+.btn, .btn2 {
     background-color: #4CAF50;
     ;
     color: #fff;
@@ -156,7 +163,7 @@ body {
     transition: background-color 0.3s ease;
 }
 
-.btn:hover {
+.btn:hover, .btn2:hover {
     background-color: #00b894;
     color: #fff;
 }
@@ -167,6 +174,10 @@ body {
 
 .container a2 {
     color: red;
+}
+
+.btn2{
+    margin-top: 20px;
 }
 
 </style>

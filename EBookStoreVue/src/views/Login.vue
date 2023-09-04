@@ -149,6 +149,40 @@ export default {
         //   this.isLoggedIn = true;
         //   console.log(this.isLoggedIn)
 
+          localStorage.setItem('userInfo', JSON.stringify(userInfo));
+  
+          this.$router.push('/');
+
+          
+        } else if (response.status === 400) {
+            const errorData = await response.text();
+            console.log(response)
+            this.errorMessage = errorData; 
+        } else {
+            console.error('Login failed');
+        }
+      },
+
+      // 驗證碼
+      refreshCode() {
+            this.identifyCode = "";
+            this.makeCode(this.identifyCodes,4);
+        },
+        randomNum (min, max) {
+            max = max + 1
+            return Math.floor(Math.random() * (max - min) + min)
+        },
+        
+        makeCode (data, len) {
+            for (let i = 0; i < len; i++) {
+                this.identifyCode += data[this.randomNum(0, data.length - 1)]
+        }
+      },
+
+      fillDefaultLogin() {
+        this.account = 'yoyo2023'; 
+        this.password = '12345678'; 
+      },
         localStorage.setItem('userInfo', JSON.stringify(userInfo));
 
         this.$router.push('/');
