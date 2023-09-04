@@ -107,6 +107,7 @@
 
 
                     <v-btn @click="updateUserInfo" color="success">更新</v-btn>
+                    <v-btn class="btn2 ml-3" @click="fillDefaultInfo" color="success">Demo用</v-btn>
                   </div>
 
                 </v-container>
@@ -159,6 +160,13 @@ const router = useRouter();
 
 const navigateToPage = (page) => {
   router.push(`/${page}`);
+};
+
+const fillDefaultInfo = () => {
+    name.value = '王小明';
+    phone.value = '09123456789';
+    address.value = '桃園市中壢區新生路二段421號';
+    gender.value = false;
 };
 
 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
@@ -272,7 +280,10 @@ const uploadImage = async (event) => {
   }
 };
 
+
+
 </script>
+
 
 <style scoped>
 .form-container {

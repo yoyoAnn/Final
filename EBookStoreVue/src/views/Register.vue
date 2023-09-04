@@ -33,6 +33,7 @@
           <input v-model="registerData.confirmedPassword" type="password" placeholder="確認密碼" required minlength="8">
         </div>
         <button class="btn" type="submit">註冊帳號</button>
+        <button class="btn2" @click="fillDefaultRegister">Demo用</button>
       </form>
      
     </div>
@@ -84,7 +85,16 @@ methods: {
             this.registrationMessage = error.response.data;
             console.error(error);
         }
-    }
+    },
+    fillDefaultRegister() {
+        this.registerData = {
+            account : 'allen',
+            password : '123', 
+            email : 'galaxydoge87@gmail.com',
+            confirmedPassword : '1234'
+        };
+    },
+
 }
 };
 </script>
@@ -168,7 +178,7 @@ body {
 }
 
 
-.btn {
+.btn, .btn2 {
     background-color: #4CAF50;
     ;
     color: #fff;
@@ -181,7 +191,7 @@ body {
     transition: background-color 0.3s ease;
 }
 
-.btn:hover {
+.btn:hover, .btn2:hover {
     background-color: #00b894;
     color: #fff;
 }
@@ -199,6 +209,10 @@ body {
 
 .errormessage{
     margin-bottom: 20px;
+}
+
+.btn2{
+    margin-top: 20px;
 }
 
 </style>

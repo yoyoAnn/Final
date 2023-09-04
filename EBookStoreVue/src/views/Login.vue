@@ -180,8 +180,8 @@
       },
 
       fillDefaultLogin() {
-        this.account = 'allen'; 
-        this.password = '123'; 
+        this.account = 'yoyo2023'; 
+        this.password = '12345678'; 
       },
 
     },
